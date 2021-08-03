@@ -19,8 +19,8 @@ msgstr ""
 "X-Crowdin-File-ID: 72\n"
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:39
-msgid "*Want to explore Apple’s blocks further? Check out <0>Apple Explorer</0> built by an open source developer."
-msgstr "*Wil jy dalk die Apple blokke verder wil ondersoek? Gaan kyk na <0>Apple Explorer<0>, gebou deur a 'n open source programmeerder."
+msgid "*Want to explore Apple’s blocks further? Check out <0>Apple Explorer</0>."
+msgstr "*Wil jy dalk die Apple blokke verder wil ondersoek? Gaan kyk na <0>Apple Explorer<0>."
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:94
 #~ msgid "0 automatically chooses bucket count"

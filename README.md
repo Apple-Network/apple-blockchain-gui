@@ -1,5 +1,5 @@
 # apple-blockchain
-![Alt text](https://www.chiaapple.com/img/apple_logo.svg)
+![Alt text](https://www.applecoin.in/img/apple_logo.svg)
 
 ![GitHub contributors](https://img.shields.io/github/contributors/Apple-Network/apple-blockchain?logo=GitHub)
 

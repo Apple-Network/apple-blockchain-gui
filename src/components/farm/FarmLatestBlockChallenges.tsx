@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 import { Link, Table, Card } from '@apple/core';
 import type { RootState } from '../../modules/rootReducer';
 import type { Row } from '../core/components/Table/Table';
+import {unix_to_short_date} from "../../util/utils";
 
 const cols = [
   {
@@ -14,8 +15,13 @@ const cols = [
     title: <Trans>Challenge Hash</Trans>,
   },
   {
-    field: (row: Row) => row.signage_point.signage_point_index,
+    field: 'signage_point.signage_point_index',
     title: <Trans>Index</Trans>,
+  },
+  {
+    minWidth: '75px',
+    field: (row: Row) => unix_to_short_date(row.signage_point.add_time),
+    title: <Trans>Date</Trans>,
   },
 ];
 
@@ -65,7 +71,7 @@ export default function FarmLatestBlockChallenges() {
           *Want to explore Apple’s blocks further? Check out{' '}
           <Link
             color="primary"
-            href="https://www.appleexplorer.com/"
+            href="https://explorer.applecoin.in/"
             target="_blank"
           >
             Apple Explorer

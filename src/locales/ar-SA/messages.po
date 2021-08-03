@@ -22,9 +22,13 @@ msgstr ""
 msgid "(Optional)"
 msgstr "(اختياري)"
 
-#: src/components/farm/FarmLatestBlockChallenges.tsx:64
+#: src/components/farm/FarmLatestBlockChallenges.tsx:70
 msgid "*Want to explore Apple’s blocks further? Check out <0>Apple Explorer</0> built by an open source developer."
-msgstr "*هل ترغب في زيادة استكشاف Apple؟ تحقق من <0> Apple Explorer</0> التي بناها مطور مفتوح المصدر."
+msgstr ""
+
+#: src/components/farm/FarmLatestBlockChallenges.tsx:70
+#~ msgid "*Want to explore Apple’s blocks further? Check out <0>Apple Explorer</0>."
+#~ msgstr "*هل ترغب في زيادة استكشاف Apple؟ تحقق من <0> Apple Explorer</0> التي بناها مطور مفتوح المصدر."
 
 #: src/components/plot/add/PlotAddNFT.tsx:123
 msgid "+ Add New Plot NFT"
@@ -63,7 +67,7 @@ msgstr "إجراء"
 
 #: src/components/farm/FarmFullNodeConnections.tsx:67
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:67
-#: src/components/fullNode/FullNodeConnections.tsx:82
+#: src/components/fullNode/FullNodeConnections.tsx:87
 #: src/components/pool/PoolOverview.tsx:69
 msgid "Actions"
 msgstr "الإجراءات"
@@ -88,8 +92,8 @@ msgstr "إضافة إلى قائمة الانتظار"
 #: src/components/plot/add/PlotAdd.tsx:160
 #: src/components/plot/overview/PlotOverviewHero.tsx:54
 #: src/components/plot/PlotHeader.tsx:63
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:232
-#: src/components/plotNFT/PlotNFTCard.tsx:284
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:230
+#: src/components/plotNFT/PlotNFTCard.tsx:272
 msgid "Add a Plot"
 msgstr "إضافة مساحة"
 
@@ -155,7 +159,7 @@ msgstr "محفظة Apple"
 msgid "Are you sure you want to delete the plot? The plot cannot be recovered."
 msgstr "هل أنت متأكد أنك تريد حذف الملف؟ لا يمكن إرجاع الملف بعد الحزف."
 
-#: src/components/plotNFT/PlotNFTCard.tsx:135
+#: src/components/plotNFT/PlotNFTCard.tsx:125
 #: src/components/wallet/standard/WalletStandard.tsx:632
 msgid "Are you sure you want to delete unconfirmed transactions?"
 msgstr ""
@@ -199,8 +203,8 @@ msgstr "الرصيد"
 msgid "Base Farmer Reward Amount"
 msgstr "مبلغ مكافأة المزرعة الأساسي"
 
-#: src/components/farm/FarmLatestBlockChallenges.tsx:39
-#: src/components/farm/FarmLatestBlockChallenges.tsx:49
+#: src/components/farm/FarmLatestBlockChallenges.tsx:45
+#: src/components/farm/FarmLatestBlockChallenges.tsx:55
 msgid "Below are the current block challenges. You may or may not have a proof of space for these challenges. These blocks do not currently contain a proof of time."
 msgstr "أدناه التحديات الحالية. قد يكون أو لا يكون لديك دليل على وجود قطع لهذه التحديات. لا تحتوي هذه القطع حاليا على دليل على الوقت."
 
@@ -275,13 +279,14 @@ msgstr "شراء"
 #~ msgid "CCListItems.title"
 #~ msgstr ""
 
-#: src/components/selectKey/SelectKey.tsx:170
+#: src/components/selectKey/SelectKey.tsx:169
 msgid "Can be backed up to mnemonic seed"
 msgstr "يمكن الإسترجاع من النسخة الاحتياطية للكلمات السرية"
 
 #: src/components/core/components/ConfirmDialog/ConfirmDialog.tsx:86
 #: src/components/farm/FarmManageFarmingRewards.tsx:196
 #: src/components/fullNode/FullNodeAddConnection.tsx:89
+#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:123
 #: src/components/plotNFT/select/PlotNFTSelectBase.tsx:87
 #: src/components/plotNFT/select/PlotNFTSelectFaucet.tsx:30
 #: src/components/trading/CreateOffer.jsx:139
@@ -302,7 +307,7 @@ msgstr "تحذير، حذف هذه القطع سيؤدي إلى حذفها إل�
 msgid "Challenge"
 msgstr "التحدي"
 
-#: src/components/farm/FarmLatestBlockChallenges.tsx:14
+#: src/components/farm/FarmLatestBlockChallenges.tsx:15
 msgid "Challenge Hash"
 msgstr "رمز التحدي"
 
@@ -310,7 +315,7 @@ msgstr "رمز التحدي"
 msgid "Change"
 msgstr "تغيير"
 
-#: src/components/plotNFT/PlotNFTCard.tsx:420
+#: src/components/plotNFT/PlotNFTCard.tsx:408
 #: src/components/plotNFT/PlotNFTChangePool.tsx:110
 #: src/components/pool/PoolOverview.tsx:115
 msgid "Change Pool"
@@ -328,7 +333,7 @@ msgstr "إختر عدد القطع"
 msgid "Choose Plot Size"
 msgstr "إختر حجم القطعة"
 
-#: src/components/plotNFT/PlotNFTCard.tsx:396
+#: src/components/plotNFT/PlotNFTCard.tsx:384
 #: src/components/pool/PoolOverview.tsx:92
 msgid "Claim Rewards"
 msgstr "المطالبة بالمكافآت"
@@ -381,7 +386,7 @@ msgstr "تأكيد"
 msgid "Confirm Disconnect"
 msgstr "تأكيد قطع الاتصال"
 
-#: src/components/plotNFT/PlotNFTCard.tsx:131
+#: src/components/plotNFT/PlotNFTCard.tsx:121
 #: src/components/wallet/standard/WalletStandard.tsx:628
 msgid "Confirmation"
 msgstr ""
@@ -398,8 +403,12 @@ msgstr "تم التأكيد في الارتفاع {0}"
 msgid "Connect"
 msgstr "إتصال"
 
+#: src/components/fullNode/FullNodeConnections.tsx:134
+msgid "Connect to Full Node list"
+msgstr "احصل على قائمة العقدة الكاملة"
+
 #: src/components/fullNode/FullNodeAddConnection.tsx:68
-#: src/components/fullNode/FullNodeConnections.tsx:112
+#: src/components/fullNode/FullNodeConnections.tsx:137
 msgid "Connect to other peers"
 msgstr "الاتصال بنقاط شبكة اخري"
 
@@ -425,11 +434,11 @@ msgstr "حالة الإتصال"
 msgid "Connection Status:"
 msgstr "حالة الإتصال:"
 
-#: src/components/fullNode/FullNodeConnections.tsx:75
+#: src/components/fullNode/FullNodeConnections.tsx:80
 msgid "Connection type"
 msgstr "نوع الاتصال"
 
-#: src/components/fullNode/FullNodeConnections.tsx:109
+#: src/components/fullNode/FullNodeConnections.tsx:127
 msgid "Connections"
 msgstr "الإتصالات"
 
@@ -504,7 +513,7 @@ msgstr "إنشاء نسخة احتياطية"
 msgid "Create a Plot NFT"
 msgstr "إنشاء قطعة NFT"
 
-#: src/components/selectKey/SelectKey.tsx:211
+#: src/components/selectKey/SelectKey.tsx:210
 msgid "Create a new private key"
 msgstr "إنشاء مفتاح خاص جديد"
 
@@ -552,13 +561,13 @@ msgstr "إنشاء قطعة NFT لتجميع الذات"
 msgid "Currency code is not defined"
 msgstr "رمز العملة غير معرف"
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:141
-#: src/components/plotNFT/PlotNFTCard.tsx:193
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:139
+#: src/components/plotNFT/PlotNFTCard.tsx:181
 msgid "Current Difficulty"
 msgstr ""
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:158
-#: src/components/plotNFT/PlotNFTCard.tsx:210
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:156
+#: src/components/plotNFT/PlotNFTCard.tsx:198
 msgid "Current Points Balance"
 msgstr ""
 
@@ -566,7 +575,7 @@ msgstr ""
 msgid "Current trade status"
 msgstr "الوضع التجاري الحالي"
 
-#: src/components/selectKey/SelectKey.tsx:185
+#: src/components/selectKey/SelectKey.tsx:184
 msgid "DANGER: permanently delete private key"
 msgstr "تحذير: حذف المفتاح الخاص بشكل دائم"
 
@@ -579,6 +588,7 @@ msgstr "تحذير: حذف المفتاح الخاص بشكل دائم"
 #~ msgstr ""
 
 #: src/components/farm/FarmLastAttemptedProof.tsx:32
+#: src/components/farm/FarmLatestBlockChallenges.tsx:24
 #: src/components/trading/TradingOverview.jsx:137
 #: src/components/wallet/WalletHistory.tsx:46
 msgid "Date"
@@ -592,7 +602,7 @@ msgstr "تأخير"
 #: src/components/plot/PlotAction.tsx:57
 #: src/components/plot/queue/PlotQueueActions.tsx:43
 #: src/components/plot/queue/PlotQueueActions.tsx:97
-#: src/components/plotNFT/PlotNFTCard.tsx:132
+#: src/components/plotNFT/PlotNFTCard.tsx:122
 #: src/components/selectKey/SelectKey.tsx:67
 #: src/components/selectKey/SelectKey.tsx:109
 #: src/components/wallet/standard/WalletStandard.tsx:629
@@ -604,13 +614,13 @@ msgstr "حذف"
 msgid "Delete Plot"
 msgstr "حذف قطعة"
 
-#: src/components/plotNFT/PlotNFTCard.tsx:327
+#: src/components/plotNFT/PlotNFTCard.tsx:315
 #: src/components/wallet/standard/WalletStandard.tsx:663
 msgid "Delete Unconfirmed Transactions"
 msgstr ""
 
 #: src/components/selectKey/SelectKey.tsx:108
-#: src/components/selectKey/SelectKey.tsx:229
+#: src/components/selectKey/SelectKey.tsx:228
 msgid "Delete all keys"
 msgstr "حذف جميع المفاتيح"
 
@@ -688,6 +698,12 @@ msgstr "قم بسحب ملف النسخة الاحتياطية من جهاز ا�
 #: src/electron/main.tsx:263
 msgid "Edit"
 msgstr "تعديل"
+
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:259
+#: src/components/plotNFT/PlotNFTCard.tsx:301
+#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:76
+msgid "Edit Payout Instructions"
+msgstr ""
 
 #: src/components/wallet/WalletImport.tsx:147
 msgid "Enter the 24 word mnemonic that you have saved in order to restore your Apple wallet."
@@ -913,7 +929,7 @@ msgstr "تجزئة رأس الصفحة"
 
 #: src/components/block/Block.jsx:201
 #: src/components/fullNode/FullNode.jsx:81
-#: src/components/fullNode/FullNodeConnections.tsx:79
+#: src/components/fullNode/FullNodeConnections.tsx:84
 msgid "Height"
 msgstr "ارتفاع"
 
@@ -938,7 +954,7 @@ msgstr "السّجل"
 msgid "Host Name"
 msgstr "اسم المستضيف"
 
-#: src/components/fullNode/FullNodeConnections.tsx:40
+#: src/components/fullNode/FullNodeConnections.tsx:45
 msgid "IP address"
 msgstr "عنوان الـ IP"
 
@@ -954,7 +970,7 @@ msgstr "إذا لم يتم اختيار أي منها, فسيكون هو الد�
 msgid "Import Wallet from Mnemonics"
 msgstr "إستيراد المحفظة من Mnemonics"
 
-#: src/components/selectKey/SelectKey.tsx:220
+#: src/components/selectKey/SelectKey.tsx:219
 msgid "Import from Mnemonics (24 words)"
 msgstr "إستيراد من Mnemonics (24 كلمة)"
 
@@ -970,7 +986,7 @@ msgstr "الوارد"
 msgid "Incorrect value"
 msgstr ""
 
-#: src/components/farm/FarmLatestBlockChallenges.tsx:18
+#: src/components/farm/FarmLatestBlockChallenges.tsx:19
 msgid "Index"
 msgstr "المضمن"
 
@@ -1007,7 +1023,7 @@ msgstr ""
 msgid "It is a one-time login link that can be used to log in to a pool's website. It contains a signature using the farmer's key from the plot NFT. Not all pools support this feature."
 msgstr ""
 
-#: src/components/plotNFT/PlotNFTCard.tsx:418
+#: src/components/plotNFT/PlotNFTCard.tsx:406
 #: src/components/pool/PoolOverview.tsx:113
 msgid "Join Pool"
 msgstr ""
@@ -1051,17 +1067,17 @@ msgstr "آخر محاولة للإثبات"
 msgid "Last Height Farmed"
 msgstr "آخر اعلى مزروعات"
 
-#: src/components/farm/FarmLatestBlockChallenges.tsx:36
+#: src/components/farm/FarmLatestBlockChallenges.tsx:42
 msgid "Latest Block Challenges"
 msgstr "أحدث تحديات الكتل"
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:297
-#: src/components/plotNFT/PlotNFTCard.tsx:362
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:295
+#: src/components/plotNFT/PlotNFTCard.tsx:350
 msgid "Launcher Id"
 msgstr ""
 
 #: src/components/plotNFT/PlotNFTGetPoolLoginLinkDialog.tsx:100
-#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:99
+#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:114
 msgid "Learn More"
 msgstr ""
 
@@ -1141,7 +1157,7 @@ msgstr "إدارة جوائز الزراعة"
 msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "إدارة عناوين جوائز الزراعة"
 
-#: src/components/fullNode/FullNodeConnections.tsx:68
+#: src/components/fullNode/FullNodeConnections.tsx:73
 msgid "MiB Up/Down"
 msgstr "ميجابيت تنزيل\\رفع"
 
@@ -1215,7 +1231,7 @@ msgstr "لا يوجد مفاتيح خاصة لواحد أو لكلا العنو�
 
 #: src/components/farm/FarmFullNodeConnections.tsx:32
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:32
-#: src/components/fullNode/FullNodeConnections.tsx:36
+#: src/components/fullNode/FullNodeConnections.tsx:41
 msgid "Node ID"
 msgstr "الرمز التعريفي للشبكة"
 
@@ -1235,6 +1251,7 @@ msgstr "لم تمر أي من قطعة خاصة بك بمرشح القطع حت�
 #: src/components/farm/card/FarmCardNotAvailable.tsx:23
 #: src/components/farm/FarmerStatus.tsx:20
 #: src/components/plot/PlotStatus.tsx:19
+#: src/components/plotNFT/PlotNFTCard.tsx:365
 msgid "Not Available"
 msgstr "غير متاح"
 
@@ -1264,8 +1281,8 @@ msgstr "لم يتم العثور على القطع"
 msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25APPLE reward for pooling plots."
 msgstr ""
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:120
-#: src/components/plotNFT/PlotNFTCard.tsx:172
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:118
+#: src/components/plotNFT/PlotNFTCard.tsx:160
 msgid "Number of Plots"
 msgstr ""
 
@@ -1279,7 +1296,6 @@ msgstr "عدد مسارات المعالج"
 
 #: src/components/core/components/ConfirmDialog/ConfirmDialog.tsx:87
 #: src/components/plotNFT/PlotNFTGetPoolLoginLinkDialog.tsx:111
-#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:112
 msgid "OK"
 msgstr "موافق"
 
@@ -1299,7 +1315,7 @@ msgstr "في المتوسط هناك دقيقة واحدة بين كل كتلة 
 msgid "Outgoing"
 msgstr "الصادرة"
 
-#: src/components/plotNFT/PlotNFTCard.tsx:373
+#: src/components/plotNFT/PlotNFTCard.tsx:361
 msgid "Payout Address"
 msgstr ""
 
@@ -1503,18 +1519,18 @@ msgstr "التآمر مع تمكين حقل البت لديه حوالي 30٪ أ
 #~ msgid "Plotting with bitfield enabled has about 30% less overall writes and is now almost always faster. You may see reduced memory requirements with bitfield plotting disabled. If your CPU design is from before 2010 you may have to disbale bitfield plotting."
 #~ msgstr ""
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:176
-#: src/components/plotNFT/PlotNFTCard.tsx:228
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:174
+#: src/components/plotNFT/PlotNFTCard.tsx:216
 msgid "Points Found Since Start"
 msgstr ""
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:187
-#: src/components/plotNFT/PlotNFTCard.tsx:239
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:185
+#: src/components/plotNFT/PlotNFTCard.tsx:227
 msgid "Points Found in Last 24 Hours"
 msgstr ""
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:196
-#: src/components/plotNFT/PlotNFTCard.tsx:248
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:194
+#: src/components/plotNFT/PlotNFTCard.tsx:236
 msgid "Points Successful in Last 24 Hours"
 msgstr ""
 
@@ -1535,8 +1551,7 @@ msgstr "مفتاح التجميع"
 msgid "Pool Login Link"
 msgstr ""
 
-#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:63
-#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:75
+#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:87
 msgid "Pool Payout Instructions"
 msgstr ""
 
@@ -1581,8 +1596,8 @@ msgstr ""
 msgid "Pool public key:"
 msgstr ""
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:274
-#: src/components/plotNFT/PlotNFTCard.tsx:339
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:272
+#: src/components/plotNFT/PlotNFTCard.tsx:327
 #: src/components/plotNFT/PlotNFTUnconfirmedCard.tsx:57
 msgid "Pool:"
 msgstr ""
@@ -1595,7 +1610,7 @@ msgstr ""
 #: src/components/farm/FarmFullNodeConnections.tsx:42
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:42
 #: src/components/fullNode/FullNodeAddConnection.tsx:80
-#: src/components/fullNode/FullNodeConnections.tsx:46
+#: src/components/fullNode/FullNodeConnections.tsx:51
 msgid "Port"
 msgstr "منفذ"
 
@@ -1624,7 +1639,7 @@ msgstr "تجزئة العنوان السابق"
 #~ msgid "Previous Sub Block Hash"
 #~ msgstr "Previous Sub Block Hash"
 
-#: src/components/selectKey/SelectKey.tsx:165
+#: src/components/selectKey/SelectKey.tsx:164
 msgid "Private key with public fingerprint {fingerprint}"
 msgstr "مفتاح خاص ببصمة إصبع عامة {fingerprint}"
 
@@ -1753,6 +1768,7 @@ msgid "Safe To Skip"
 msgstr "التخطي الآمن"
 
 #: src/components/farm/FarmManageFarmingRewards.tsx:199
+#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:126
 #: src/components/trading/CreateOffer.jsx:142
 msgid "Save"
 msgstr "حفظ"
@@ -1769,7 +1785,7 @@ msgstr "البحث عن كتلة حسب تجزئة الترويسة"
 msgid "Second temporary folder location"
 msgstr "موقع المجلد المؤقت الثاني"
 
-#: src/components/selectKey/SelectKey.tsx:174
+#: src/components/selectKey/SelectKey.tsx:173
 msgid "See private key"
 msgstr "عرض المفتاح الخاص"
 
@@ -1932,8 +1948,8 @@ msgstr "الحالة"
 #: src/components/fullNode/card/FullNodeCardStatus.tsx:59
 #: src/components/fullNode/card/FullNodeCardStatus.tsx:67
 #: src/components/plot/overview/PlotOverviewPlots.tsx:110
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:115
-#: src/components/plotNFT/PlotNFTCard.tsx:157
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:113
+#: src/components/plotNFT/PlotNFTCard.tsx:145
 #: src/components/pool/PoolOverview.tsx:44
 #: src/components/trading/TradingOverview.jsx:128
 #: src/components/wallet/WalletHistory.tsx:55
@@ -1977,6 +1993,10 @@ msgstr "الحالة:"
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:347
 msgid "Submit"
 msgstr "إرسال"
+
+#: src/components/fullNode/FullNodeConnections.tsx:135
+#~ msgid "Sync official peers"
+#~ msgstr ""
 
 #: src/components/fullNode/card/FullNodeCardStatus.tsx:43
 #: src/components/wallet/WalletStatus.tsx:33
@@ -2092,7 +2112,11 @@ msgid "The total transactions fees in this block. Rewarded to the farmer."
 msgstr "مجموع رسوم المعاملات في هذه الكتلة. مكافأة للمزارع."
 
 #: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:87
-msgid "These are the instructions for how the farmer wants to get paid. By default this will be an APPLE address, but it can be set to any string with a size of less than 1024 characters, so it can represent another blockchain or payment system identifier."
+#~ msgid "These are the instructions for how the farmer wants to get paid. By default this will be an APPLE address, but it can be set to any string with a size of less than 1024 characters, so it can represent another blockchain or payment system identifier."
+#~ msgstr ""
+
+#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:102
+msgid "These are the instructions for how the farmer wants to get paid. By default this will be an XCH address, but it can be set to any string with a size of less than 1024 characters, so it can represent another blockchain or payment system identifier."
 msgstr ""
 
 #: src/components/plot/PlotsFailed.tsx:40
@@ -2103,8 +2127,8 @@ msgstr "هذه القطعة غير صالحة، قد ترغب في حذفها."
 msgid "This allows you to add a directory that has plots in it. If you have not created any plots, go to the plotting screen."
 msgstr "هذا يسمح لك بإضافة دليل يحتوي على مخططات داخلية. إذا لم تقم بإنشاء أي مخططات، انتقل إلى شاشة الرسم."
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:132
-#: src/components/plotNFT/PlotNFTCard.tsx:184
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:130
+#: src/components/plotNFT/PlotNFTCard.tsx:172
 msgid "This difficulty is an artifically lower difficulty than on the real network, and is used when farming, in order to find more proofs and send them to the pool. The more plots you have, the higher difficulty you will have. However, the difficulty does not affect rewards."
 msgstr ""
 
@@ -2142,13 +2166,13 @@ msgstr "هذا هو إجمالي كمية الشيا في سلسلة الكتل 
 msgid "This is the total balance + pending balance: it is what your balance will be after all pending transactions are confirmed."
 msgstr "هذا هو الرصيد الإجمالي + الرصيد المعلق: هذا هو ما سيكون عليه رصيدك بعد تأكيد جميع المعاملات المعلقة."
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:151
-#: src/components/plotNFT/PlotNFTCard.tsx:203
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:149
+#: src/components/plotNFT/PlotNFTCard.tsx:191
 msgid "This is the total number of points this plotNFT has with this pool, since the last payout. The pool will reset the points after making a payout."
 msgstr ""
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:168
-#: src/components/plotNFT/PlotNFTCard.tsx:220
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:166
+#: src/components/plotNFT/PlotNFTCard.tsx:208
 msgid "This is the total number of points your farmer has found for this plot NFT. Each k32 plot will get around 10 points per day, so if you have 10TiB, should should expect around 1000 points per day, or 41 points per hour."
 msgstr ""
 
@@ -2156,7 +2180,7 @@ msgstr ""
 msgid "This node is fully caught up and validating the network"
 msgstr "هذه العقدة ملتقطة بالكامل و التحقق من صحة الشبكة"
 
-#: src/components/plotNFT/PlotExternalNFTCard.tsx:310
+#: src/components/plotNFT/PlotExternalNFTCard.tsx:308
 msgid "This plot NFT is assigned to a different key. You can still create plots for this plot NFT, but you can not make changes."
 msgstr ""
 
@@ -2278,7 +2302,7 @@ msgstr "النّوع"
 msgid "Unable to create plot NFT"
 msgstr ""
 
-#: src/components/plotNFT/PlotNFTCard.tsx:162
+#: src/components/plotNFT/PlotNFTCard.tsx:150
 #: src/components/pool/PoolOverview.tsx:66
 msgid "Unclaimed Rewards"
 msgstr ""
@@ -2338,7 +2362,7 @@ msgstr "عرض إقتراح"
 #~ msgid "View Payout Instructions"
 #~ msgstr "View Payout Instructions"
 
-#: src/components/plotNFT/PlotNFTCard.tsx:298
+#: src/components/plotNFT/PlotNFTCard.tsx:286
 msgid "View Pool Login Link"
 msgstr ""
 
@@ -2478,7 +2502,7 @@ msgstr ""
 msgid "You are not self pooling"
 msgstr ""
 
-#: src/components/plotNFT/PlotNFTCard.tsx:436
+#: src/components/plotNFT/PlotNFTCard.tsx:424
 msgid "You can still create plots for this plot NFT, but you can not make changes until sync is complete."
 msgstr ""
 

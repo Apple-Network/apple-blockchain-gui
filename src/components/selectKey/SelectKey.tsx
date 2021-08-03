@@ -139,8 +139,7 @@ export default function SelectKey() {
               </Typography>
               <Typography variant="subtitle1">
                 <Trans>
-                  Welcome to Apple. Please log in with an existing key, or create
-                  a new key.
+                  Welcome to Apple. Please log in with an existing key, or create a new key.
                 </Trans>
               </Typography>
             </>

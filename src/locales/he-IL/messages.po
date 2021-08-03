@@ -23,8 +23,8 @@ msgid "(Optional)"
 msgstr ""
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:64
-msgid "*Want to explore Apple’s blocks further? Check out <0>Apple Explorer</0> built by an open source developer."
-msgstr "* רוצה לחקור את הבלוקים של צ'יה עוד? בדוק את </0>Apple Explorer<0> שנבנה על ידי מפתח קוד פתוח."
+msgid "*Want to explore Apple’s blocks further? Check out <0>Apple Explorer</0>."
+msgstr "* רוצה לחקור את הבלוקים של צ'יה עוד? בדוק את </0>Apple Explorer<0>."
 
 #: src/components/plot/add/PlotAddNFT.tsx:123
 msgid "+ Add New Plot NFT"

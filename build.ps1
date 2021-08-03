@@ -6,21 +6,22 @@ If ($LastExitCode -gt 0){
     Throw "npm run build failed!"
 }
 
-Write-Output "   ---"
-Write-Output "Increase the stack for apple command for (apple plots create) chiapos limitations"
-# editbin.exe needs to be in the path
-editbin.exe /STACK:8000000 daemon\apple.exe
-Write-Output "   ---"
-
-Write-Output "   ---"
-Write-Output "Get APPLE_INSTALLER_VERSION"
-# The environment variable APPLE_INSTALLER_VERSION needs to be defined
-$env:APPLE_INSTALLER_VERSION = python ..\build_scripts\installer-version.py -win
+$env:APPLE_INSTALLER_VERSION = '1.2.33' # python ..\build_scripts\installer-version.py -win
 
 if (-not (Test-Path env:APPLE_INSTALLER_VERSION)) {
   $env:APPLE_INSTALLER_VERSION = '0.0.0'
   Write-Output "WARNING: No environment variable APPLE_INSTALLER_VERSION set. Using 0.0.0"
 }
+
+Write-Output "   ---"
+Write-Output "Increase the stack for apple command for (apple plots create) apple limitations"
+# editbin.exe needs to be in the path
+editbin.exe /STACK:8000000 daemon\apple.exe
+Write-Output "   ---"
+
+$packageVersion = "$env:APPLE_INSTALLER_VERSION"
+$packageName = "Apple-$packageVersion"
+
 Write-Output "Apple Version is: $env:APPLE_INSTALLER_VERSION"
 Write-Output "   ---"
 

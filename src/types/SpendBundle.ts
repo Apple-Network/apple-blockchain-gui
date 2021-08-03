@@ -1,8 +1,8 @@
-import type CoinSolution from './CoinSolution';
+import type CoinSpend from './CoinSpend';
 import type G2Element from './G2Element';
 
 type SpendBundle = {
-  coin_solutions: CoinSolution[];
+  coin_spends: CoinSpend[];
   aggregated_signature: G2Element;
 };
 

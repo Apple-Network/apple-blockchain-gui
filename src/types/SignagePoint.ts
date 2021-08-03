@@ -5,6 +5,7 @@ type SignagePoint = {
   difficulty: number;
   sub_slot_iters: number;
   signage_point_index: number;
+  add_time: number;
 };
 
 export default SignagePoint;
