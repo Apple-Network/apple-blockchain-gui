@@ -11,18 +11,17 @@ import {
   Table,
   IconButton,
 } from '@apple/core';
-import {Box, Button, Tooltip} from '@material-ui/core';
+import { Button, Tooltip } from '@material-ui/core';
 import { service_connection_types } from '../../util/service_names';
 import Connection from '../../types/Connection';
 import FullNodeCloseConnection from './FullNodeCloseConnection';
 import type { RootState } from '../../modules/rootReducer';
 import useOpenDialog from '../../hooks/useOpenDialog';
 import FullNodeAddConnection from './FullNodeAddConnection';
-import Flex from "../core/components/Flex";
-import TooltipIcon from "../core/components/TooltipIcon";
+import Flex from '../core/components/Flex';
 import {
   openOfficialConnection
-} from "../../modules/fullnodeMessages";
+} from '../../modules/fullnodeMessages';
 
 const StyledIconButton = styled(IconButton)`
   padding: 0.2rem;
@@ -105,7 +104,6 @@ export default function Connections() {
   const connections = useSelector(
     (state: RootState) => state.full_node_state.connections,
   );
-
   const [error, setError] = useState<Error | null>(null);
 
   function handleAddPeer() {
@@ -133,9 +131,9 @@ export default function Connections() {
           >
             <Trans>Connect to Full Node list</Trans>
           </Button>
-          <Button onClick={handleAddPeer} variant="outlined">
-            <Trans>Connect to other peers</Trans>
-          </Button>
+        <Button onClick={handleAddPeer} variant="outlined">
+          <Trans>Connect to other peers</Trans>
+        </Button>
         </Flex>
       }
     >

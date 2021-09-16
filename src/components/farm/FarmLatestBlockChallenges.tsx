@@ -3,9 +3,9 @@ import { Trans } from '@lingui/macro';
 import { useSelector } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import { Link, Table, Card } from '@apple/core';
+import moment from 'moment';
 import type { RootState } from '../../modules/rootReducer';
 import type { Row } from '../core/components/Table/Table';
-import {unix_to_short_date} from "../../util/utils";
 
 const cols = [
   {
@@ -15,12 +15,12 @@ const cols = [
     title: <Trans>Challenge Hash</Trans>,
   },
   {
-    field: 'signage_point.signage_point_index',
+    field: (row: Row) => row.signage_point.signage_point_index,
     title: <Trans>Index</Trans>,
   },
   {
     minWidth: '75px',
-    field: (row: Row) => unix_to_short_date(row.signage_point.add_time),
+    field: (row: Row) => moment(row.signage_point.add_time * 1000).format('MMM D, h:mm:ss A'),
     title: <Trans>Date</Trans>,
   },
 ];

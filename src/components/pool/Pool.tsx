@@ -5,6 +5,7 @@ import { Flex, Link } from '@apple/core';
 import LayoutMain from '../layout/LayoutMain';
 import PoolOverview from './PoolOverview';
 import PlotNFTAdd from '../plotNFT/PlotNFTAdd';
+import PlotNFTRecovery from '../plotNFT/PlotNFTRecovery';
 import PlotNFTChangePool from '../plotNFT/PlotNFTChangePool';
 import PlotNFTAbsorbRewards from '../plotNFT/PlotNFTAbsorbRewards';
 import { PoolHeaderTarget } from './PoolHeader';
@@ -28,6 +29,7 @@ export default function Pool() {
         </>
       }
     >
+      <PlotNFTRecovery />
       <Flex flexDirection="column" gap={3}>
         <Switch>
           <Route path={path} exact>

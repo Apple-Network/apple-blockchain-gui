@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv_SE\n"
 "Project-Id-Version: apple-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-07-14 21:30\n"
+"PO-Revision-Date: 2021-07-29 09:05\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -24,15 +24,15 @@ msgstr "(Valfritt)"
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:70
 msgid "*Want to explore Apple’s blocks further? Check out <0>Apple Explorer</0> built by an open source developer."
-msgstr ""
-
-#: src/components/farm/FarmLatestBlockChallenges.tsx:70
-#~ msgid "*Want to explore Apple’s blocks further? Check out <0>Apple Explorer</0>."
-#~ msgstr "*Vill du utforska Apples block lite mer? Ta en titt på <0>Apple Explorer</0>."
+msgstr "*Vill du utforska Apples block lite mer? Ta en titt på <0>Apple Explorer</0> som har skapats som öppen källkod av en utvecklare."
 
 #: src/components/plot/add/PlotAddNFT.tsx:123
 msgid "+ Add New Plot NFT"
 msgstr "+ Lägg till ny plott-NFT"
+
+#: src/components/wallet/Wallets.tsx:132
+msgid "+ Add Wallet"
+msgstr ""
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:94
 #~ msgid "0 automatically chooses bucket count"
@@ -67,7 +67,7 @@ msgstr "Åtgärd"
 
 #: src/components/farm/FarmFullNodeConnections.tsx:67
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:67
-#: src/components/fullNode/FullNodeConnections.tsx:87
+#: src/components/fullNode/FullNodeConnections.tsx:86
 #: src/components/pool/PoolOverview.tsx:69
 msgid "Actions"
 msgstr "Åtgärder"
@@ -75,6 +75,11 @@ msgstr "Åtgärder"
 #: src/components/trading/CreateOffer.jsx:201
 msgid "Add"
 msgstr "Lägg till"
+
+#: src/components/wallet/did/WalletDID.tsx:874
+#: src/components/wallet/did/WalletDIDCreate.tsx:205
+msgid "Add Backup ID"
+msgstr ""
 
 #: src/components/plot/PlotHeader.tsx:91
 msgid "Add Plot Directory"
@@ -124,7 +129,7 @@ msgstr "Adress"
 msgid "Address / Puzzle hash"
 msgstr "Adress/pusselhash"
 
-#: src/components/core/components/Amount/Amount.tsx:96
+#: src/components/core/components/Amount/Amount.tsx:99
 #: src/components/trading/CreateOffer.jsx:196
 #: src/components/trading/TradesTable.tsx:20
 #: src/components/wallet/create/createNewColouredCoin.jsx:119
@@ -142,6 +147,10 @@ msgstr "Belopp ({cc_unit})"
 msgid "Amount For Initial Coin"
 msgstr "Belopp för ursprungligt mynt"
 
+#: src/components/wallet/did/WalletDIDCreate.tsx:62
+msgid "Amount must be an even amount."
+msgstr ""
+
 #: src/electron/main.tsx:419
 msgid "Apple"
 msgstr "Apple"
@@ -150,7 +159,7 @@ msgstr "Apple"
 msgid "Apple Blockchain Wiki"
 msgstr "Apple Blockchains wiki"
 
-#: src/components/wallet/standard/WalletStandard.tsx:647
+#: src/components/wallet/standard/WalletStandard.tsx:649
 msgid "Apple Wallet"
 msgstr "Apple-plånbok"
 
@@ -160,7 +169,7 @@ msgid "Are you sure you want to delete the plot? The plot cannot be recovered."
 msgstr "Är det säkert att du vill ta bort plotten? Den kan inte återställas."
 
 #: src/components/plotNFT/PlotNFTCard.tsx:125
-#: src/components/wallet/standard/WalletStandard.tsx:632
+#: src/components/wallet/standard/WalletStandard.tsx:633
 msgid "Are you sure you want to delete unconfirmed transactions?"
 msgstr "Är du säker på att du vill radera obekräftade transaktioner?"
 
@@ -190,16 +199,17 @@ msgstr "Autogenererat namn från poolkontraktsadress"
 msgid "Back"
 msgstr "Tillbaka"
 
-#: src/components/backup/BackupCreate.tsx:66
+#: src/components/backup/BackupCreate.tsx:45
 msgid "Backup file is used to restore smart wallets."
 msgstr "Säkerhetskopierad fil används för att återställa smarta plånböcker."
 
 #: src/components/wallet/coloured/WalletColoured.tsx:377
+#: src/components/wallet/did/WalletDID.tsx:647
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:541
 msgid "Balance"
 msgstr "Saldo"
 
-#: src/components/block/Block.jsx:317
+#: src/components/block/Block.jsx:318
 msgid "Base Farmer Reward Amount"
 msgstr "Grundbelopp för odlarbelöning"
 
@@ -216,22 +226,22 @@ msgstr "Bästa uppskattning under de senaste 24 timmarna"
 #~ msgid "Best estimate over last 5 hours"
 #~ msgstr ""
 
-#: src/components/block/Block.jsx:129
-#: src/components/block/Block.jsx:153
-#: src/components/block/Block.jsx:157
-#: src/components/block/Block.jsx:332
+#: src/components/block/Block.jsx:130
+#: src/components/block/Block.jsx:154
+#: src/components/block/Block.jsx:158
+#: src/components/block/Block.jsx:333
 msgid "Block"
 msgstr "Block"
 
-#: src/components/block/Block.jsx:137
+#: src/components/block/Block.jsx:138
 msgid "Block Test"
 msgstr "Blocktest"
 
-#: src/components/block/Block.jsx:235
+#: src/components/block/Block.jsx:236
 msgid "Block VDF Iterations"
 msgstr "VDF-iterationer för block"
 
-#: src/components/block/Block.jsx:336
+#: src/components/block/Block.jsx:337
 msgid "Block at height {0} in the Apple blockchain"
 msgstr "Block vid höjd {0} i Apple-blockkedjan"
 
@@ -239,11 +249,11 @@ msgstr "Block vid höjd {0} i Apple-blockkedjan"
 #~ msgid "Block hash"
 #~ msgstr ""
 
-#: src/components/block/Block.jsx:141
+#: src/components/block/Block.jsx:142
 msgid "Block with hash {headerHash}"
 msgstr "Block med hash {headerHash}"
 
-#: src/components/block/Block.jsx:162
+#: src/components/block/Block.jsx:163
 msgid "Block with hash {headerHash} does not exist."
 msgstr "Block med hash {headerHash} existerar inte."
 
@@ -279,10 +289,11 @@ msgstr "Köp"
 #~ msgid "CCListItems.title"
 #~ msgstr ""
 
-#: src/components/selectKey/SelectKey.tsx:169
+#: src/components/selectKey/SelectKey.tsx:170
 msgid "Can be backed up to mnemonic seed"
 msgstr "Kan säkerhetskopieras till minnesfras"
 
+#: src/components/backup/BackupCreate.tsx:50
 #: src/components/core/components/ConfirmDialog/ConfirmDialog.tsx:86
 #: src/components/farm/FarmManageFarmingRewards.tsx:196
 #: src/components/fullNode/FullNodeAddConnection.tsx:89
@@ -347,6 +358,10 @@ msgstr "Stäng"
 msgid "Closing down node and server"
 msgstr "Stänger ner nod och server"
 
+#: src/components/wallet/did/WalletDID.tsx:984
+msgid "Coin Name"
+msgstr ""
+
 #: src/components/trading/TradingOverview.jsx:366
 msgid "Coins:"
 msgstr "Mynt:"
@@ -368,11 +383,11 @@ msgstr "Färgsträng"
 msgid "Colour:"
 msgstr "Färg:"
 
-#: src/components/wallet/create/WalletCreate.jsx:118
+#: src/components/wallet/create/WalletCreateList.tsx:34
 msgid "Coloured Coin"
 msgstr "Färgat mynt"
 
-#: src/components/wallet/create/WalletCreate.jsx:160
+#: src/components/wallet/create/WalletCreate.jsx:122
 msgid "Coloured Coin Options"
 msgstr "Alternativ för färgade mynt"
 
@@ -387,7 +402,7 @@ msgid "Confirm Disconnect"
 msgstr "Bekräfta frånkoppling"
 
 #: src/components/plotNFT/PlotNFTCard.tsx:121
-#: src/components/wallet/standard/WalletStandard.tsx:628
+#: src/components/wallet/standard/WalletStandard.tsx:629
 msgid "Confirmation"
 msgstr "Bekräfta"
 
@@ -403,12 +418,12 @@ msgstr "Bekräftad vid höjd {0}"
 msgid "Connect"
 msgstr "Anslut"
 
-#: src/components/fullNode/FullNodeConnections.tsx:134
+#: src/components/fullNode/FullNodeConnections.tsx:132
 msgid "Connect to Full Node list"
 msgstr ""
 
 #: src/components/fullNode/FullNodeAddConnection.tsx:68
-#: src/components/fullNode/FullNodeConnections.tsx:137
+#: src/components/fullNode/FullNodeConnections.tsx:135
 msgid "Connect to other peers"
 msgstr "Anslut till andra peer-datorer"
 
@@ -434,11 +449,11 @@ msgstr "Anslutningsstatus"
 msgid "Connection Status:"
 msgstr "Anslutningsstatus:"
 
-#: src/components/fullNode/FullNodeConnections.tsx:80
+#: src/components/fullNode/FullNodeConnections.tsx:79
 msgid "Connection type"
 msgstr "Anslutningstyp"
 
-#: src/components/fullNode/FullNodeConnections.tsx:127
+#: src/components/fullNode/FullNodeConnections.tsx:125
 msgid "Connections"
 msgstr "Anslutningar"
 
@@ -461,19 +476,32 @@ msgstr "Kopiera"
 msgid "Copy to Clipboard"
 msgstr "Kopiera till Urklipp"
 
-#: src/components/backup/BackupCreate.tsx:78
+#: src/components/backup/BackupCreate.tsx:58
 #: src/components/plot/add/PlotAdd.tsx:177
 #: src/components/plotNFT/select/PlotNFTSelectPool.tsx:175
 #: src/components/wallet/create/createExistingColouredCoin.jsx:133
 #: src/components/wallet/create/createNewColouredCoin.jsx:142
 #: src/components/wallet/create/createRLAdmin.jsx:307
 #: src/components/wallet/create/createRLUser.jsx:99
+#: src/components/wallet/did/WalletDIDCreate.tsx:218
 msgid "Create"
 msgstr "Skapa"
 
-#: src/components/wallet/create/WalletCreate.jsx:276
-msgid "Create DID wallet"
-msgstr "Skapa DID-plånbok"
+#: src/components/wallet/did/WalletDID.tsx:967
+msgid "Create An Attestation Packet"
+msgstr ""
+
+#: src/components/wallet/create/WalletCreate.jsx:290
+#~ msgid "Create DID wallet"
+#~ msgstr "Skapa DID-plånbok"
+
+#: src/components/wallet/did/WalletDIDCreate.tsx:110
+msgid "Create Distributed Identity Wallet"
+msgstr ""
+
+#: src/components/wallet/did/WalletDIDSelect.tsx:32
+msgid "Create New Wallet"
+msgstr ""
 
 #: src/components/trading/TradeManager.tsx:45
 msgid "Create Offer"
@@ -505,7 +533,7 @@ msgstr "Skapa handelserbjudande"
 msgid "Create Transaction"
 msgstr "Skapa transaktion"
 
-#: src/components/backup/BackupCreate.tsx:63
+#: src/components/backup/BackupCreate.tsx:41
 msgid "Create a Backup"
 msgstr "Skapa en säkerhetskopia"
 
@@ -513,19 +541,19 @@ msgstr "Skapa en säkerhetskopia"
 msgid "Create a Plot NFT"
 msgstr "Skapa en plott-NFT"
 
-#: src/components/selectKey/SelectKey.tsx:210
+#: src/components/selectKey/SelectKey.tsx:211
 msgid "Create a new private key"
 msgstr "Skapa ny privat nyckel"
 
-#: src/components/wallet/create/WalletCreate.jsx:224
+#: src/components/wallet/create/WalletCreate.jsx:186
 msgid "Create admin wallet"
 msgstr "Skapa adminplånbok"
 
-#: src/components/wallet/create/WalletCreate.jsx:170
+#: src/components/wallet/create/WalletCreate.jsx:132
 msgid "Create new coloured coin"
 msgstr "Skapa nytt färgat mynt"
 
-#: src/components/wallet/create/WalletCreate.jsx:230
+#: src/components/wallet/create/WalletCreate.jsx:192
 msgid "Create user wallet"
 msgstr "Skapa användarplånbok"
 
@@ -533,7 +561,7 @@ msgstr "Skapa användarplånbok"
 msgid "Create wallet for colour"
 msgstr "Skapa plånbok för färg"
 
-#: src/components/wallet/create/WalletCreate.jsx:177
+#: src/components/wallet/create/WalletCreate.jsx:139
 msgid "Create wallet for existing colour"
 msgstr "Skapa plånbok för existerande färg"
 
@@ -575,7 +603,7 @@ msgstr "Aktuellt poängsaldo"
 msgid "Current trade status"
 msgstr "Aktuell handelsstatus"
 
-#: src/components/selectKey/SelectKey.tsx:184
+#: src/components/selectKey/SelectKey.tsx:185
 msgid "DANGER: permanently delete private key"
 msgstr "VARNING: permanent ta bort privat nyckel"
 
@@ -605,7 +633,11 @@ msgstr "Fördröjning"
 #: src/components/plotNFT/PlotNFTCard.tsx:122
 #: src/components/selectKey/SelectKey.tsx:67
 #: src/components/selectKey/SelectKey.tsx:109
-#: src/components/wallet/standard/WalletStandard.tsx:629
+#: src/components/wallet/did/WalletDID.tsx:449
+#: src/components/wallet/did/WalletDID.tsx:862
+#: src/components/wallet/did/WalletDIDCreate.tsx:194
+#: src/components/wallet/did/WalletDIDRecovery.tsx:101
+#: src/components/wallet/standard/WalletStandard.tsx:630
 msgid "Delete"
 msgstr "Ta bort"
 
@@ -615,12 +647,12 @@ msgid "Delete Plot"
 msgstr "Ta bort plott"
 
 #: src/components/plotNFT/PlotNFTCard.tsx:315
-#: src/components/wallet/standard/WalletStandard.tsx:663
+#: src/components/wallet/standard/WalletStandard.tsx:674
 msgid "Delete Unconfirmed Transactions"
 msgstr "Ta bort obekräftade transaktioner"
 
 #: src/components/selectKey/SelectKey.tsx:108
-#: src/components/selectKey/SelectKey.tsx:228
+#: src/components/selectKey/SelectKey.tsx:229
 msgid "Delete all keys"
 msgstr "Ta bort alla nycklar"
 
@@ -648,7 +680,7 @@ msgstr "Utvecklare"
 msgid "Developer Tools"
 msgstr "Utvecklarverktyg"
 
-#: src/components/block/Block.jsx:221
+#: src/components/block/Block.jsx:222
 #: src/components/fullNode/card/FullNodeCardDifficulty.tsx:20
 msgid "Difficulty"
 msgstr "Svårighetsgrad"
@@ -669,13 +701,14 @@ msgstr "Spara inte"
 msgid "Disconnect"
 msgstr "Koppla ifrån"
 
-#: src/components/wallet/create/WalletCreate.jsx:144
-#~ msgid "Distributed Identity"
-#~ msgstr ""
+#: src/components/wallet/create/WalletCreateList.tsx:28
+#: src/components/wallet/did/WalletDIDSelect.tsx:25
+msgid "Distributed Identity"
+msgstr ""
 
-#: src/components/wallet/create/WalletCreate.jsx:266
-msgid "Distributed Identity Options"
-msgstr "Alternativ för distribuerad identitet"
+#: src/components/wallet/create/WalletCreate.jsx:280
+#~ msgid "Distributed Identity Options"
+#~ msgstr "Alternativ för distribuerad identitet"
 
 #: src/components/farm/overview/FarmOverviewHero.tsx:52
 #: src/components/plot/overview/PlotOverviewHero.tsx:69
@@ -686,14 +719,21 @@ msgstr "Har du redan några plottar på denna maskin? <0>Lägg till plottmapp</0
 msgid "Does your machine support parallel plotting?"
 msgstr "Stöder din maskin parallell plottning?"
 
+#: src/components/wallet/did/WalletDID.tsx:428
+msgid "Drag and drop attestation packet(s)"
+msgstr ""
+
 #: src/components/trading/ViewOffer.jsx:39
-#: src/components/wallet/create/recoverDIDWallet.js:294
 msgid "Drag and drop offer file"
 msgstr "Dra och släpp erbjudandefil"
 
 #: src/components/backup/BackupRestore.tsx:173
 msgid "Drag and drop your backup file"
 msgstr "Drag och släpp din säkerhetskopierade fil"
+
+#: src/components/wallet/did/WalletDIDRecovery.tsx:109
+msgid "Drag and drop your recovery backup file"
+msgstr ""
 
 #: src/electron/main.tsx:263
 msgid "Edit"
@@ -703,7 +743,7 @@ msgstr "Redigera"
 #: src/components/plotNFT/PlotNFTCard.tsx:301
 #: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:76
 msgid "Edit Payout Instructions"
-msgstr ""
+msgstr "Redigera utbetalningsinstruktioner"
 
 #: src/components/wallet/WalletImport.tsx:147
 msgid "Enter the 24 word mnemonic that you have saved in order to restore your Apple wallet."
@@ -763,7 +803,7 @@ msgstr "Odling"
 msgid "Farmer Public Key"
 msgstr "Publik nyckel för odlare"
 
-#: src/components/block/Block.jsx:267
+#: src/components/block/Block.jsx:268
 msgid "Farmer Puzzle Hash"
 msgstr "Odlare-pusselhash"
 
@@ -793,7 +833,7 @@ msgstr "Odlaren är inte ansluten"
 msgid "Farmer is not running"
 msgstr "Odlaren körs inte"
 
-#: src/middleware/middleware_api.jsx:275
+#: src/middleware/middleware_api.jsx:238
 msgid "Farmer public key:"
 msgstr "Publik nyckel för odlare:"
 
@@ -842,7 +882,7 @@ msgstr "Avgift"
 msgid "Fee ({currencyCode})"
 msgstr "Avgift ({currencyCode})"
 
-#: src/components/block/Block.jsx:321
+#: src/components/block/Block.jsx:322
 msgid "Fees Amount"
 msgstr "Avgiftsbelopp"
 
@@ -858,6 +898,7 @@ msgstr "Fil"
 #: src/components/plot/overview/PlotOverviewPlots.tsx:106
 #: src/components/plot/PlotsFailed.tsx:14
 #: src/components/plot/PlotsNotFound.tsx:14
+#: src/components/wallet/did/WalletDID.tsx:975
 msgid "Filename"
 msgstr "Filnamn"
 
@@ -923,13 +964,13 @@ msgstr "Lokala plottar"
 msgid "Header Hash"
 msgstr "Huvudhash"
 
-#: src/components/block/Block.jsx:185
+#: src/components/block/Block.jsx:186
 msgid "Header hash"
 msgstr "Huvudhash"
 
-#: src/components/block/Block.jsx:201
+#: src/components/block/Block.jsx:202
 #: src/components/fullNode/FullNode.jsx:81
-#: src/components/fullNode/FullNodeConnections.tsx:84
+#: src/components/fullNode/FullNodeConnections.tsx:83
 msgid "Height"
 msgstr "Höjd"
 
@@ -954,7 +995,7 @@ msgstr "Historik"
 msgid "Host Name"
 msgstr "Värdnamn"
 
-#: src/components/fullNode/FullNodeConnections.tsx:45
+#: src/components/fullNode/FullNodeConnections.tsx:44
 msgid "IP address"
 msgstr "IP-adress"
 
@@ -970,7 +1011,7 @@ msgstr "Om ingen anges kommer den tillfälliga mappen att användas."
 msgid "Import Wallet from Mnemonics"
 msgstr "Importera plånbok från minnesfras"
 
-#: src/components/selectKey/SelectKey.tsx:219
+#: src/components/selectKey/SelectKey.tsx:220
 msgid "Import from Mnemonics (24 words)"
 msgstr "Importera från minnesfras (24 ord)"
 
@@ -1074,7 +1115,7 @@ msgstr "Senaste blockverifieringar"
 #: src/components/plotNFT/PlotExternalNFTCard.tsx:295
 #: src/components/plotNFT/PlotNFTCard.tsx:350
 msgid "Launcher Id"
-msgstr ""
+msgstr "Launcher-ID"
 
 #: src/components/plotNFT/PlotNFTGetPoolLoginLinkDialog.tsx:100
 #: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:114
@@ -1089,11 +1130,11 @@ msgstr "Lämnar poolen"
 msgid "List view"
 msgstr "Listvy"
 
-#: src/components/pool/Pool.tsx:21
+#: src/components/pool/Pool.tsx:22
 msgid "Loading Plot NFTs"
 msgstr "Läser in plott-NFT:er"
 
-#: src/components/wallet/Wallets.tsx:172
+#: src/components/wallet/Wallets.tsx:117
 msgid "Loading list of wallets"
 msgstr "Läser in en lista över plånböcker"
 
@@ -1153,11 +1194,15 @@ msgstr "Loggar in"
 msgid "Manage Farming Rewards"
 msgstr "Hantera odlingsbelöningar"
 
+#: src/components/wallet/did/WalletDID.tsx:806
+msgid "Manage Recovery DIDs"
+msgstr ""
+
 #: src/components/farm/FarmManageFarmingRewards.tsx:119
 msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "Hantera dina måladresser för odlarbelöningar"
 
-#: src/components/fullNode/FullNodeConnections.tsx:73
+#: src/components/fullNode/FullNodeConnections.tsx:72
 msgid "MiB Up/Down"
 msgstr "MiB upp/ner"
 
@@ -1173,9 +1218,21 @@ msgstr "Minuter"
 msgid "More memory slightly increases speed"
 msgstr "Mer minne ökar hastigheten något"
 
+#: src/components/wallet/did/WalletDID.tsx:537
+msgid "My DID Wallet"
+msgstr ""
+
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:415
 msgid "My Pubkey"
 msgstr "Min publika nyckel"
+
+#: src/components/plotNFT/PlotNFTRecovery.tsx:117
+msgid "NFT Recovery"
+msgstr ""
+
+#: src/components/plotNFT/PlotNFTRecovery.tsx:77
+#~ msgid "NTF Recovery"
+#~ msgstr ""
 
 #: src/components/fullNode/card/FullNodeCardNetworkName.tsx:19
 msgid "Network Name"
@@ -1198,7 +1255,7 @@ msgstr "Ny adress"
 msgid "New Wallet"
 msgstr "Ny plånbok"
 
-#: src/components/block/Block.jsx:350
+#: src/components/block/Block.jsx:351
 #: src/components/wallet/WalletAdd.tsx:95
 #: src/components/wallet/WalletImport.tsx:163
 msgid "Next"
@@ -1213,7 +1270,7 @@ msgstr "Smeknamn"
 msgid "No"
 msgstr "Nej"
 
-#: src/middleware/middleware_api.jsx:301
+#: src/middleware/middleware_api.jsx:264
 msgid "No 24 word seed, since this key is imported."
 msgstr "Ingen 24 ords minnesfras eftersom denna nyckel har importerats."
 
@@ -1231,7 +1288,7 @@ msgstr "Inga privata nycklar för en eller båda adresser. Endast säkert om du 
 
 #: src/components/farm/FarmFullNodeConnections.tsx:32
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:32
-#: src/components/fullNode/FullNodeConnections.tsx:41
+#: src/components/fullNode/FullNodeConnections.tsx:40
 msgid "Node ID"
 msgstr "Node-ID"
 
@@ -1311,13 +1368,21 @@ msgstr "Skapade erbjudanden"
 msgid "On average there is one minute between each transaction block. Unless there is congestion you can expect your transaction to be included in less than a minute."
 msgstr "Vanligtvis är det en minut mellan varje transaktionsblock. Om det inte är någon form av köbildning kan du räkna med att en transaktion inkluderas i blockkedjan på under en minut."
 
+#: src/components/wallet/did/WalletDIDRecovery.tsx:34
+msgid "Only one backup file is allowed."
+msgstr ""
+
+#: src/components/wallet/create/recoverDIDWallet.js:156
+#~ msgid "Only one backup file is allowed. To add a new backup file, please delete any previously uploaded files and try again."
+#~ msgstr ""
+
 #: src/components/wallet/WalletHistory.tsx:23
 msgid "Outgoing"
 msgstr "Utgående"
 
 #: src/components/plotNFT/PlotNFTCard.tsx:361
 msgid "Payout Address"
-msgstr ""
+msgstr "Utbetalningsadress"
 
 #: src/components/fullNode/card/FullNodeCardPeakHeight.tsx:20
 msgid "Peak Height"
@@ -1356,6 +1421,10 @@ msgstr "Väntande totalt saldo"
 msgid "Please Confirm"
 msgstr "Bekräfta"
 
+#: src/components/plotNFT/PlotNFTRecovery.tsx:62
+msgid "Please Input NFT Launcher Id"
+msgstr ""
+
 #: src/components/trading/CreateOffer.jsx:100
 msgid "Please add a trade pair"
 msgstr "Ange ett handelspar"
@@ -1364,15 +1433,41 @@ msgstr "Ange ett handelspar"
 msgid "Please enter 0 fee. Positive fees not supported yet for RL."
 msgstr "Ange 0 som avgift. Positiv avgift stöds ännu inte för RL."
 
+#: src/components/wallet/did/WalletDID.tsx:924
+msgid "Please enter a coin"
+msgstr ""
+
+#: src/components/wallet/did/WalletDID.tsx:526
+#: src/components/wallet/did/WalletDID.tsx:914
+msgid "Please enter a filename"
+msgstr ""
+
+#: src/components/wallet/did/WalletDID.tsx:934
+msgid "Please enter a pubkey"
+msgstr ""
+
+#: src/components/wallet/did/WalletDID.tsx:944
+msgid "Please enter a puzzlehash"
+msgstr ""
+
 #: src/components/wallet/create/createRLAdmin.jsx:140
 msgid "Please enter a valid initial coin amount"
 msgstr "Ange ett giltigt belopp för ursprungligt mynt"
+
+#: src/components/wallet/did/WalletDID.tsx:777
+#: src/components/wallet/did/WalletDIDCreate.tsx:76
+msgid "Please enter a valid integer of 0 or greater for the number of Backup IDs needed for recovery."
+msgstr ""
 
 #: src/components/wallet/create/createNewColouredCoin.jsx:69
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:639
 #: src/components/wallet/standard/WalletStandard.tsx:432
 msgid "Please enter a valid numeric amount"
 msgstr "Ange ett giltigt numeriskt belopp"
+
+#: src/components/wallet/did/WalletDIDCreate.tsx:50
+msgid "Please enter a valid numeric amount."
+msgstr ""
 
 #: src/components/wallet/create/createExistingColouredCoin.jsx:70
 #: src/components/wallet/create/createNewColouredCoin.jsx:79
@@ -1394,6 +1489,7 @@ msgstr "Ange ett giltigt spenderbart belopp"
 msgid "Please enter a valid pubkey"
 msgstr "Ange en giltig publik nyckel"
 
+#: src/components/plotNFT/PlotNFTRecovery.tsx:73
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:623
 #: src/components/wallet/standard/WalletStandard.tsx:420
 msgid "Please finish syncing before making a transaction"
@@ -1402,6 +1498,10 @@ msgstr "Vänta på synkronisering innan du gör en transaktion"
 #: src/components/trading/CreateOffer.jsx:66
 msgid "Please select amount"
 msgstr "Välj belopp"
+
+#: src/components/wallet/did/WalletDIDRecovery.tsx:55
+msgid "Please select backup file first"
+msgstr ""
 
 #: src/components/trading/CreateOffer.jsx:76
 msgid "Please select buy or sell"
@@ -1429,6 +1529,7 @@ msgstr "Ange tillfällig mapp"
 msgid "Please wait for synchronization"
 msgstr "Vänta på synkronisering"
 
+#: src/components/wallet/did/WalletDIDRecovery.tsx:64
 #: src/hooks/useJoinPool.tsx:27
 msgid "Please wait for wallet synchronization"
 msgstr "Vänta på synkronisering av plånboken"
@@ -1442,7 +1543,7 @@ msgstr "Plott"
 msgid "Plot Count"
 msgstr "Antal plottar"
 
-#: src/components/block/Block.jsx:299
+#: src/components/block/Block.jsx:300
 msgid "Plot Id"
 msgstr "Plott-ID"
 
@@ -1463,7 +1564,7 @@ msgstr "Plott-NFT med p2_singleton_puzzle_hash {plotNFTId} finns inte"
 #~ msgid "Plot Name"
 #~ msgstr ""
 
-#: src/components/block/Block.jsx:259
+#: src/components/block/Block.jsx:260
 msgid "Plot Public Key"
 msgstr "Publik nyckel för plott"
 
@@ -1535,12 +1636,16 @@ msgid "Points Successful in Last 24 Hours"
 msgstr "Poäng lyckade under de senaste 24 timmarna"
 
 #: src/components/dashboard/DashboardSideBar.tsx:60
-#: src/components/pool/Pool.tsx:25
+#: src/components/pool/Pool.tsx:26
 msgid "Pool"
 msgstr "Pool"
 
 #: src/components/plot/overview/PlotOverviewPlots.tsx:100
 msgid "Pool Contract Address"
+msgstr "Poolens kontraktsadress"
+
+#: src/components/plotNFT/PlotNFTRecovery.tsx:85
+msgid "Pool Contract Address is not properly formatted."
 msgstr ""
 
 #: src/components/plot/overview/PlotOverviewPlots.tsx:81
@@ -1555,12 +1660,12 @@ msgstr "Inloggningslänk för pool"
 msgid "Pool Payout Instructions"
 msgstr "Instruktioner för poolutbetalning"
 
-#: src/components/block/Block.jsx:263
+#: src/components/block/Block.jsx:264
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:222
 msgid "Pool Public Key"
 msgstr "Publik nyckel för pool"
 
-#: src/components/block/Block.jsx:283
+#: src/components/block/Block.jsx:284
 msgid "Pool Puzzle Hash"
 msgstr "Pool-pusselhash"
 
@@ -1580,7 +1685,7 @@ msgstr "Den här dressen är inte korrekt formaterad."
 msgid "Pool Reward Address must not be empty."
 msgstr "Adress får inte vara tom."
 
-#: src/components/block/Block.jsx:313
+#: src/components/block/Block.jsx:314
 msgid "Pool Reward Amount"
 msgstr "Belopp för pool-belöning"
 
@@ -1592,7 +1697,7 @@ msgstr "Poolen tillhandahåller inte relative_lock_height."
 msgid "Pool does not provide target_puzzle_hash."
 msgstr "Poolen tillhandahåller inte target_puzzle_hash."
 
-#: src/middleware/middleware_api.jsx:283
+#: src/middleware/middleware_api.jsx:246
 msgid "Pool public key:"
 msgstr "Publik nyckel för pool:"
 
@@ -1610,7 +1715,7 @@ msgstr "Poolning"
 #: src/components/farm/FarmFullNodeConnections.tsx:42
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:42
 #: src/components/fullNode/FullNodeAddConnection.tsx:80
-#: src/components/fullNode/FullNodeConnections.tsx:51
+#: src/components/fullNode/FullNodeConnections.tsx:50
 msgid "Port"
 msgstr "Port"
 
@@ -1623,7 +1728,7 @@ msgstr "Förbereder plott-NFT"
 msgid "Preparing standard wallet"
 msgstr "Förbereder standardplånbok"
 
-#: src/components/block/Block.jsx:347
+#: src/components/block/Block.jsx:348
 msgid "Previous"
 msgstr "Föregående"
 
@@ -1631,7 +1736,7 @@ msgstr "Föregående"
 #~ msgid "Previous Block Hash"
 #~ msgstr ""
 
-#: src/components/block/Block.jsx:215
+#: src/components/block/Block.jsx:216
 msgid "Previous Header Hash"
 msgstr "Föregående huvudhash"
 
@@ -1639,19 +1744,19 @@ msgstr "Föregående huvudhash"
 #~ msgid "Previous Sub Block Hash"
 #~ msgstr "Previous Sub Block Hash"
 
-#: src/components/selectKey/SelectKey.tsx:164
+#: src/components/selectKey/SelectKey.tsx:165
 msgid "Private key with public fingerprint {fingerprint}"
 msgstr "Privat nyckel med publikt fingeravtryck {fingerprint}"
 
-#: src/middleware/middleware_api.jsx:249
+#: src/middleware/middleware_api.jsx:212
 msgid "Private key {0}"
 msgstr "Privat nyckel {0}"
 
-#: src/middleware/middleware_api.jsx:259
+#: src/middleware/middleware_api.jsx:222
 msgid "Private key:"
 msgstr "Privat nyckel:"
 
-#: src/components/block/Block.jsx:251
+#: src/components/block/Block.jsx:252
 msgid "Proof of Space Size"
 msgstr "Storlek på bevis-på-utrymme"
 
@@ -1664,12 +1769,17 @@ msgid "Protocol Version"
 msgstr "Protokollversion"
 
 #: src/components/wallet/create/createRLAdmin.jsx:297
+#: src/components/wallet/did/WalletDID.tsx:993
 msgid "Pubkey"
 msgstr "Publik nyckel"
 
-#: src/middleware/middleware_api.jsx:267
+#: src/middleware/middleware_api.jsx:230
 msgid "Public key:"
 msgstr "Publik nyckel:"
+
+#: src/components/wallet/did/WalletDID.tsx:1002
+msgid "Puzzlehash"
+msgstr ""
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:162
 msgid "Queue Name"
@@ -1691,6 +1801,10 @@ msgstr "I kö"
 msgid "RAM max usage"
 msgstr "Max RAM-användning"
 
+#: src/components/plotNFT/PlotNFTRecovery.tsx:154
+msgid "RECOVER"
+msgstr ""
+
 #: src/components/wallet/Wallets.tsx:51
 #~ msgid "RL Wallet"
 #~ msgstr "RL Wallet"
@@ -1699,7 +1813,7 @@ msgstr "Max RAM-användning"
 #~ msgid "RLListItems.title"
 #~ msgstr ""
 
-#: src/components/wallet/create/WalletCreate.jsx:124
+#: src/components/wallet/create/WalletCreateList.tsx:42
 msgid "Rate Limited"
 msgstr "Spenderbegränsad (Rate limited)"
 
@@ -1708,7 +1822,7 @@ msgstr "Spenderbegränsad (Rate limited)"
 msgid "Rate Limited Info"
 msgstr "Info om spenderbegränsning"
 
-#: src/components/wallet/create/WalletCreate.jsx:214
+#: src/components/wallet/create/WalletCreate.jsx:176
 msgid "Rate Limited Options"
 msgstr "Alternativ för spenderbegränsning"
 
@@ -1721,9 +1835,27 @@ msgstr "Konfiguration av spenderbegränsad användarplånbok"
 msgid "Receive Address"
 msgstr "Mottagaradress"
 
-#: src/components/wallet/create/WalletCreate.jsx:282
-msgid "Recover DID wallet"
-msgstr "Återställ DID-plånbok"
+#: src/components/wallet/did/WalletDID.tsx:464
+#: src/components/wallet/did/WalletDIDRecovery.tsx:124
+msgid "Recover"
+msgstr ""
+
+#: src/components/wallet/did/WalletDID.tsx:340
+#: src/components/wallet/did/WalletDID.tsx:480
+msgid "Recover DID Wallet"
+msgstr ""
+
+#: src/components/wallet/create/WalletCreate.jsx:296
+#~ msgid "Recover DID wallet"
+#~ msgstr "Återställ DID-plånbok"
+
+#: src/components/wallet/did/WalletDIDRecovery.tsx:84
+msgid "Recover Distributed Identity Wallet"
+msgstr ""
+
+#: src/components/wallet/did/WalletDIDSelect.tsx:39
+msgid "Recover Wallet"
+msgstr ""
 
 #: src/components/plot/overview/PlotOverviewHero.tsx:62
 #: src/components/plot/PlotHeader.tsx:78
@@ -1785,11 +1917,11 @@ msgstr "Sök block baserat på header hash"
 msgid "Second temporary folder location"
 msgstr "Andra tillfällig mapp"
 
-#: src/components/selectKey/SelectKey.tsx:173
+#: src/components/selectKey/SelectKey.tsx:174
 msgid "See private key"
 msgstr "Visa privat nyckel"
 
-#: src/middleware/middleware_api.jsx:293
+#: src/middleware/middleware_api.jsx:256
 msgid "Seed:"
 msgstr "Minnesfras:"
 
@@ -1813,7 +1945,7 @@ msgstr "Välj erbjudande"
 msgid "Select Temporary Directory"
 msgstr "Välj tillfällig mapp"
 
-#: src/components/wallet/create/WalletCreate.jsx:108
+#: src/components/wallet/create/WalletCreateList.tsx:21
 msgid "Select Wallet Type"
 msgstr "Välj plånbokstyp"
 
@@ -1842,6 +1974,10 @@ msgstr "Välj din plott-NFT från listrutan, eller skapa en ny."
 #: src/components/plot/add/PlotAddSelectTemporaryDirectory.tsx:108
 msgid "Selected"
 msgstr "Vald"
+
+#: src/components/wallet/did/WalletDIDRecovery.tsx:91
+msgid "Selected recovery file:"
+msgstr ""
 
 #: src/components/plotNFT/PlotNFTExternalState.tsx:23
 #: src/components/plotNFT/PlotNFTState.tsx:57
@@ -1953,7 +2089,7 @@ msgstr "Tillstånd"
 #: src/components/pool/PoolOverview.tsx:44
 #: src/components/trading/TradingOverview.jsx:128
 #: src/components/wallet/WalletHistory.tsx:55
-#: src/components/wallet/Wallets.tsx:118
+#: src/components/wallet/Wallets.tsx:50
 #: src/components/wallet/WalletStatusCard.tsx:22
 msgid "Status"
 msgstr "Status"
@@ -1990,13 +2126,10 @@ msgstr "Status:"
 #~ msgid "Sub Block at height {0} in the Apple blockchain"
 #~ msgstr "Sub Block at height {0} in the Apple blockchain"
 
+#: src/components/wallet/did/WalletDID.tsx:886
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:347
 msgid "Submit"
 msgstr "Skicka"
-
-#: src/components/fullNode/FullNodeConnections.tsx:135
-#~ msgid "Sync official peers"
-#~ msgstr ""
 
 #: src/components/fullNode/card/FullNodeCardStatus.tsx:43
 #: src/components/wallet/WalletStatus.tsx:33
@@ -2071,6 +2204,11 @@ msgstr "Noden är inte synkad"
 msgid "The node is syncing, which means it is downloading blocks from other nodes, to reach the latest block in the chain"
 msgstr "Noden synkroniserar, vilket betyder att den laddar ner block från andra noder, för att nå det sista blocket i kedjan"
 
+#: src/components/wallet/did/WalletDID.tsx:790
+#: src/components/wallet/did/WalletDIDCreate.tsx:89
+msgid "The number of Backup IDs needed for recovery cannot exceed the number of Backup IDs added."
+msgstr ""
+
 #: src/hooks/usePoolInfo.ts:57
 msgid "The pool URL \"{normalizedUrl}\" is not working. Is it pool? Error: {0}"
 msgstr "Pool-URL:en \"{normalizedUrl}\" fungerar inte. Är det en pool? Fel: {0}"
@@ -2095,29 +2233,25 @@ msgstr "Pool-URL måste använda protokollet https. {normalizedUrl}"
 msgid "The pool switching operation was cancelled, please try again by changing pool, or self pooling"
 msgstr "Poolbytet avbröts. Försök igen genom att byta pool eller använda självpoolning"
 
-#: src/components/block/Block.jsx:302
+#: src/components/block/Block.jsx:303
 msgid "The seed used to create the plot. This depends on the pool pk and plot pk."
 msgstr "Den minnesfras som användes för att skapa plotten. Denna beror av den publika nyckeln för pool respektive plott."
 
-#: src/components/block/Block.jsx:228
+#: src/components/block/Block.jsx:229
 msgid "The total number of VDF (verifiable delay function) or proof of time iterations on the whole chain up to this sub block."
 msgstr "Sammanlagt antal VDF- (verifiable delay function) eller bevis-på-tid-iterationer på hela kedjan upp till detta underblock."
 
-#: src/components/block/Block.jsx:244
+#: src/components/block/Block.jsx:245
 msgid "The total number of VDF (verifiable delay function) or proof of time iterations on this block."
 msgstr "Sammanlagt antal VDF- (verifiable delay function) eller bevis-på-tid-iterationer på detta block."
 
-#: src/components/block/Block.jsx:324
+#: src/components/block/Block.jsx:325
 msgid "The total transactions fees in this block. Rewarded to the farmer."
 msgstr "Summan av transaktionsavgifterna i detta block. Utbetalda till odlaren."
 
-#: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:87
-#~ msgid "These are the instructions for how the farmer wants to get paid. By default this will be an APPLE address, but it can be set to any string with a size of less than 1024 characters, so it can represent another blockchain or payment system identifier."
-#~ msgstr "Det här är instruktionerna för hur du vill få betalt. Som standard kommer detta att vara en APPLE-adress, men det kan ställas in till vilken sträng som helst med en storlek på mindre än 1024 tecken, så att det kan representera en annan blockkedja eller betalningssystem identifierare."
-
 #: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:102
-msgid "These are the instructions for how the farmer wants to get paid. By default this will be an XCH address, but it can be set to any string with a size of less than 1024 characters, so it can represent another blockchain or payment system identifier."
-msgstr ""
+msgid "These are the instructions for how the farmer wants to get paid. By default this will be an APPLE address, but it can be set to any string with a size of less than 1024 characters, so it can represent another blockchain or payment system identifier."
+msgstr "Det här är instruktionerna för hur odlaren vill få betalt. Som standard är det en APPLE-adress, men det kan ställas in till vilken sträng som helst med en storlek på färrre än 1024 tecken, så det kan representera en identifierare för en annan blockkedja eller betalningssystem."
 
 #: src/components/plot/PlotsFailed.tsx:40
 msgid "These plots are invalid, you might want to delete them."
@@ -2154,7 +2288,7 @@ msgstr "Detta är summan av inkommande och utgående väntande transaktioner (so
 msgid "This is the time of the latest peak sub block."
 msgstr "Detta är tidpunkten för det senaste topp-underblocket."
 
-#: src/components/block/Block.jsx:194
+#: src/components/block/Block.jsx:195
 msgid "This is the time the block was created by the farmer, which is before it is finalized with a proof of time"
 msgstr "Detta är den tidpunkt då blocket skapades av odlaren, vilket är innan det färdigställs med ett bevis-på-tid"
 
@@ -2169,12 +2303,12 @@ msgstr "Detta är totalt saldo + väntande saldo: det är vad ditt saldo kommer 
 #: src/components/plotNFT/PlotExternalNFTCard.tsx:149
 #: src/components/plotNFT/PlotNFTCard.tsx:191
 msgid "This is the total number of points this plotNFT has with this pool, since the last payout. The pool will reset the points after making a payout."
-msgstr "Detta är det sammanlagda antalet poäng denna plot-NFT har med denna pool, sedan den senaste utbetalningen. Poolen kommer att återställa poängen efter att ha gjort en utbetalning."
+msgstr "Detta är det sammanlagda antalet poäng denna plot-NFT har hos denna pool, sedan den senaste utbetalningen. Poolen kommer att återställa poängen efter att ha gjort en utbetalning."
 
 #: src/components/plotNFT/PlotExternalNFTCard.tsx:166
 #: src/components/plotNFT/PlotNFTCard.tsx:208
 msgid "This is the total number of points your farmer has found for this plot NFT. Each k32 plot will get around 10 points per day, so if you have 10TiB, should should expect around 1000 points per day, or 41 points per hour."
-msgstr ""
+msgstr "Detta är det totala antalet poäng som din odlare har hittat för denna plott-NFT. Varje k32-plott får cirka 10 poäng per dag, så om du har 10 TiB, kan du förvänta dig cirka 1000 poäng per dag, eller 41 poäng per timme."
 
 #: src/components/fullNode/card/FullNodeCardStatus.tsx:46
 msgid "This node is fully caught up and validating the network"
@@ -2216,7 +2350,7 @@ msgstr "Skapat"
 #~ msgid "Time this trade was created at this time"
 #~ msgstr ""
 
-#: src/components/block/Block.jsx:189
+#: src/components/block/Block.jsx:190
 msgid "Timestamp"
 msgstr "Tidsstämpel"
 
@@ -2250,7 +2384,7 @@ msgstr "Sammanlagd plottstorlek:"
 msgid "Total Size of Plots"
 msgstr "Sammanlagd storlek hos alla plottar"
 
-#: src/components/block/Block.jsx:225
+#: src/components/block/Block.jsx:226
 msgid "Total VDF Iterations"
 msgstr "Totalt antal VDF-iterationer"
 
@@ -2290,7 +2424,7 @@ msgstr "Handel"
 msgid "Trading History"
 msgstr "Handelshistorik"
 
-#: src/components/block/Block.jsx:309
+#: src/components/block/Block.jsx:310
 msgid "Transactions Filter Hash"
 msgstr "Transaktionsfilterhash"
 
@@ -2394,9 +2528,13 @@ msgid "Waiting for the transaction to be confirmed"
 msgstr "Väntar på att transaktionen ska bekräftas"
 
 #: src/components/pool/PoolOverview.tsx:185
-#: src/components/wallet/standard/WalletStandard.tsx:674
+#: src/components/wallet/standard/WalletStandard.tsx:656
 msgid "Wallet Status:"
 msgstr "Plånboksstatus:"
+
+#: src/components/wallet/did/WalletDID.tsx:1118
+msgid "Wallet does not exists"
+msgstr ""
 
 #: src/components/wallet/Wallets.tsx:30
 #~ msgid "WalletItem.appleWallet"
@@ -2427,7 +2565,7 @@ msgstr "Plånboksstatus:"
 #~ msgstr ""
 
 #: src/components/dashboard/DashboardSideBar.tsx:45
-#: src/components/wallet/Wallets.tsx:173
+#: src/components/wallet/Wallets.tsx:118
 msgid "Wallets"
 msgstr "Plånböcker"
 
@@ -2459,11 +2597,11 @@ msgstr "Varning: Denna nyckel används av din farmer. Genom att ta bort denna ny
 msgid "Warning: This key is used for your pool rewards address. By deleting this key you may lose access to any future pool rewards"
 msgstr "Varning: Denna nyckel används av din pool. Genom att ta bort denna nyckel kan du förlora tillgång till framtida vinster från poolen"
 
-#: src/components/block/Block.jsx:205
+#: src/components/block/Block.jsx:206
 msgid "Weight"
 msgstr "Vikt"
 
-#: src/components/block/Block.jsx:208
+#: src/components/block/Block.jsx:209
 msgid "Weight is the total added difficulty of all sub blocks up to and including this one"
 msgstr "Vikt är den sammanlagda svårighetsgraden för alla underblock upp till och inklusive detta"
 
@@ -2556,6 +2694,10 @@ msgstr "Du kommer att få <0/> till {0}"
 msgid "You will recieve <0/> to {address}"
 msgstr "Du kommer att få <0/> till {address}"
 
+#: src/components/wallet/did/WalletDID.tsx:328
+msgid "Your DID requires at least {dids_num_req} attestation file{0} for recovery. Please upload additional files."
+msgstr ""
+
 #: src/components/farm/overview/FarmOverview.tsx:37
 msgid "Your Farm Overview"
 msgstr "Översikt över din odling"
@@ -2580,17 +2722,17 @@ msgstr "[Felkod 13] Åtkomst nekan. Du saknar behörighet till en fil eller kata
 msgid "[Error 22] File not found. Most likely one of the plot folders in your config.yaml has an issue."
 msgstr "[Felkod 22] Filen går inte att hitta. Troligtvis en av katalog för plottar i din config.yaml som är felaktig."
 
-#: src/components/wallet/Wallets.tsx:143
+#: src/components/wallet/Wallets.tsx:75
 #: src/components/wallet/WalletStatusCard.tsx:41
 msgid "connections:"
 msgstr "anslutningar:"
 
-#: src/components/wallet/Wallets.tsx:135
+#: src/components/wallet/Wallets.tsx:67
 #: src/components/wallet/WalletStatusCard.tsx:33
 msgid "height:"
 msgstr "höjd:"
 
-#: src/components/wallet/Wallets.tsx:129
+#: src/components/wallet/Wallets.tsx:61
 msgid "not synced"
 msgstr "ej synkad"
 
@@ -2598,20 +2740,24 @@ msgstr "ej synkad"
 msgid "p2_singleton_puzzle_hash is not defined"
 msgstr "p2_singleton_puzzle_hash är inte definierat"
 
-#: src/components/wallet/Wallets.tsx:123
+#: src/components/wallet/Wallets.tsx:55
 #: src/components/wallet/WalletStatusCard.tsx:27
 msgid "status:"
 msgstr "status:"
 
-#: src/components/wallet/Wallets.tsx:128
+#: src/components/wallet/Wallets.tsx:60
 #: src/components/wallet/WalletStatusCard.tsx:29
 msgid "synced"
 msgstr "synkad"
 
-#: src/components/wallet/Wallets.tsx:127
+#: src/components/wallet/Wallets.tsx:59
 #: src/components/wallet/WalletStatusCard.tsx:29
 msgid "syncing"
 msgstr "synkar"
+
+#: src/components/plotNFT/PlotNFTRecovery.tsx:118
+msgid "visiting the Pool tab of your CHIA-GUI. using this command: chia plotNFT show. Note: you have to do this on the CHIA client, not the fork!"
+msgstr ""
 
 #: src/components/farm/card/FarmCardBlockRewards.tsx:16
 #~ msgid "{0} Block Rewards"
@@ -2637,6 +2783,6 @@ msgstr "{currencyCode} Totalt antal Apple som odlats"
 msgid "{currencyCode} User Transaction Fees"
 msgstr "{currencyCode} Transaktionsavgifter för användare"
 
-#: src/components/core/components/Amount/Amount.tsx:80
+#: src/components/core/components/Amount/Amount.tsx:82
 msgid "{mojo, plural, one {mojo} other {mojos}}"
 msgstr "{mojo, plural, one {mojo} other {mojo}}"
