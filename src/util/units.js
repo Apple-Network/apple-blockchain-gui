@@ -12,7 +12,7 @@ const aliases = {
 
 const display = {
   apple: {
-    format: '{amount} CH',
+    format: '{amount} APPLE',
     fractionDigits: 12,
   },
   mojo: {

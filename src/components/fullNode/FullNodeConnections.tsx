@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Trans } from '@lingui/macro';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import styled from 'styled-components';
 import {
@@ -18,10 +18,6 @@ import FullNodeCloseConnection from './FullNodeCloseConnection';
 import type { RootState } from '../../modules/rootReducer';
 import useOpenDialog from '../../hooks/useOpenDialog';
 import FullNodeAddConnection from './FullNodeAddConnection';
-import Flex from '../core/components/Flex';
-import {
-  openOfficialConnection
-} from '../../modules/fullnodeMessages';
 
 const StyledIconButton = styled(IconButton)`
   padding: 0.2rem;
@@ -100,41 +96,21 @@ const cols = [
 
 export default function Connections() {
   const openDialog = useOpenDialog();
-  const dispatch = useDispatch();
   const connections = useSelector(
     (state: RootState) => state.full_node_state.connections,
   );
-  const [error, setError] = useState<Error | null>(null);
 
   function handleAddPeer() {
     openDialog(<FullNodeAddConnection />);
-  }
-
-  async function handleOpenOfficialPeer() {
-    setError(null);
-
-    try {
-      await dispatch(openOfficialConnection());
-    } catch (error) {
-      setError(error);
-    }
   }
 
   return (
     <Card
       title={<Trans>Connections</Trans>}
       action={
-        <Flex alignItems="center" gap={1}>
-          <Button onClick={handleOpenOfficialPeer}
-            variant="contained"
-            color="primary"
-          >
-            <Trans>Connect to Full Node list</Trans>
-          </Button>
         <Button onClick={handleAddPeer} variant="outlined">
           <Trans>Connect to other peers</Trans>
         </Button>
-        </Flex>
       }
     >
       {connections ? (

@@ -151,22 +151,6 @@ export const openConnection = (host, port) => {
   };
 };
 
-export const openOfficialConnection = () => {
-  return async (dispatch) => {
-    const { data } = await async_api(
-      dispatch,
-      fullNodeMessage({
-        command: 'open_official_connection',
-        data: {},
-      }),
-      true,
-      true,
-    );
-
-    return data;
-  };
-};
-
 export const closeConnection = (node_id) => {
   const action = fullNodeMessage();
   action.message.command = 'close_connection';

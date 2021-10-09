@@ -27,6 +27,12 @@ const cols = [
   },
   {
     field(row: Row) {
+      return `${row.time_consuming} ms`;
+    },
+    title: <Trans>Time Consuming</Trans>,
+  },
+  {
+    field(row: Row) {
       return moment(row.timestamp * 1000).format('MMM D, h:mm:ss A');
     },
     title: <Trans>Date</Trans>,

@@ -5,6 +5,7 @@ type FarmingInfo = {
   passed_filter: number;
   proofs: number;
   total_plots: number;
+  time_consuming: number;
 };
 
 export default FarmingInfo;
