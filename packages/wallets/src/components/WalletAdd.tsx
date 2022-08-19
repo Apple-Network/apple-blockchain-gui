@@ -5,7 +5,7 @@ import {
   Typography,
   Grid,
   Container,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useGenerateMnemonicMutation, useAddKeyMutation, useLogInMutation } from '@apple/api-react';
 import { useNavigate } from 'react-router';
 import { useEffectOnce } from 'react-use';

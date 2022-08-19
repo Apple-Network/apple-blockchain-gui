@@ -73,9 +73,7 @@ export default function appleLazyBaseQuery(options: Options = {}): BaseQueryFn<
 
     try {
       return {
-        data: mockResponse
-          ? mockResponse
-          : await instance[command](...args),
+        data: mockResponse ?? await instance[command](...args),
         meta,
       };
     } catch(error) {

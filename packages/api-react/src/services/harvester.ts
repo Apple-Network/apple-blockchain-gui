@@ -59,14 +59,11 @@ export const harvesterApi = apiWithTag2.injectEndpoints({
       */
       async queryFn({ filename }, _queryApi, _extraOptions, fetchWithBQ) {
         try {
-          console.log('DELETE PLOT', filename);
           const { data, error } = await fetchWithBQ({
             command: 'deletePlot',
             service: Harvester,
             args: [filename],
           });
-
-          console.log('DELETE PLOT response', error, data);
 
           if (error) {
             throw error;
@@ -76,8 +73,6 @@ export const harvesterApi = apiWithTag2.injectEndpoints({
             command: 'refreshPlots',
             service: Harvester,
           });
-
-          console.log('refresh response', refreshResponse);
 
           if (refreshResponse.error) {
             throw error;
@@ -97,6 +92,12 @@ export const harvesterApi = apiWithTag2.injectEndpoints({
         return response?.success;
       },
       invalidatesTags: (_result, _error, { filename }) => [
+        { type: 'HarvestersSummary', id: 'LIST' },
+        { type: 'HarvesterPlots', id: 'LIST' },
+        { type: 'HarvesterPlotsInvalid', id: 'LIST' },
+        { type: 'HarvesterPlotsKeysMissing', id: 'LIST' },
+        { type: 'HarvesterPlotsDuplicates', id: 'LIST' },
+        // TODO all next are deprecated and removed in long run
         { type: 'Plots', id: 'LIST' },
         { type: 'Plots', id: filename },
         { type: 'Harvesters', id: 'LIST' },

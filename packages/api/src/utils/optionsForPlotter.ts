@@ -1,6 +1,6 @@
 import PlotterName from '../constants/PlotterName';
 import { PlotterOptions } from '../@types/Plotter';
-import { bladebitOptions, madmaxOptions, chiaposOptions } from '../constants/Plotters';
+import { bladebitOptions, madmaxOptions, appleposOptions } from '../constants/Plotters';
 
 export default function optionsForPlotter(plotterName: PlotterName): PlotterOptions {
   switch (plotterName) {
@@ -10,7 +10,7 @@ export default function optionsForPlotter(plotterName: PlotterName): PlotterOpti
       return madmaxOptions;
     case PlotterName.APPLEPOS: // fallthrough
     default:
-      return chiaposOptions;
+      return appleposOptions;
   }
 };
 

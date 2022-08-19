@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans } from '@lingui/macro';
-import { makeStyles } from '@material-ui/core/styles';
 import {
+  Button,
   AlertDialog,
   Suspender,
   useOpenDialog,
@@ -11,50 +11,22 @@ import {
   Flex,
   StateTypography,
   State,
+  TooltipIcon,
 } from '@apple/core';
 import { useGetKeyringStatusQuery } from '@apple/api-react';
-import {
-  Grid,
-  Typography,
-  Box,
-  Button,
-  Tooltip,
-} from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import {
   Help as HelpIcon,
-  Lock as LockIcon,
-  NoEncryption as NoEncryptionIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import ChangePassphrasePrompt from './ChangePassphrasePrompt';
 import RemovePassphrasePrompt from './RemovePassphrasePrompt';
 import SetPassphrasePrompt from './SetPassphrasePrompt';
-
-const useStyles = makeStyles((theme) => ({
-  passToggleBox: {
-    alignItems: 'center',
-  },
-  passChangeBox: {
-    paddingTop: 20,
-  },
-  oldPass: {
-    paddingRight: 20,
-  },
-  togglePassButton: {
-    marginLeft: theme.spacing(4),
-  },
-  updatePassButton: {
-    marginLeft: theme.spacing(6),
-    marginRight: theme.spacing(2),
-    height: 56,
-    width: 150,
-  },
-}));
+import SettingsDerivationIndex from './SettingsDerivationIndex';
 
 
 export default function SettingsPanel() {
-  const classes = useStyles();
   const openDialog = useOpenDialog();
-  const [_skipMigration, setSkipMigration] = useSkipMigration();
+  const [, setSkipMigration] = useSkipMigration();
   const { data: keyringStatus, isLoading } = useGetKeyringStatusQuery();
   const [changePassphraseOpen, setChangePassphraseOpen] = React.useState(false);
   const [removePassphraseOpen, setRemovePassphraseOpen] = React.useState(false);
@@ -65,8 +37,6 @@ export default function SettingsPanel() {
       <Suspender />
     );
   }
-
-  const passphraseSupportEnabled = keyringStatus?.passphraseSupportEnabled ?? false;
 
   const {
     userPassphraseIsSet,
@@ -120,25 +90,21 @@ export default function SettingsPanel() {
 
   function PassphraseFeatureStatus() {
     let state: State = null;
-    let icon: JSX.Element | null = null;
     let statusMessage: JSX.Element | null = null;
     let tooltipTitle: React.ReactElement;
     const tooltipIconStyle: React.CSSProperties = { color: '#c8c8c8', fontSize: 12 };
 
     if (needsMigration) {
       state = State.WARNING;
-      icon = (<NoEncryptionIcon style={{ color: 'red',  marginRight: 6 }} />);
       statusMessage = (<Trans>Migration required to support passphrase protection</Trans>);
       tooltipTitle = (<Trans>Passphrase support requires migrating your keys to a new keyring</Trans>);
     } else {
       tooltipTitle = (<Trans>Secure your keychain using a strong passphrase</Trans>);
 
       if (userPassphraseIsSet) {
-        icon = (<LockIcon style={{ color: '#3AAC59',  marginRight: 6 }} />);
         statusMessage = (<Trans>Passphrase protection is enabled</Trans>);
       } else {
         state = State.WARNING;
-        icon = (<NoEncryptionIcon style={{ color: 'red',  marginRight: 6 }} />);
         statusMessage = (<Trans>Passphrase protection is disabled</Trans>);
       }
     }
@@ -211,29 +177,44 @@ export default function SettingsPanel() {
 
   return (
     <SettingsApp>
-      {passphraseSupportEnabled && (
-        <Flex flexDirection="column" gap={1}>
-          <SettingsLabel>
-            <Trans>Passphrase</Trans>
-          </SettingsLabel>
+      <Flex flexDirection="column" gap={1}>
+        <SettingsLabel>
+          <Flex gap={1} alignItems="center">
+            <Trans>Derivation Index</Trans>
+            <TooltipIcon>
+              <Trans>
+                The derivation index sets the range of wallet addresses that the wallet scans the blockchain for.
+                This number is generally higher if you have a lot of transactions or canceled offers for APPLE, CATs, or NFTs.
+                If you believe your balance is incorrect because it’s missing coins,
+                then increasing the derivation index could help the wallet include the missing coins in the balance total.
+              </Trans>
+            </TooltipIcon>
+          </Flex>
+        </SettingsLabel>
 
-          <DisplayChangePassphrase />
-          <ActionButtons />
-          {removePassphraseOpen && (
-            <RemovePassphrasePrompt
-              onSuccess={removePassphraseSucceeded}
-              onCancel={closeRemovePassphrase}
-            />
-          )}
-          {addPassphraseOpen && (
-            <SetPassphrasePrompt
-              onSuccess={setPassphraseSucceeded}
-              onCancel={closeSetPassphrase}
-            />
-          )}
-          <PassphraseFeatureStatus />
-        </Flex>
-      )}
+        <SettingsDerivationIndex />
+      </Flex>
+      <Flex flexDirection="column" gap={1}>
+        <SettingsLabel>
+          <Trans>Passphrase</Trans>
+        </SettingsLabel>
+
+        <DisplayChangePassphrase />
+        <ActionButtons />
+        {removePassphraseOpen && (
+          <RemovePassphrasePrompt
+            onSuccess={removePassphraseSucceeded}
+            onCancel={closeRemovePassphrase}
+          />
+        )}
+        {addPassphraseOpen && (
+          <SetPassphrasePrompt
+            onSuccess={setPassphraseSucceeded}
+            onCancel={closeSetPassphrase}
+          />
+        )}
+        <PassphraseFeatureStatus />
+      </Flex>
     </SettingsApp>
   );
 }

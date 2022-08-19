@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Box, BoxProps } from '@material-ui/core';
+import { Box, BoxProps } from '@mui/material';
 import { Apple } from '@apple/icons';
 
 const StyledApple = styled(Apple)`

@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { Trans } from '@lingui/macro';
-import { useCurrencyCode, mojoToAppleLocaleString, CardSimple } from '@apple/core';
+import { useCurrencyCode, mojoToAppleLocaleString, CardSimple, useLocale } from '@apple/core';
 import { useGetFarmedAmountQuery } from '@apple/api-react';
 
 export default function FarmCardUserFees() {
   const currencyCode = useCurrencyCode();
+  const [locale] = useLocale();
   const { data, isLoading, error } = useGetFarmedAmountQuery();
 
   const feeAmount = data?.feeAmount;
@@ -13,13 +14,13 @@ export default function FarmCardUserFees() {
     if (feeAmount !== undefined) {
       return (
         <>
-          {mojoToAppleLocaleString(feeAmount)}
+          {mojoToAppleLocaleString(feeAmount, locale)}
           &nbsp;
           {currencyCode}
         </>
       );
     }
-  }, [feeAmount]);
+  }, [feeAmount, locale, currencyCode]);
 
   return (
     <CardSimple
