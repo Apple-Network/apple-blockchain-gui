@@ -1,29 +1,29 @@
+import { alpha, ListItem, ListItemIcon, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React, { type ReactNode } from 'react';
 import { useNavigate, useMatch } from 'react-router-dom';
-import { ListItem, ListItemIcon, Typography } from '@mui/material';
-import { Flex } from '@apple/core';
-import { styled } from '@mui/system';
+
+import Color from '../../constants/Color';
 import useColorModeValue from '../../utils/useColorModeValue';
+import Flex from '../Flex';
 
 const StyledListItemIcon = styled(ListItemIcon)`
   min-width: auto;
   position: relative;
-  background-color: ${({ theme, selected }) => selected
-    ? useColorModeValue(theme, 'sidebarBackground')
-    : 'transparent'};
+  background-color: ${({ theme, selected }) =>
+    selected ? useColorModeValue(theme, 'sidebarBackground') : 'transparent'};
   border-radius: ${({ theme }) => theme.spacing(1.5)};
   width: ${({ theme }) => theme.spacing(6)};
   height: ${({ theme }) => theme.spacing(6)};
-  border: ${({ selected, theme }) => `1px solid ${selected
-    ? theme.palette.highlight.main
-    : useColorModeValue(theme, 'border')}`};
+  border: ${({ selected, theme }) =>
+    `1px solid ${selected ? theme.palette.highlight.main : useColorModeValue(theme, 'border')}`};
   display: flex;
   align-items: center;
   justify-content: center;
   transition: border 0.3s ease-in-out;
 
   &::after {
-    content: "";
+    content: '';
     border-radius: ${({ theme }) => theme.spacing(1.5)};
     position: absolute;
     z-index: -1;
@@ -31,15 +31,14 @@ const StyledListItemIcon = styled(ListItemIcon)`
     left: 0;
     width: 100%;
     height: 100%;
-    box-shadow: 0px -2px 4px rgba(104, 249, 127, 0.41), 0px 1px 8px rgba(145, 247, 53, 0.45);
+    box-shadow: 0px -2px 4px ${alpha(Color.Green[300], 0.41)}, 0px 1px 8px ${alpha(Color.Lime[400], 0.45)};
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
   }
 
   svg {
-    color: ${({ selected, theme }) => selected
-      ? useColorModeValue(theme, 'sidebarIconSelected')
-      : useColorModeValue(theme, 'sidebarIcon')};
+    color: ${({ selected, theme }) =>
+      selected ? useColorModeValue(theme, 'sidebarIconSelected') : useColorModeValue(theme, 'sidebarIcon')};
   }
 `;
 
@@ -57,7 +56,7 @@ const StyledListItem = styled(ListItem)`
   }
 
   &:hover ${StyledListItemIcon} {
-    border-color: #4CAF50;
+    border-color: ${Color.Green[500]};
 
     svg {
       color: ${({ theme }) => useColorModeValue(theme, 'sidebarIconHover')} !important;
@@ -83,7 +82,7 @@ export type SideBarItemProps = {
 };
 
 export default function SideBarItem(props: SideBarItemProps) {
-  const { to, title, icon: Icon, end = false, onSelect } = props;
+  const { to, title, icon: Icon, end = false, onSelect, ...rest } = props;
   const navigate = useNavigate();
   const match = useMatch({
     path: to,
@@ -91,7 +90,6 @@ export default function SideBarItem(props: SideBarItemProps) {
   });
 
   const isSelected = !!match;
-
 
   async function handleClick() {
     if (onSelect) {
@@ -101,14 +99,12 @@ export default function SideBarItem(props: SideBarItemProps) {
   }
 
   return (
-    <StyledListItem button onClick={() => handleClick()} >
+    <StyledListItem button onClick={() => handleClick()} {...rest}>
       <Flex flexDirection="column" alignItems="center" gap={0.5}>
         <StyledListItemIcon selected={isSelected}>
           <Icon fontSize="sidebarIcon" />
         </StyledListItemIcon>
-        <StyledListItemText align="center">
-          {title}
-        </StyledListItemText>
+        <StyledListItemText align="center">{title}</StyledListItemText>
       </Flex>
     </StyledListItem>
   );

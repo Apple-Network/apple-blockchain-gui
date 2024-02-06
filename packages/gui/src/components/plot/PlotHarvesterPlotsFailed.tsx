@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import { type Plot } from '@apple-network/api';
+import { useGetHarvesterPlotsInvalidQuery, useGetHarvesterQuery } from '@apple-network/api-react';
+import { TableControlled } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { TableControlled } from '@apple/core';
-import { type Plot } from '@apple/api';
-import { useGetHarvesterPlotsInvalidQuery, useGetHarvesterQuery } from '@apple/api-react';
 import { Typography } from '@mui/material';
+import React, { useState, useMemo } from 'react';
+
 import PlotAction from './PlotAction';
 
 const cols = [
@@ -27,7 +28,11 @@ export default function PlotHarvesterPlotsFailed(props: PlotHarvesterPlotsFailed
   const { nodeId } = props;
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
-  const { failedToOpenFilenames, initialized, isLoading: isLoadingHarvester } = useGetHarvesterQuery({
+  const {
+    failedToOpenFilenames,
+    initialized,
+    isLoading: isLoadingHarvester,
+  } = useGetHarvesterQuery({
     nodeId,
   });
   const { isLoading: isLoadingHarvesterPlots, data = [] } = useGetHarvesterPlotsInvalidQuery({
@@ -36,16 +41,14 @@ export default function PlotHarvesterPlotsFailed(props: PlotHarvesterPlotsFailed
     pageSize,
   });
 
-  const rows = useMemo(() => {
-    return data?.map((filename) => ({ filename }));
-  }, [data]);
+  const rows = useMemo(() => data?.map((filename) => ({ filename })), [data]);
 
   const isLoading = isLoadingHarvester || isLoadingHarvesterPlots;
   const count = failedToOpenFilenames ?? 0;
 
-  function handlePageChange(rowsPerPage: number, page: number) {
+  function handlePageChange(rowsPerPage: number, pageLocal: number) {
     setPageSize(rowsPerPage);
-    setPage(page);
+    setPage(pageLocal);
   }
 
   return (
@@ -60,11 +63,13 @@ export default function PlotHarvesterPlotsFailed(props: PlotHarvesterPlotsFailed
       isLoading={isLoading || !initialized}
       expandedCellShift={1}
       uniqueField="filename"
-      caption={!failedToOpenFilenames && (
-        <Typography variant="body2" align="center">
-          <Trans>Hooray, no files here!</Trans>
-        </Typography>
-      )}
+      caption={
+        !failedToOpenFilenames && (
+          <Typography variant="body2" align="center">
+            <Trans>Hooray, no files here!</Trans>
+          </Typography>
+        )
+      }
       pages={!!failedToOpenFilenames}
     />
   );

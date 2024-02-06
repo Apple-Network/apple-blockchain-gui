@@ -1,8 +1,8 @@
+import { WalletType } from '@apple-network/api';
+import type { Wallet } from '@apple-network/api';
+import { useGetWalletsQuery, useGetCatListQuery } from '@apple-network/api-react';
+import { useCurrencyCode } from '@apple-network/core';
 import { useMemo } from 'react';
-import { useGetWalletsQuery, useGetCatListQuery } from '@apple/api-react';
-import { WalletType } from '@apple/api';
-import type { Wallet } from '@apple/api';
-import { useCurrencyCode } from '@apple/core';
 
 export default function useWallet(walletId?: number | string): {
   loading: boolean;
@@ -13,13 +13,14 @@ export default function useWallet(walletId?: number | string): {
   const { data: wallets, isLoading } = useGetWalletsQuery();
   const { data: catList = [], isLoading: isCatListLoading } = useGetCatListQuery();
 
-  const wallet = useMemo(() => {
-    return wallets?.find((item) => item.id.toString() === walletId?.toString());
-  }, [wallets, walletId]);
+  const wallet = useMemo(
+    () => wallets?.find((item) => item.id.toString() === walletId?.toString()),
+    [wallets, walletId]
+  );
 
   const unit = useMemo(() => {
     if (wallet) {
-      if (!isCatListLoading && wallet.type === WalletType.CAT) {
+      if (!isCatListLoading && [WalletType.CAT, WalletType.CRCAT].includes(wallet.type)) {
         const token = catList.find((item) => item.assetId === wallet.meta?.assetId);
         if (token) {
           return token.symbol;
@@ -30,7 +31,8 @@ export default function useWallet(walletId?: number | string): {
 
       return currencyCode;
     }
-  }, [wallet, currencyCode, isCatListLoading]);
+    return undefined;
+  }, [wallet, isCatListLoading, currencyCode, catList]);
 
   return {
     wallet,

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import { type Plot } from '@apple-network/api';
+import { useGetHarvesterPlotsValidQuery, useGetHarvesterQuery } from '@apple-network/api-react';
+import { Address, TableControlled, Flex, FormatBytes, Tooltip, StateColor } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { Address, TableControlled, Flex, FormatBytes, Tooltip, StateColor } from '@apple/core';
 import { Warning as WarningIcon } from '@mui/icons-material';
-import { type Plot } from '@apple/api';
-import { useGetHarvesterPlotsValidQuery, useGetHarvesterQuery } from '@apple/api-react';
-import styled from 'styled-components';
 import { Box, Typography } from '@mui/material';
-import PlotStatus from './PlotStatus';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+
 import PlotAction from './PlotAction';
+import PlotStatus from './PlotStatus';
 
 const StyledWarningIcon = styled(WarningIcon)`
   color: ${StateColor.WARNING};
@@ -19,9 +20,7 @@ const cols = [
       const hasDuplicates = false;
       const [firstDuplicate] = duplicates || [];
 
-      const duplicateTitle = hasDuplicates ? (
-        <Trans>Plot is duplicate of {firstDuplicate.filename}</Trans>
-      ) : null;
+      const duplicateTitle = hasDuplicates ? <Trans>Plot is duplicate of {firstDuplicate.filename}</Trans> : null;
 
       return (
         <Flex alignItems="center" gap={1}>
@@ -30,7 +29,7 @@ const cols = [
             <FormatBytes value={fileSize} precision={3} />
           </Box>
           {hasDuplicates && (
-            <Tooltip title={<Box>{duplicateTitle}</Box>} interactive arrow>
+            <Tooltip title={<Box>{duplicateTitle}</Box>} arrow>
               <StyledWarningIcon />
             </Tooltip>
           )}
@@ -88,7 +87,11 @@ export default function PlotHarvesterPlots(props: PlotHarvesterPlotsProps) {
   const { nodeId } = props;
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
-  const { plots, initialized, isLoading: isLoadingHarvester } = useGetHarvesterQuery({
+  const {
+    plots,
+    initialized,
+    isLoading: isLoadingHarvester,
+  } = useGetHarvesterQuery({
     nodeId,
   });
   const { isLoading: isLoadingHarvesterPlots, data = [] } = useGetHarvesterPlotsValidQuery({
@@ -100,9 +103,9 @@ export default function PlotHarvesterPlots(props: PlotHarvesterPlotsProps) {
   const isLoading = isLoadingHarvester || isLoadingHarvesterPlots;
   const count = plots ?? 0;
 
-  function handlePageChange(rowsPerPage: number, page: number) {
+  function handlePageChange(rowsPerPage: number, pageLocal: number) {
     setPageSize(rowsPerPage);
-    setPage(page);
+    setPage(pageLocal);
   }
 
   return (
@@ -117,15 +120,13 @@ export default function PlotHarvesterPlots(props: PlotHarvesterPlotsProps) {
       isLoading={isLoading || !initialized}
       expandedCellShift={1}
       uniqueField="plotId"
-      caption={!plots && (
-        <Typography variant="body2" align="center">
-          {initialized ? (
-            <Trans>No plots yet</Trans>
-          ) : (
-            <Trans>Initializing...</Trans>
-          )}
-        </Typography>
-      )}
+      caption={
+        !plots && (
+          <Typography variant="body2" align="center">
+            {initialized ? <Trans>No plots yet</Trans> : <Trans>Initializing...</Trans>}
+          </Typography>
+        )
+      }
       pages={!!plots}
     />
   );

@@ -1,9 +1,11 @@
-# @apple/api-react
+# apple-blockchain-gui/api-react
 
-![Alt text](https://www.applecoin.in/img/apple_logo.svg)
+![Apple logo](https://www.applecoin.in/wp-content/uploads/2022/09/apple-logo.svg)
 
-This library provides react hooks on the top of @apple/api and uses [RTK Query](https://redux-toolkit.js.org/rtk-query/overview) under do hood.
-It is designed to simplify common cases for loading data in a web application, eliminating the need to hand-write data fetching & caching logic yourself. Providing much more benefits:
+![GitHub contributors](https://img.shields.io/github/contributors/Apple-Network/apple-blockchain-gui?logo=GitHub)
+
+This library provides react hooks on the top of @apple-network/api and uses [RTK Query](https://redux-toolkit.js.org/rtk-query/overview) under the hood.
+It is designed to simplify common cases for loading data in a web application, eliminating the need to hand-write data fetching & caching logic yourself. Benefits include:
 
 - Automatically refresh queries when data changed (using events from Apple Blockchain).
 - Tracking loading state in order to show UI spinners.
@@ -19,32 +21,25 @@ It is designed to simplify common cases for loading data in a web application, e
 
 ```tsx
 import React from 'react';
-import { useGetPublicKeysQuery } from '@apple/api-react';
+import { useGetPublicKeysQuery } from '@apple-network/api-react';
+import { Loading } from '@apple-network/core';
 import Suspender from 'react-suspender';
 
 export default function PublicKeys() {
   const { data: publicKeys, isLoading, error } = useGetPublicKeysQuery();
 
   if (isLoading) {
-    return (
-      <Suspender />
-    );
+    return <Loading center />;
   }
 
   if (error) {
-    return (
-      <Alert severiry="error">
-        {error.message}
-      </Alert>
-    );
+    return <Alert severity="error">{error.message}</Alert>;
   }
 
   return (
     <ul>
-      {publicKeys.map(key => (
-        <li key={key}>
-          {key}
-        </li>
+      {publicKeys.map((key) => (
+        <li key={key}>{key}</li>
       ))}
     </ul>
   );
@@ -56,7 +51,7 @@ export default function PublicKeys() {
 ```tsx
 import React, { Suspense } from 'react';
 import Websocket from 'ws'; // or read this value from electron main application
-import { store, api } from '@apple/api-react';
+import { store, api } from '@apple-network/api-react';
 import PublicKeys from './PublicKeys';
 
 // prepare api
@@ -71,9 +66,13 @@ export default function Application() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Provider store={store}>
-        <PublickKeys />
+        <PublicKeys />
       </Provider>
     </Suspense>
   );
 }
 ```
+
+## Development
+
+Please read and follow the main [README.md](https://github.com/Apple-Network/apple-blockchain-gui) of this monorepo.

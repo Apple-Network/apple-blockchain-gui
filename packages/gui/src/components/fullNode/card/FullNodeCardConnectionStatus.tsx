@@ -1,24 +1,19 @@
-import React from 'react';
+import { ServiceName } from '@apple-network/api';
+import { CardSimple } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { CardSimple } from '@apple/core';
-import { ServiceName } from '@apple/api';
-import { useIsServiceRunningQuery } from '@apple/api-react';
+import React from 'react';
+
+import useIsServiceRunning from '../../../hooks/useIsServiceRunning';
 
 export default function FullNodeCardConnectionStatus() {
-  const { data: isRunning, isLoading, error } = useIsServiceRunningQuery({
-    service: ServiceName.FULL_NODE,
-  }, {
-    pollingInterval: 1000,
-  });
+  const { isRunning, isLoading, error } = useIsServiceRunning(ServiceName.FULL_NODE);
 
   return (
     <CardSimple
       loading={isLoading}
       valueColor={isRunning ? 'primary' : 'textPrimary'}
       title={<Trans>Connection Status</Trans>}
-      value={
-        isRunning ? <Trans>Connected</Trans> : <Trans>Not connected</Trans>
-      }
+      value={isRunning ? <Trans>Connected</Trans> : <Trans>Not connected</Trans>}
       error={error}
     />
   );

@@ -1,20 +1,19 @@
 import React, { type ReactNode } from 'react';
-import { Typography } from '@mui/material';
-import Loading from '../Loading';
+
 import LayoutHero from '../LayoutHero';
+import Loading from '../Loading';
 
 export type LayoutLoadingProps = {
   children?: ReactNode;
-  hideSettings?: boolean;
 };
 
 export default function LayoutLoading(props: LayoutLoadingProps) {
-  const { children, hideSettings } = props;
+  const { children } = props;
 
   return (
-    <LayoutHero hideSettings={hideSettings}>
-      <Loading center/>
-      <Typography variant="body1">{children}</Typography>
+    <LayoutHero>
+      <Loading center />
+      {children}
     </LayoutHero>
   );
 }

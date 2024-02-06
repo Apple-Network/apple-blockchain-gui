@@ -1,18 +1,21 @@
-import React from 'react';
+import { useRefreshPlotsMutation, useGetPlotDirectoriesQuery } from '@apple-network/api-react';
+import { Button, Flex, useOpenDialog, MenuItem, More } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
+import { Folder, Refresh } from '@mui/icons-material';
+import { ListItemIcon, Typography } from '@mui/material';
+import React from 'react';
 import { useNavigate } from 'react-router';
-import { useRefreshPlotsMutation } from '@apple/api-react';
-import { Button, Flex, useOpenDialog, More } from '@apple/core';
-import { Box, MenuItem, ListItemIcon, Typography } from '@mui/material';
-import { Add, Refresh } from '@mui/icons-material';
-import PlotOverviewCards from './PlotOverviewCards';
+
+import PlotAddDirectoryDialog from '../PlotAddDirectoryDialog';
 import PlotHarvesters from '../PlotHarvesters';
 import PlotPlotting from '../PlotPlotting';
-import PlotAddDirectoryDialog from '../PlotAddDirectoryDialog';
+
+import PlotOverviewCards from './PlotOverviewCards';
 
 export default function PlotOverviewPlots() {
   const navigate = useNavigate();
   const openDialog = useOpenDialog();
+  const { data: directories, isLoading } = useGetPlotDirectoriesQuery();
   const [refreshPlots] = useRefreshPlotsMutation();
 
   function handleAddPlot() {
@@ -40,36 +43,26 @@ export default function PlotOverviewPlots() {
             </Button>
             &nbsp;
             <More>
-              {({ onClose }) => (
-                <Box>
-                  <MenuItem
-                    onClick={() => {
-                      onClose();
-                      handleAddPlotDirectory();
-                    }}
-                  >
-                    <ListItemIcon>
-                      <Add fontSize="small" />
-                    </ListItemIcon>
-                    <Typography variant="inherit" noWrap>
-                      <Trans>Add Plot Directory</Trans>
-                    </Typography>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      onClose();
-                      handleRefreshPlots();
-                    }}
-                  >
-                    <ListItemIcon>
-                      <Refresh fontSize="small" />
-                    </ListItemIcon>
-                    <Typography variant="inherit" noWrap>
-                      <Trans>Refresh Plots</Trans>
-                    </Typography>
-                  </MenuItem>
-                </Box>
-              )}
+              <MenuItem onClick={handleAddPlotDirectory} close>
+                <ListItemIcon>
+                  <Folder fontSize="small" color="info" />
+                </ListItemIcon>
+                <Typography variant="inherit" noWrap>
+                  {isLoading || directories.length === 0 ? (
+                    <Trans>Add Plot Directory</Trans>
+                  ) : (
+                    <Trans>Manage Plot Directories</Trans>
+                  )}
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleRefreshPlots} close>
+                <ListItemIcon>
+                  <Refresh fontSize="small" color="info" />
+                </ListItemIcon>
+                <Typography variant="inherit" noWrap>
+                  <Trans>Refresh Plots</Trans>
+                </Typography>
+              </MenuItem>
             </More>
           </Flex>
         </Flex>

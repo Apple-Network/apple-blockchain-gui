@@ -1,5 +1,4 @@
-import type BigNumber from 'bignumber.js';
-import { type WalletType } from '@apple/api';
+import { WalletType } from '@apple-network/api';
 
 type OfferRowData = {
   amount: string;

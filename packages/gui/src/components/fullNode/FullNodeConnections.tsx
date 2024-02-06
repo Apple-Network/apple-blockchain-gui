@@ -1,22 +1,16 @@
-import React from 'react';
+import { Connection } from '@apple-network/api';
+import { useGetFullNodeConnectionsQuery } from '@apple-network/api-react';
+import { Card, FormatBytes, FormatLargeNumber, IconButton, Loading, Table, useOpenDialog } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
 import { Delete as DeleteIcon } from '@mui/icons-material';
+import { Button, Tooltip } from '@mui/material';
+import React from 'react';
 import styled from 'styled-components';
-import {
-  Button,
-  Card,
-  FormatBytes,
-  FormatLargeNumber,
-  Table,
-  IconButton,
-  useOpenDialog,
-} from '@apple/core';
-import { useGetFullNodeConnectionsQuery } from '@apple/api-react';
-import { Tooltip } from '@mui/material';
-import { service_connection_types } from '../../util/service_names';
-import Connection from '../../types/Connection';
-import FullNodeCloseConnection from './FullNodeCloseConnection';
+
+import { serviceConnectionTypes } from '../../util/service_names';
+
 import FullNodeAddConnection from './FullNodeAddConnection';
+import FullNodeCloseConnection from './FullNodeCloseConnection';
 
 const StyledIconButton = styled(IconButton)`
   padding: 0.2rem;
@@ -48,19 +42,9 @@ const cols = [
     field(row: Connection) {
       return (
         <>
-          <FormatBytes
-            value={row.bytesWritten}
-            unit="MiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesWritten} unit="MiB" removeUnit fixedDecimals />
           /
-          <FormatBytes
-            value={row.bytesRead}
-            unit="MiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesRead} unit="MiB" removeUnit fixedDecimals />
         </>
       );
     },
@@ -69,7 +53,7 @@ const cols = [
   {
     field(row: Connection) {
       // @ts-ignore
-      return service_connection_types[row.type];
+      return serviceConnectionTypes[row.type];
     },
     title: <Trans>Connection type</Trans>,
   },
@@ -84,7 +68,7 @@ const cols = [
         <FullNodeCloseConnection nodeId={row.nodeId}>
           {({ onClose }) => (
             <StyledIconButton onClick={onClose}>
-              <DeleteIcon />
+              <DeleteIcon color="info" />
             </StyledIconButton>
           )}
         </FullNodeCloseConnection>
@@ -103,16 +87,20 @@ export default function Connections() {
 
   return (
     <Card
-      title={<Trans>Connections</Trans>}
-      titleVariant="h6"
+      title={<Trans>Full Node Connections</Trans>}
       action={
         <Button onClick={handleAddPeer} variant="outlined">
           <Trans>Connect to other peers</Trans>
         </Button>
       }
-      transparent
     >
-      <Table cols={cols} rows={connections} isLoading={isLoading} />
+      {isLoading ? (
+        <Loading center />
+      ) : !connections?.length ? (
+        <Trans>List of connections is empty</Trans>
+      ) : (
+        <Table cols={cols} rows={connections} />
+      )}
     </Card>
   );
 }

@@ -1,8 +1,11 @@
+import { alpha, Container } from '@mui/material';
 import React, { ReactElement, ReactNode } from 'react';
-import { Container } from '@mui/material';
-import styled from 'styled-components';
-import Flex from '../Flex';
 import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
+
+import Color from '../../constants/Color';
+import Flex from '../Flex';
+
 import LayoutFooter from './LayoutFooter';
 
 const StyledContainer = styled(Container)`
@@ -13,7 +16,7 @@ const StyledContainer = styled(Container)`
 `;
 
 const StyledInnerContainer = styled(Flex)`
-  box-shadow: inset 6px 0 8px -8px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 6px 0 8px -8px ${alpha(Color.Neutral[900], 0.2)};
   flex-grow: 1;
 `;
 

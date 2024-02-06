@@ -1,7 +1,7 @@
-import React from 'react';
+import { useGetTotalHarvestersSummaryQuery } from '@apple-network/api-react';
+import { FormatLargeNumber, CardSimple } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { FormatLargeNumber, CardSimple } from '@apple/core';
-import { useGetTotalHarvestersSummaryQuery } from '@apple/api-react';
+import React from 'react';
 
 export default function PlotCardNotFound() {
   const { noKeyFilenames, initializedHarvesters, isLoading } = useGetTotalHarvestersSummaryQuery();

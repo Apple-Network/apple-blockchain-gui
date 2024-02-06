@@ -1,42 +1,49 @@
-import React from 'react';
+import { usePrefs } from '@apple-network/api-react';
+import { ButtonSelected, CardStep, Flex, TextField } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { useFormContext } from 'react-hook-form';
-import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
-import { ButtonSelected, CardStep, Flex, TextField } from '@apple/core';
 import { Typography } from '@mui/material';
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import PlotLocalStorageKeys from '../../../constants/plotLocalStorage';
 import useSelectDirectory from '../../../hooks/useSelectDirectory';
 import Plotter from '../../../types/Plotter';
-import PlotLocalStorageKeys from '../../../constants/plotLocalStorage';
+
+import PlotAddSelectTemporaryDirectory from './PlotAddSelectTemporaryDirectory';
 
 type Props = {
   step: number;
-  plotter: Plotter
+  plotter: Plotter;
 };
 
 export default function PlotAddSelectFinalDirectory(props: Props) {
-  const { step } = props;
+  const { step, plotter } = props;
+  const allowTempDirSelection = plotter.options.haveTempDir === true;
   const selectDirectory = useSelectDirectory();
   const { setValue, watch } = useFormContext();
 
   const finalLocation = watch('finalLocation');
   const hasFinalLocation = !!finalLocation;
-  const [defaultFinalDirPath] = useLocalStorage<string>(PlotLocalStorageKeys.FINALDIR);
+  const [defaultFinalDirPath, setDefaultFinalDirPath] = usePrefs<string>(PlotLocalStorageKeys.FINALDIR);
 
   async function handleSelect() {
     const location = await selectDirectory({ defaultPath: defaultFinalDirPath || undefined });
     if (location) {
       setValue('finalLocation', location, { shouldValidate: true });
-      writeStorage(PlotLocalStorageKeys.FINALDIR, location);
+      setDefaultFinalDirPath(location);
     }
   }
 
   return (
-    <CardStep step={step} title={<Trans>Select Final Directory</Trans>}>
+    <CardStep
+      step={step}
+      title={allowTempDirSelection ? <Trans>Select Temp/Final Directory</Trans> : <Trans>Select Final Directory</Trans>}
+    >
+      {allowTempDirSelection && <PlotAddSelectTemporaryDirectory plotter={plotter} />}
       <Typography variant="subtitle1">
         <Trans>
-          Select the final destination for the folder where you would like the
-          plot to be stored. We recommend you use a large slow hard drive (like
-          external HDD).
+          Select the final destination for the folder where you would like the plot to be stored. We recommend you use a
+          large slow hard drive (like external HDD).
         </Trans>
       </Typography>
 

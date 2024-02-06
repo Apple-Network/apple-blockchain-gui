@@ -1,14 +1,23 @@
-import React, { ReactNode } from 'react';
 import { Paper, CircularProgress } from '@mui/material';
-import styled from 'styled-components';
+import React, { ReactNode } from 'react';
 import { useDropzone, DropzoneOptions } from 'react-dropzone';
+
+import Color from '../../constants/Color';
 import AspectRatio from '../AspectRatio';
 import Flex from '../Flex';
 
-const StyledPaper = styled(Paper)`
-  background-color: #999999;
-  padding: ${({ theme }) => `${theme.spacing(1)} ${theme.spacing(2)}`};
-`;
+function StyledPaper({ children }: { children: ReactNode | ChildrenRender }) {
+  return (
+    <Paper
+      sx={{
+        backgroundColor: Color.Neutral[400],
+        padding: (theme) => `${theme.spacing(1)} ${theme.spacing(2)}`,
+      }}
+    >
+      {children}
+    </Paper>
+  );
+}
 
 type ChildrenRender = (input: { isDragActive: boolean }) => ReactNode;
 
@@ -19,10 +28,19 @@ type Props = {
   accept?: string[]; // ['image/jpeg', 'image/png']
   ratio: number;
   processing?: boolean;
+  background?: React.ElementType;
 };
 
 export default function Dropzone(props: Props) {
-  const { children, onDrop, maxFiles, accept, ratio, processing } = props;
+  const {
+    children,
+    onDrop,
+    maxFiles,
+    accept,
+    ratio = 16 / 6,
+    processing = false,
+    background: Background = StyledPaper,
+  } = props;
 
   const config: DropzoneOptions = {
     onDrop,
@@ -34,35 +52,18 @@ export default function Dropzone(props: Props) {
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone(config);
-  const childrenContent =
-    typeof children === 'function' ? children({ isDragActive }) : children;
+  const childrenContent = typeof children === 'function' ? children({ isDragActive }) : children;
 
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      <StyledPaper>
+      <Background>
         <AspectRatio ratio={ratio}>
-          <Flex
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-            height="100%"
-          >
-            {processing ? (
-              <CircularProgress color="secondary" />
-            ) : (
-              childrenContent
-            )}
+          <Flex alignItems="center" justifyContent="center" flexDirection="column" height="100%">
+            {processing ? <CircularProgress color="secondary" /> : childrenContent}
           </Flex>
         </AspectRatio>
-      </StyledPaper>
+      </Background>
     </div>
   );
 }
-
-Dropzone.defaultProps = {
-  maxFiles: undefined,
-  accept: undefined,
-  ratio: 16 / 6,
-  processing: false,
-};

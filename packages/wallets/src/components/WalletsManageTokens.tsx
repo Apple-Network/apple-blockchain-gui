@@ -1,29 +1,24 @@
-import React, { type ReactNode, useState } from 'react';
+import { WalletType } from '@apple-network/api';
+import { Button, Color, useColorModeValue, Spinner, Flex, Tooltip, useTrans, ScrollbarFlex } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { Box, IconButton, InputBase } from '@mui/material';
-import { WalletType } from '@apple/api';
-import {
-  Button,
-  useColorModeValue,
-  Spinner,
-  Flex,
-  Tooltip,
-  useTrans,
-} from '@apple/core';
-import styled from 'styled-components';
 import { Add, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
-import { useToggle } from 'react-use';
-import useWalletsList from '../hooks/useWalletsList';
-import WalletTokenCard from './WalletTokenCard';
-import { useNavigate } from 'react-router';
 import SearchIcon from '@mui/icons-material/Search';
+import { Box, IconButton, InputBase } from '@mui/material';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useToggle } from 'react-use';
+import styled from 'styled-components';
+
+import useWalletsList from '../hooks/useWalletsList';
+
+import WalletTokenCard from './WalletTokenCard';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.action.selected,
+  backgroundColor: theme.palette.mode === 'dark' ? Color.Neutral[800] : Color.Neutral[100],
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.mode === 'dark' ? Color.Neutral[700] : Color.Neutral[200],
   },
   paddingLeft: theme.spacing(1),
   paddingRight: theme.spacing(1),
@@ -68,22 +63,20 @@ const StyledButtonContainer = styled(Box)`
 `;
 
 const StyledMainButton = styled(Button)`
-  border-radius: ${({ theme }) =>
-    `${theme.spacing(2)} ${theme.spacing(2)} 0 0`};
+  border-radius: ${({ theme }) => `${theme.spacing(2)} ${theme.spacing(2)} 0 0`};
   border: ${({ theme }) => `1px solid ${useColorModeValue(theme, 'border')}`};
-  background-color: ${({ theme }) => theme.palette.action.hover};
+  background-color: ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[700] : Color.Neutral[200])};
   height: ${({ theme }) => theme.spacing(6)};
   pointer-events: auto;
 
   &:hover {
-    background-color: ${({ theme }) => theme.palette.action.selected};
-    border-color: ${({ theme }) => theme.palette.highlight.main};
+    background-color: ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[800] : Color.Neutral[300])};
   }
 `;
 
-const StyledBody = styled(Box)`
+const StyledBody = styled(({ expanded, ...rest }) => <Box {...rest} />)`
   pointer-events: auto;
-  background-color: ${({ theme }) => theme.palette.background.default};
+  background-color: ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[700] : Color.Neutral[200])};
   transition: all 0.25s ease-out;
   overflow: hidden;
   height: ${({ expanded }) => (expanded ? '100%' : '0%')};
@@ -93,23 +86,17 @@ const StyledContent = styled(Box)`
   height: 100%;
   background-color: ${({ theme }) => theme.palette.action.hover};
   padding-top: ${({ theme }) => theme.spacing(2)};
-  border-left: 1px solid ${({ theme }) => useColorModeValue(theme, 'border')};
-  border-right: 1px solid ${({ theme }) => useColorModeValue(theme, 'border')};
+  border-left: 1px solid ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[700] : Color.Neutral[300])};
+  border-right: 1px solid ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[700] : Color.Neutral[300])};
   display: flex;
   flex-direction: column;
 `;
 
-const StyledListBody = styled(Flex)`
-  overflow-y: overlay;
+const StyledListBody = styled(ScrollbarFlex)`
+  overflow-y: hidden;
   flex-direction: column;
   flex-grow: 1;
   margin-top: ${({ theme }) => theme.spacing(2)};
-  padding-left: ${({ theme }) => theme.spacing(2)};
-  padding-right: ${({ theme }) => theme.spacing(2)};
-`;
-
-const StyledButtonText = styled(Box)`
-  position: relative;
 `;
 
 const StyledExpandButtonContainer = styled(Box)`
@@ -118,11 +105,7 @@ const StyledExpandButtonContainer = styled(Box)`
   top: ${({ theme }) => theme.spacing(0)};
 `;
 
-export type WalletsManageTokensProps = {
-  children?: ReactNode;
-};
-
-export default function WalletsManageTokens(props: WalletsManageTokensProps) {
+export default function WalletsManageTokens() {
   const [expanded, toggle] = useToggle(false);
   const t = useTrans();
   const navigate = useNavigate();
@@ -130,6 +113,7 @@ export default function WalletsManageTokens(props: WalletsManageTokensProps) {
   const { list, hide, show, isLoading } = useWalletsList(search, [
     WalletType.STANDARD_WALLET,
     WalletType.CAT,
+    WalletType.CRCAT,
   ]);
 
   function handleAddToken(event) {
@@ -142,13 +126,13 @@ export default function WalletsManageTokens(props: WalletsManageTokensProps) {
   return (
     <StyledRoot>
       <StyledButtonContainer>
-        <StyledMainButton onClick={toggle} fullWidth>
-          <StyledButtonText>
+        <StyledMainButton onClick={toggle} data-testid="WalletsManageTokens-manage-token-list" fullWidth>
+          <Box position="relative">
             <Trans>Manage token list</Trans>
             <StyledExpandButtonContainer>
               {expanded ? <KeyboardArrowDown /> : <KeyboardArrowUp />}
             </StyledExpandButtonContainer>
-          </StyledButtonText>
+          </Box>
         </StyledMainButton>
       </StyledButtonContainer>
       <StyledBody expanded={expanded}>
@@ -157,11 +141,11 @@ export default function WalletsManageTokens(props: WalletsManageTokensProps) {
             <Box flexGrow={1} ml={2}>
               <Search>
                 <SearchIconWrapper>
-                  <SearchIcon />
+                  <SearchIcon color="info" />
                 </SearchIconWrapper>
                 <StyledInputBase
                   value={search}
-                  onChange={event => setSearch(event.target.value)}
+                  onChange={(event) => setSearch(event.target.value)}
                   placeholder={t('Search...')}
                 />
               </Search>
@@ -169,26 +153,23 @@ export default function WalletsManageTokens(props: WalletsManageTokensProps) {
             <Box mr={2}>
               <Tooltip title={<Trans>Add Token</Trans>}>
                 <IconButton onClick={handleAddToken}>
-                  <Add />
+                  <Add color="info" />
                 </IconButton>
               </Tooltip>
             </Box>
           </Flex>
           <StyledListBody>
-            {isLoading ? (
-              <Spinner center />
-            ) : (
-              <Flex gap={1} flexDirection="column" width="100%">
-                {list?.map(list => (
-                  <WalletTokenCard
-                    item={list}
-                    key={list.id}
-                    onHide={hide}
-                    onShow={show}
-                  />
-                ))}
-              </Flex>
-            )}
+            <Flex flexDirection="column" alignItems="center" paddingLeft={2} paddingRight={2} paddingBottom={1}>
+              {isLoading ? (
+                <Spinner center />
+              ) : (
+                <Flex gap={1} flexDirection="column" width="100%">
+                  {list?.map((listItem) => (
+                    <WalletTokenCard item={listItem} key={listItem.id} onHide={hide} onShow={show} />
+                  ))}
+                </Flex>
+              )}
+            </Flex>
           </StyledListBody>
         </StyledContent>
       </StyledBody>

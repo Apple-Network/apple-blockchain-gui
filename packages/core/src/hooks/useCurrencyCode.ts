@@ -1,4 +1,4 @@
-import { useGetNetworkInfoQuery } from '@apple/api-react';
+import { useGetNetworkInfoQuery } from '@apple-network/api-react';
 
 export default function useCurrencyCode(): string | undefined {
   const { data: networkInfo, isLoading } = useGetNetworkInfoQuery();

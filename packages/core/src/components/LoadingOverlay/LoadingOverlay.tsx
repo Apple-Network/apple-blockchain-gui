@@ -1,12 +1,9 @@
+import { alpha, Box } from '@mui/material';
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import { Box } from '@mui/material';
-import Loading from '../Loading';
 
-const StyledRoot = styled(Box)`
-  position: relative;
-  width: 100%;
-`;
+import Color from '../../constants/Color';
+import Loading from '../Loading';
 
 const StyledLoadingContainer = styled(Box)`
   position: absolute;
@@ -17,34 +14,22 @@ const StyledLoadingContainer = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: ${alpha(Color.Neutral[900], 0.2)};
 `;
 
-type Props = {
+export type LoadingOverlayProps = {
   children?: ReactNode;
   loading?: boolean;
   disabled?: boolean;
 };
 
-export default function LoadingOverlay(props: Props) {
-  const { children, loading, disabled } = props;
+export default function LoadingOverlay(props: LoadingOverlayProps) {
+  const { children, loading = false, disabled = false } = props;
 
   return (
-    <StyledRoot>
+    <Box width="100%" position="relative">
       {children}
-      {(loading || disabled) && (
-        <StyledLoadingContainer>
-          {!disabled && (
-            <Loading center />
-          )}
-        </StyledLoadingContainer>
-      )}
-    </StyledRoot>
+      {(loading || disabled) && <StyledLoadingContainer>{!disabled && <Loading center />}</StyledLoadingContainer>}
+    </Box>
   );
 }
-
-LoadingOverlay.defaultProps = {
-  children: undefined,
-  loading: false,
-  disabled: false,
-};

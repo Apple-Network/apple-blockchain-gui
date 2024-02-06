@@ -1,38 +1,37 @@
-import React from 'react';
 import { Trans } from '@lingui/macro';
-import Flex from '../Flex';
 import { Typography } from '@mui/material';
+import React from 'react';
 import styled from 'styled-components';
-import { Shell } from 'electron';
-import { default as walletPackageJson } from '../../../package.json';
+
+import walletPackageJson from '../../../package.json';
+import Color from '../../constants/Color';
 import useAppVersion from '../../hooks/useAppVersion';
+import Flex from '../Flex';
 
 const { productName } = walletPackageJson;
 
 const FAQ = styled.a`
-color: rgb(128, 160, 194);
+  color: ${Color.Royal[300]};
 `;
 
 const SendFeedback = styled.a`
-color: rgb(128, 160, 194);
+  color: ${Color.Royal[300]};
 `;
 
 async function openFAQURL(): Promise<void> {
   try {
-    const shell: Shell = (window as any).shell;
+    const { shell } = window as any;
     await shell.openExternal('https://github.com/Apple-Network/apple-blockchain/wiki/FAQ');
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e);
   }
 }
 
 async function openSendFeedbackURL(): Promise<void> {
   try {
-    const shell: Shell = (window as any).shell;
+    const { shell } = window as any;
     await shell.openExternal('https://feedback.applecoin.in/lightwallet');
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e);
   }
 }
@@ -54,5 +53,5 @@ export default function LayoutFooter() {
         </SendFeedback>
       </Flex>
     </Flex>
-  )
+  );
 }

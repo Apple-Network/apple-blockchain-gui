@@ -1,10 +1,10 @@
+import { LayoutDashboardSub } from '@apple-network/core';
 import React from 'react';
-import { LayoutDashboardSub } from '@apple/core';
-import { Navigate } from 'react-router-dom'
-import WalletCreate from './create/WalletCreate';
-import { Routes, Route } from 'react-router-dom';
-import WalletsSidebar from './WalletsSidebar';
+import { Navigate, Routes, Route } from 'react-router-dom';
+
 import Wallet from './Wallet';
+import WalletsSidebar from './WalletsSidebar';
+import WalletCreate from './create/WalletCreate';
 
 export default function Wallets() {
   return (

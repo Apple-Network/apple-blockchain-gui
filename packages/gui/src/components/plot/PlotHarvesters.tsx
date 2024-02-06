@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react';
-import { orderBy } from 'lodash';
-import { useGetHarvestersSummaryQuery } from '@apple/api-react';
+import { useGetHarvestersSummaryQuery } from '@apple-network/api-react';
+import { Loading, Flex } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { Loading, Flex } from '@apple/core';
 import { Typography } from '@mui/material';
-import PlotHarvester from './PlotHarvester';
+import { orderBy } from 'lodash';
+import React, { useMemo } from 'react';
+
 import isLocalhost from '../../util/isLocalhost';
+
+import PlotHarvester from './PlotHarvester';
 
 function getIpAddress(harvester) {
   if (isLocalhost(harvester.connection.host)) {
@@ -27,13 +29,10 @@ export default function PlotHarvesters() {
   }, [data]);
 
   if (isLoading) {
-    return (
-      <Loading center />
-    );
+    return <Loading center />;
   }
 
   return (
-
     <Flex flexDirection="column" gap={1}>
       <Typography variant="h6">
         <Trans>Harvesters</Trans>

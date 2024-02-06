@@ -1,4 +1,4 @@
-import { toBech32m, fromBech32m } from '@apple/api';
+import { toBech32m, fromBech32m } from '@apple-network/api';
 
 export function isValidNFTId(nftId: string): boolean {
   return launcherIdFromNFTId(nftId) !== undefined;
@@ -9,7 +9,7 @@ export function launcherIdToNFTId(launcherId: string): string {
 }
 
 export function launcherIdFromNFTId(nftId: string): string | undefined {
-  let decoded: string | undefined = undefined;
+  let decoded: string | undefined;
 
   try {
     decoded = fromBech32m(nftId);

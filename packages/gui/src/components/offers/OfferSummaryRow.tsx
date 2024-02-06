@@ -1,29 +1,30 @@
-import React, { useMemo } from 'react';
-import { Plural, t, Trans } from '@lingui/macro';
+import { WalletType } from '@apple-network/api';
 import {
+  Color,
   CopyToClipboard,
   Flex,
   Link,
   FormatLargeNumber,
   TooltipIcon,
   mojoToCATLocaleString,
-} from '@apple/core';
-import { Box, Typography } from '@mui/material';
-import useAssetIdName from '../../hooks/useAssetIdName';
-import { WalletType } from '@apple/api';
-import { useGetNFTInfoQuery } from '@apple/api-react';
-import { formatAmountForWalletType } from './utils';
-import { launcherIdToNFTId } from '../../util/nfts';
-import { stripHexPrefix } from '../../util/utils';
-import { didToDIDId } from '../../util/dids';
-import NFTSummary from '../nfts/NFTSummary';
+} from '@apple-network/core';
+import { Plural, t, Trans } from '@lingui/macro';
+import { alpha, Box, Typography } from '@mui/material';
+import React from 'react';
 import styled from 'styled-components';
+
+import useAssetIdName from '../../hooks/useAssetIdName';
+import useNFTMinterDID from '../../hooks/useNFTMinterDID';
+import { launcherIdToNFTId } from '../../util/nfts';
+import NFTSummary from '../nfts/NFTSummary';
+
+import { formatAmountForWalletType } from './utils';
 
 /* ========================================================================== */
 
 const StyledTitle = styled(Box)`
   font-size: 0.625rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${alpha(Color.Neutral[50], 0.7)};
 `;
 
 const StyledValue = styled(Box)`
@@ -36,9 +37,7 @@ type OfferMojoAmountProps = {
   mojos: number;
 };
 
-function OfferMojoAmount(
-  props: OfferMojoAmountProps,
-): React.ReactElement | null {
+function OfferMojoAmount(props: OfferMojoAmountProps): React.ReactElement | null {
   const { mojos } = props;
 
   return (
@@ -53,14 +52,7 @@ function OfferMojoAmount(
   );
 }
 
-OfferMojoAmount.defaultProps = {
-  mojos: 0,
-};
-
-function shouldShowMojoAmount(
-  mojos: number,
-  mojoThreshold = 1000000000 /* 1 billion */,
-): boolean {
+function shouldShowMojoAmount(mojos: number, mojoThreshold = 1_000_000_000): boolean {
   return mojoThreshold > 0 && mojos < mojoThreshold;
 }
 
@@ -68,46 +60,23 @@ function shouldShowMojoAmount(
 
 type OfferSummaryNFTRowProps = {
   launcherId: string;
-  amount: number;
   rowNumber?: number;
   showNFTPreview: boolean;
 };
 
-export function OfferSummaryNFTRow(
-  props: OfferSummaryNFTRowProps,
-): React.ReactElement {
+export function OfferSummaryNFTRow(props: OfferSummaryNFTRowProps): React.ReactElement {
   const { launcherId, rowNumber, showNFTPreview } = props;
   const nftId = launcherIdToNFTId(launcherId);
 
-  const {
-    data: nft,
-  } = useGetNFTInfoQuery({ coinId: launcherId ?? '' });
-
-  const owner = useMemo(() => {
-    if (!nft) {
-      return undefined;
-    }
-    const { ownerDid } = nft;
-    if (!ownerDid) {
-      return undefined;
-    }
-    const hexDIDId = stripHexPrefix(ownerDid);
-    const didId = didToDIDId(hexDIDId);
-
-    if (didId === 'did:apple:19qf3g9876t0rkq7tfdkc28cxfy424yzanea29rkzylq89kped9hq3q7wd2') {
-      return 'Apple Network';
-    }
-
-    return didId;
-  }, [nft]);
+  const { didId: minterDID, didName: minterDIDName, isLoading: isLoadingMinterDID } = useNFTMinterDID(nftId);
 
   return (
     <Flex flexDirection="column" gap={2}>
       <Flex flexDirection="column" gap={1}>
         <Box>
           {!showNFTPreview && (
-            <Flex flexDirections="row" alignItems="center" gap={1}>
-              <Typography variant="body1">
+            <Flex alignItems="center" gap={1}>
+              <Typography variant="body1" component="div">
                 <Flex flexDirection="row" alignItems="center" gap={1}>
                   {rowNumber !== undefined && (
                     <Typography
@@ -120,7 +89,7 @@ export function OfferSummaryNFTRow(
                 </Flex>
               </Typography>
               {launcherId !== undefined && (
-                <TooltipIcon interactive>
+                <TooltipIcon>
                   <Flex flexDirection="column" gap={1}>
                     <Flex flexDirection="column" gap={0}>
                       <Flex>
@@ -150,9 +119,9 @@ export function OfferSummaryNFTRow(
             </Flex>
           )}
         </Box>
-        {owner && (
+        {!isLoadingMinterDID && (
           <Typography variant="body2" color="textSecondary">
-            {owner}
+            <Trans>Minter:</Trans> {minterDIDName ?? minterDID}
           </Typography>
         )}
       </Flex>
@@ -170,15 +139,8 @@ type OfferSummaryTokenRowProps = {
   overrideNFTSellerAmount?: number;
 };
 
-export function OfferSummaryTokenRow(
-  props: OfferSummaryTokenRowProps,
-): React.ReactElement {
-  const {
-    assetId,
-    amount: originalAmount,
-    rowNumber,
-    overrideNFTSellerAmount,
-  } = props;
+export function OfferSummaryTokenRow(props: OfferSummaryTokenRowProps): React.ReactElement {
+  const { assetId, amount: originalAmount, rowNumber, overrideNFTSellerAmount } = props;
   const { lookupByAssetId } = useAssetIdName();
   const assetIdInfo = lookupByAssetId(assetId);
   const amount = overrideNFTSellerAmount ?? originalAmount;
@@ -187,20 +149,14 @@ export function OfferSummaryTokenRow(
     : mojoToCATLocaleString(amount);
   const displayName = assetIdInfo?.displayName ?? t`Unknown CAT`;
   const tooltipDisplayName = assetIdInfo?.name ?? t`Unknown CAT`;
-  const showMojoAmount =
-    assetIdInfo?.walletType === WalletType.STANDARD_WALLET &&
-    shouldShowMojoAmount(amount);
+  const showMojoAmount = assetIdInfo?.walletType === WalletType.STANDARD_WALLET && shouldShowMojoAmount(amount);
 
   return (
-    <Flex flexDirections="row" alignItems="center" gap={1}>
-      <Typography variant="body1">
+    <Flex alignItems="center" gap={1}>
+      <Typography variant="body1" component="div">
         <Flex flexDirection="row" alignItems="center" gap={1}>
           {rowNumber !== undefined && (
-            <Typography
-              variant="body1"
-              color="secondary"
-              style={{ fontWeight: 'bold' }}
-            >{`${rowNumber})`}</Typography>
+            <Typography variant="body1" color="secondary" style={{ fontWeight: 'bold' }}>{`${rowNumber})`}</Typography>
           )}
           <Typography>
             {displayAmount} {displayName}
@@ -208,22 +164,19 @@ export function OfferSummaryTokenRow(
         </Flex>
       </Typography>
       {showMojoAmount && (
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="textSecondary" component="div">
           <OfferMojoAmount mojos={amount} />
         </Typography>
       )}
-      <TooltipIcon interactive>
+      <TooltipIcon>
         <Flex flexDirection="column" gap={1}>
           <Flex flexDirection="column" gap={0}>
             <Flex>
               <Box flexGrow={1}>
                 <StyledTitle>Name</StyledTitle>
               </Box>
-              {(!assetIdInfo || assetIdInfo?.walletType === WalletType.CAT) && (
-                <Link
-                  href={`https://www.taildatabase.com/tail/${assetId.toLowerCase()}`}
-                  target="_blank"
-                >
+              {(!assetIdInfo || [WalletType.CAT, WalletType.CRCAT].includes(assetIdInfo?.walletType)) && (
+                <Link href={`https://www.taildatabase.com/tail/${assetId.toLowerCase()}`} target="_blank">
                   <Trans>Search on Tail Database</Trans>
                 </Link>
               )}
@@ -231,93 +184,12 @@ export function OfferSummaryTokenRow(
 
             <StyledValue>{tooltipDisplayName}</StyledValue>
           </Flex>
-          {(!assetIdInfo || assetIdInfo?.walletType === WalletType.CAT) && (
+          {(!assetIdInfo || [WalletType.CAT, WalletType.CRCAT].includes(assetIdInfo?.walletType)) && (
             <Flex flexDirection="column" gap={0}>
               <StyledTitle>Asset ID</StyledTitle>
               <Flex alignItems="center" gap={1}>
                 <StyledValue>{assetId.toLowerCase()}</StyledValue>
-                <CopyToClipboard
-                  value={assetId.toLowerCase()}
-                  fontSize="small"
-                />
-              </Flex>
-            </Flex>
-          )}
-        </Flex>
-      </TooltipIcon>
-    </Flex>
-  );
-}
-
-/* ========================================================================== */
-
-type Props = {
-  assetId: string;
-  amount: number;
-  rowNumber?: number;
-};
-
-export default function OfferSummaryRow(props: Props) {
-  const { assetId, amount, rowNumber } = props;
-  const { lookupByAssetId } = useAssetIdName();
-  const assetIdInfo = lookupByAssetId(assetId);
-  const displayAmount = assetIdInfo
-    ? formatAmountForWalletType(amount as number, assetIdInfo.walletType)
-    : mojoToCATLocaleString(amount);
-  const displayName = assetIdInfo?.displayName ?? t`Unknown CAT`;
-  const showMojoAmount =
-    assetIdInfo?.walletType === WalletType.STANDARD_WALLET &&
-    shouldShowMojoAmount(amount);
-
-  return (
-    <Flex flexDirections="row" alignItems="center" gap={1}>
-      <Typography variant="body1">
-        <Flex flexDirection="row" alignItems="center" gap={1}>
-          {rowNumber !== undefined && (
-            <Typography
-              variant="body1"
-              color="secondary"
-              style={{ fontWeight: 'bold' }}
-            >{`${rowNumber})`}</Typography>
-          )}
-          <Typography>
-            {displayAmount} {displayName}
-          </Typography>
-        </Flex>
-      </Typography>
-      {showMojoAmount && (
-        <Typography variant="body1" color="textSecondary">
-          <OfferMojoAmount mojos={amount} />
-        </Typography>
-      )}
-      <TooltipIcon interactive>
-        <Flex flexDirection="column" gap={1}>
-          <Flex flexDirection="column" gap={0}>
-            <Flex>
-              <Box flexGrow={1}>
-                <StyledTitle>Name</StyledTitle>
-              </Box>
-              {assetIdInfo?.walletType === WalletType.CAT && (
-                <Link
-                  href={`https://www.taildatabase.com/tail/${assetId.toLowerCase()}`}
-                  target="_blank"
-                >
-                  <Trans>Search on Tail Database</Trans>
-                </Link>
-              )}
-            </Flex>
-
-            <StyledValue>{assetIdInfo?.name}</StyledValue>
-          </Flex>
-          {assetIdInfo?.walletType === WalletType.CAT && (
-            <Flex flexDirection="column" gap={0}>
-              <StyledTitle>Asset ID</StyledTitle>
-              <Flex alignItems="center" gap={1}>
-                <StyledValue>{assetId.toLowerCase()}</StyledValue>
-                <CopyToClipboard
-                  value={assetId.toLowerCase()}
-                  fontSize="small"
-                />
+                <CopyToClipboard value={assetId.toLowerCase()} fontSize="small" />
               </Flex>
             </Flex>
           )}

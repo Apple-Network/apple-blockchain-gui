@@ -1,4 +1,4 @@
-import type NFTInfo from '@apple/api';
+import type NFTInfo from '@apple-network/api';
 
 type NFTSelection = {
   items: NFTInfo[];

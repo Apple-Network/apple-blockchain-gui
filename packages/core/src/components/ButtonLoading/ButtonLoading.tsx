@@ -1,13 +1,14 @@
-import React from 'react';
 import { LoadingButton, type LoadingButtonProps } from '@mui/lab';
+import React from 'react';
 
 export type ButtonLoadingProps = LoadingButtonProps & {
   loading?: boolean;
   mode?: 'autodisable' | 'hidecontent';
 };
+type Ref = HTMLButtonElement;
 
-export default function ButtonLoading(props: ButtonLoadingProps) {
-  const { loading, onClick, ...rest } = props;
+const ButtonLoading = React.forwardRef<Ref, ButtonLoadingProps>((props, ref) => {
+  const { color = 'secondary', loading, onClick, ...rest } = props;
 
   function handleClick(...args: any[]) {
     if (!loading && onClick) {
@@ -15,8 +16,7 @@ export default function ButtonLoading(props: ButtonLoadingProps) {
     }
   }
 
-  return (
-    <LoadingButton onClick={handleClick} loading={loading} {...rest} />
-  );
-}
+  return <LoadingButton onClick={handleClick} loading={loading} color={color} ref={ref} {...rest} />;
+});
 
+export default ButtonLoading;

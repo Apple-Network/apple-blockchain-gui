@@ -1,17 +1,15 @@
-import React from 'react';
+import type { Connection } from '@apple-network/api';
+import { ServiceName } from '@apple-network/api';
+import { useGetFarmerFullNodeConnectionsQuery } from '@apple-network/api-react';
+import { Table, Card, FormatBytes, FormatConnectionStatus } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import styled from 'styled-components';
-import { Link, Typography, Tooltip, IconButton } from '@mui/material';
 import { Delete as DeleteIcon } from '@mui/icons-material';
-import {
-  Table,
-  Card,
-  FormatBytes,
-  FormatConnectionStatus,
-} from '@apple/core';
-import { useGetFarmerFullNodeConnectionsQuery, useIsServiceRunningQuery } from '@apple/api-react';
-import type { Connection } from '@apple/api';
-import { ServiceName } from '@apple/api';
+import { Link, Typography, Tooltip, IconButton } from '@mui/material';
+import React from 'react';
+import styled from 'styled-components';
+
+import useIsServiceRunning from '../../hooks/useIsServiceRunning';
+
 import FarmCloseConnection from './FarmCloseConnection';
 
 const StyledIconButton = styled(IconButton)`
@@ -44,19 +42,9 @@ const cols = [
     field(row: Connection) {
       return (
         <>
-          <FormatBytes
-            value={row.bytesWritten}
-            unit="KiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesWritten} unit="KiB" removeUnit fixedDecimals />
           /
-          <FormatBytes
-            value={row.bytesRead}
-            unit="KiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesRead} unit="KiB" removeUnit fixedDecimals />
         </>
       );
     },
@@ -69,7 +57,7 @@ const cols = [
         <FarmCloseConnection nodeId={row.nodeId}>
           {({ onClose }) => (
             <StyledIconButton onClick={() => onClose()}>
-              <DeleteIcon />
+              <DeleteIcon color="info" />
             </StyledIconButton>
           )}
         </FarmCloseConnection>
@@ -80,11 +68,7 @@ const cols = [
 
 export default function FarmFullNodeConnections() {
   const { data: connections = [] } = useGetFarmerFullNodeConnectionsQuery();
-  const { data: isRunning, isLoading } = useIsServiceRunningQuery({
-    service: ServiceName.FARMER,
-  }, {
-    pollingInterval: 1000,
-  });
+  const { isRunning, isLoading } = useIsServiceRunning(ServiceName.FARMER);
 
   return (
     <Card
@@ -94,15 +78,11 @@ export default function FarmFullNodeConnections() {
       tooltip={
         <Trans>
           {'The full node that your farmer is connected to is below. '}
-          <Link
-            target="_blank"
-            href="https://github.com/Apple-Network/apple-blockchain/wiki/Network-Architecture"
-          >
+          <Link target="_blank" href="https://github.com/Apple-Network/apple-blockchain/wiki/Network-Architecture">
             Learn more
           </Link>
         </Trans>
       }
-      interactive
       transparent
     >
       <Typography variant="caption" color="textSecondary">

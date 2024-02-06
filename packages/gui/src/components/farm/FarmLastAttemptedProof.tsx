@@ -1,8 +1,9 @@
-import React from 'react';
+import { useGetNewFarmingInfoQuery } from '@apple-network/api-react';
+import { Link, Table, Card } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { Link, Table, Card } from '@apple/core';
-import { useGetFarmingInfoQuery } from '@apple/api-react';
 import moment from 'moment';
+import React from 'react';
+
 import type { Row } from '../core/components/Table/Table';
 // import usePlots from '../../hooks/usePlots';
 
@@ -34,9 +35,14 @@ const cols = [
 export default function FarmLastAttemptedProof() {
   // const { size } = usePlots();
 
-  const { data: lastAttemptedProof, isLoading } = useGetFarmingInfoQuery();
+  const { data, isLoading } = useGetNewFarmingInfoQuery();
 
-  const reducedLastAttemptedProof = lastAttemptedProof?.slice(0, 5);
+  const reducedLastAttemptedProof = React.useMemo(() => {
+    if (!data) {
+      return data;
+    }
+    return data.newFarmingInfo.slice(0, 5);
+  }, [data]);
   const isEmpty = !reducedLastAttemptedProof?.length;
 
   return (
@@ -45,8 +51,7 @@ export default function FarmLastAttemptedProof() {
       titleVariant="h6"
       tooltip={
         <Trans>
-          This table shows you the last time your farm attempted to win a block
-          challenge.{' '}
+          This table shows you the last time your farm attempted to win a block challenge.{' '}
           <Link
             target="_blank"
             href="https://github.com/Apple-Network/apple-blockchain/wiki/FAQ#what-is-the-plot-filter-and-why-didnt-my-plot-pass-it"
@@ -55,7 +60,6 @@ export default function FarmLastAttemptedProof() {
           </Link>
         </Trans>
       }
-      interactive
       transparent
     >
       <Table

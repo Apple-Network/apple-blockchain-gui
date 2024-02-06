@@ -1,8 +1,10 @@
-import React, { ReactNode } from 'react';
 import { Paper } from '@mui/material';
-import styled from 'styled-components';
-// @ts-ignore
+import React, { ReactNode } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import styled from 'styled-components';
+
+import Color from '../../constants/Color';
+// @ts-ignore
 
 const StyledScrollToBottom = styled(ScrollToBottom)`
   width: 100%;
@@ -10,8 +12,8 @@ const StyledScrollToBottom = styled(ScrollToBottom)`
 `;
 
 const StyledPaper = styled(Paper)`
-  background-color: #272c34;
-  color: white;
+  background-color: ${Color.Neutral[800]};
+  color: ${Color.Neutral[50]};
   min-width: 50vw;
   width: 100%;
   height: 40vh;
@@ -39,7 +41,3 @@ export default function Log(props: Props) {
     </StyledPaper>
   );
 }
-
-Log.defaultProps = {
-  children: undefined,
-};

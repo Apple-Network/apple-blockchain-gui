@@ -1,15 +1,12 @@
+import { CircularProgress, CircularProgressProps, Typography } from '@mui/material';
 import React, { type ReactNode } from 'react';
-import {
-  CircularProgress,
-  CircularProgressProps,
-  Typography,
-} from '@mui/material';
 import styled from 'styled-components';
+
+import Color from '../../constants/Color';
 import Flex from '../Flex';
 
 const StyledCircularProgress = styled(CircularProgress)`
-  color: ${({ theme }) =>
-    theme.palette.mode === 'dark' ? 'white' : 'inherit'}; ;
+  color: ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[50] : 'inherit')};
 `;
 
 export type LoadingProps = CircularProgressProps & {
@@ -18,7 +15,7 @@ export type LoadingProps = CircularProgressProps & {
 };
 
 export default function Loading(props: LoadingProps) {
-  const { children, center, ...rest } = props;
+  const { children, center = false, ...rest } = props;
 
   if (children) {
     return (
@@ -33,11 +30,7 @@ export default function Loading(props: LoadingProps) {
 
   if (center) {
     return (
-      <Flex
-        flexDirection="column"
-        gap={1}
-        alignItems="center"
-      >
+      <Flex flexDirection="column" gap={1} alignItems="center">
         <StyledCircularProgress {...rest} />
       </Flex>
     );
@@ -45,8 +38,3 @@ export default function Loading(props: LoadingProps) {
 
   return <StyledCircularProgress {...rest} />;
 }
-
-Loading.defaultProps = {
-  children: undefined,
-  center: false,
-};

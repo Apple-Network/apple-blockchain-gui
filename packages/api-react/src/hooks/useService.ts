@@ -1,114 +1,102 @@
-import { useEffect, useState } from 'react';
-import { ServiceName } from '@apple/api';
-import { useClientStartServiceMutation } from '../services/client';
-import { useIsServiceRunningQuery, useStopServiceMutation } from '../services/daemon';
+import { ServiceNameValue } from '@apple-network/api';
+import { useEffect, useState, useCallback } from 'react';
 
-export type ServiceState = 'starting' | 'running' | 'stopping' | 'stopped';
+import { useStartServiceMutation, useStopServiceMutation } from '../services/daemon';
+
+export enum ServiceState {
+  STARTING = 'starting',
+  RUNNING = 'running',
+  STOPPING = 'stopping',
+  STOPPED = 'stopped',
+}
 
 type Options = {
-  keepState?: ServiceState,
-  disabled?: boolean,
+  keepState?: ServiceState;
+  disabled?: boolean;
+  noWait?: boolean;
 };
 
-export default function useService(service: ServiceName, options: Options): {
+export default function useService(
+  service: ServiceNameValue,
+  options: Options = {}
+): {
   isLoading: boolean;
-  isProcessing: boolean;
+  isRunning: boolean;
   state: ServiceState;
   start: () => Promise<void>;
   stop: () => Promise<void>;
-  error?: Error | unknown;
-  service: ServiceName;
+  error: Error | undefined;
+  service: ServiceNameValue;
 } {
-  const {
-    keepState,
-    disabled = false,
-  } = options;
+  const { keepState, disabled = false, noWait = false } = options;
 
-  const [isStarting, setIsStarting] = useState<boolean>(false);
-  const [isStopping, setIsStopping] = useState<boolean>(false);
-  const [startService] = useClientStartServiceMutation();
+  const [error, setError] = useState<Error | undefined>();
+  const [state, setState] = useState<ServiceState>(ServiceState.STOPPED);
+
+  const [startService] = useStartServiceMutation();
   const [stopService] = useStopServiceMutation();
 
-  // isRunning is not working when stopService is called (backend issue)
-  const { data: isRunning, isLoading, refetch, error } = useIsServiceRunningQuery({
-    service,
-  }, {
-    pollingInterval: 1000,
-    skip: disabled,
-    selectFromResult: (state) => {
-      return {
-        data: state.data,
-        refetch: state.refetch,
-        error: state.error,
-        isLoading: state.isLoading,
-      };
-    },
-  });
+  const isLoading = [ServiceState.STARTING, ServiceState.STOPPING].includes(state);
 
-  const isProcessing = isStarting || isStopping;
-
-  let state: ServiceState = 'stopped';
-  if (isStarting) {
-    state = 'starting';
-  } else if (isStopping) {
-    state = 'stopping';
-  } else if (isRunning) {
-    state = 'running';
-  }
-
-  async function handleStart() {
-    if (isProcessing) {
+  const handleStart = useCallback(async () => {
+    if (isLoading || disabled || state === ServiceState.RUNNING) {
       return;
     }
 
     try {
-      setIsStarting(true);
+      setState(ServiceState.STARTING);
+
       await startService({
         service,
+        noWait,
       }).unwrap();
 
-      refetch();
-    } finally {
-      setIsStarting(false);
+      setState(ServiceState.RUNNING);
+    } catch (e) {
+      setState(ServiceState.STOPPED);
+      setError(e as Error);
+      console.error(e);
     }
-  }
+  }, [isLoading, service, startService, disabled, state, noWait]);
 
-  async function handleStop() {
-    if (isProcessing) {
+  const handleStop = useCallback(async () => {
+    if (isLoading || disabled || state === ServiceState.STOPPED) {
       return;
     }
 
     try {
-      setIsStopping(true);
+      setState(ServiceState.STOPPING);
       await stopService({
         service,
       }).unwrap();
 
-      refetch();
-    } finally {
-      setIsStopping(false);
+      setState(ServiceState.STOPPED);
+    } catch (e) {
+      setState(ServiceState.RUNNING);
+      setError(e as Error);
+      console.error(e);
     }
-  }
+  }, [isLoading, service, stopService, disabled, state]);
 
   useEffect(() => {
-    if (disabled) {
+    if (disabled || isLoading) {
       return;
     }
 
-    if (keepState === 'running' && keepState !== state && !isProcessing && isRunning === false) {
+    if (keepState === 'running' && keepState !== state) {
       handleStart();
-    } else if (keepState === 'stopped' && keepState !== state && !isProcessing && isRunning === true) {
+    } else if (keepState === 'stopped' && keepState !== state) {
       handleStop();
     }
-  }, [keepState, state, isProcessing, disabled, isRunning]);
+  }, [keepState, service, state, isLoading, disabled, handleStart, handleStop]);
 
   return {
     state,
     isLoading,
-    isProcessing,
-    error,
+    isRunning: state === ServiceState.RUNNING,
     start: handleStart,
     stop: handleStop,
     service,
+    error,
   };
 }

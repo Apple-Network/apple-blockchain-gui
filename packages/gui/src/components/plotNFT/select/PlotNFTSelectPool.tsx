@@ -1,20 +1,17 @@
-import React, {
-  useState,
-  ReactNode,
-  forwardRef,
-  useImperativeHandle,
-} from 'react';
-import { Alert } from '@mui/material';
+import { ButtonLoading, Loading, Flex, Form, Back, appleToMojo, ConfirmDialog, useOpenDialog } from '@apple-network/core';
 import { t, Trans } from '@lingui/macro';
+import { Alert } from '@mui/material';
+import React, { useState, ReactNode, forwardRef, useImperativeHandle } from 'react';
 import { useForm } from 'react-hook-form';
-import { ButtonLoading, Loading, Flex, Form, Back, appleToMojo, ConfirmDialog, useOpenDialog } from '@apple/core';
-import PlotNFTSelectBase from './PlotNFTSelectBase';
-import normalizeUrl from '../../../util/normalizeUrl';
-import getPoolInfo from '../../../util/getPoolInfo';
-import InitialTargetState from '../../../types/InitialTargetState';
-import useStandardWallet from '../../../hooks/useStandardWallet';
-import PlotNFTSelectFaucet from './PlotNFTSelectFaucet';
+
 import usePlotNFTs from '../../../hooks/usePlotNFTs';
+import useStandardWallet from '../../../hooks/useStandardWallet';
+import InitialTargetState from '../../../types/InitialTargetState';
+import getPoolInfo from '../../../util/getPoolInfo';
+import normalizeUrl from '../../../util/normalizeUrl';
+
+import PlotNFTSelectBase from './PlotNFTSelectBase';
+import PlotNFTSelectFaucet from './PlotNFTSelectFaucet';
 
 export type SubmitData = {
   initialTargetState: InitialTargetState;
@@ -29,9 +26,7 @@ async function prepareSubmitData(data: FormData): SubmitData {
 
   if (!self && poolUrl) {
     const normalizedPoolUrl = normalizeUrl(poolUrl);
-    const { targetPuzzleHash, relativeLockHeight } = await getPoolInfo(
-      normalizedPoolUrl,
-    );
+    const { targetPuzzleHash, relativeLockHeight } = await getPoolInfo(normalizedPoolUrl);
     if (!targetPuzzleHash) {
       throw new Error(t`Pool does not provide targetPuzzleHash.`);
     }
@@ -72,6 +67,7 @@ type Props = {
     poolUrl?: string;
   };
   feeDescription?: ReactNode;
+  setShowingPoolDetails?: (showing: boolean) => void;
 };
 
 const PlotNFTSelectPool = forwardRef((props: Props, ref) => {
@@ -82,9 +78,10 @@ const PlotNFTSelectPool = forwardRef((props: Props, ref) => {
     onSubmit,
     title,
     description,
-    submitTitle,
-    hideFee,
+    submitTitle = <Trans>Create</Trans>,
+    hideFee = false,
     feeDescription,
+    setShowingPoolDetails,
   } = props;
   const [loading, setLoading] = useState<boolean>(false);
   const { balance, loading: walletLoading } = useStandardWallet();
@@ -113,27 +110,22 @@ const PlotNFTSelectPool = forwardRef((props: Props, ref) => {
   async function handleSubmit(data: FormData) {
     let createNFT = true;
     if (nfts?.length > 10) {
-       createNFT = await openDialog(
-        <ConfirmDialog
-          title={<Trans>Too Many Plot NFTs</Trans>}
-          confirmColor="danger"
-        >
-          <Trans>
-            You already have more than 10 Plot NFTs. Click OK if you're sure you want to create a new one.
-          </Trans>
+      createNFT = await openDialog(
+        <ConfirmDialog title={<Trans>Too Many Plot NFTs</Trans>} confirmColor="danger">
+          <Trans>You already have more than 10 Plot NFTs. Click OK if you're sure you want to create a new one.</Trans>
         </ConfirmDialog>
       );
     }
     if (createNFT && !exceededNFTLimit) {
-    try {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const submitData = await prepareSubmitData(data);
+        const submitData = await prepareSubmitData(data);
 
-      await onSubmit(submitData);
-    } finally {
-      setLoading(false);
-    }
+        await onSubmit(submitData);
+      } finally {
+        setLoading(false);
+      }
     }
   }
 
@@ -172,10 +164,13 @@ const PlotNFTSelectPool = forwardRef((props: Props, ref) => {
           description={description}
           hideFee={hideFee}
           feeDescription={feeDescription}
+          setShowingPoolDetails={setShowingPoolDetails}
         />
-        {exceededNFTLimit && <Alert severity="error">
-          <Trans>You already have 50 or more Plot NFTs.</Trans>
-        </Alert>}
+        {exceededNFTLimit && (
+          <Alert severity="error">
+            <Trans>You already have 50 or more Plot NFTs.</Trans>
+          </Alert>
+        )}
         {!onCancel && (
           <Flex gap={1} justifyContent="right">
             <ButtonLoading
@@ -193,15 +188,5 @@ const PlotNFTSelectPool = forwardRef((props: Props, ref) => {
     </Form>
   );
 });
-
-PlotNFTSelectPool.defaultProps = {
-  step: undefined,
-  onCancel: undefined,
-  defaultValues: undefined,
-  title: undefined,
-  description: undefined,
-  hideFee: false,
-  submitTitle: <Trans>Create</Trans>,
-};
 
 export default PlotNFTSelectPool;

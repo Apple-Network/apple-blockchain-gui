@@ -1,7 +1,8 @@
-import React from 'react';
+import { Button, Flex, CardStep, useCurrencyCode } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { Button, Flex, CardStep, useCurrencyCode } from '@apple/core';
 import { Box, Typography } from '@mui/material';
+import React from 'react';
+
 import useOpenExternal from '../../../hooks/useOpenExternal';
 
 type Props = {
@@ -14,9 +15,13 @@ export default function PlotNFTSelectFaucet(props: Props) {
   const currencyCode = useCurrencyCode();
   const openExternal = useOpenExternal();
 
-  function handleClick() {
-    openExternal('https://faucet.applecoin.in/');
-  }
+  const handleClick = React.useCallback(() => {
+    if (currencyCode === 'TAPPLE') {
+      openExternal('https://testnet0-faucet.applecoin.in/');
+    } else {
+      openExternal('https://faucet.applecoin.in/');
+    }
+  }, [currencyCode, openExternal]);
 
   return (
     <CardStep
@@ -44,7 +49,3 @@ export default function PlotNFTSelectFaucet(props: Props) {
     </CardStep>
   );
 }
-
-PlotNFTSelectFaucet.defaultProps = {
-  step: 1,
-};

@@ -1,13 +1,21 @@
-import React from 'react';
-import { useCurrencyCode } from '@apple/core';
-import styled from 'styled-components';
-import { useGetCatListQuery } from '@apple/api-react';
-import { WalletType, type Wallet } from '@apple/api';
+import { WalletType, type Wallet } from '@apple-network/api';
+import { useGetCatListQuery } from '@apple-network/api-react';
+import { Flex, TooltipIcon, useCurrencyCode } from '@apple-network/core';
+import { CrCat } from '@apple-network/icons';
+import { t, Trans } from '@lingui/macro';
 import { Typography, type TypographyProps } from '@mui/material';
+import React from 'react';
+import styled from 'styled-components';
 
 const StyledSymbol = styled(Typography)`
   font-size: 1rem;
 `;
+
+const STABLY_USDSC_ASSET_ID = '6d95dae356e32a71db5ddcb42224754a02524c615c5fc35f568c2af04774e589';
+
+const AssetIdTooltipMapping = {
+  [STABLY_USDSC_ASSET_ID]: t`Classic version of Stably USDS as held by Prime Trust`,
+};
 
 export type WalletIconProps = TypographyProps & {
   wallet: Wallet;
@@ -20,13 +28,33 @@ export default function WalletIcon(props: WalletIconProps) {
   const currencyCode = useCurrencyCode();
 
   if (wallet.type === WalletType.STANDARD_WALLET) {
-    return <StyledSymbol color={color} {...rest}>{currencyCode}</StyledSymbol>;
+    return (
+      <StyledSymbol color={color} {...rest}>
+        {currencyCode}
+      </StyledSymbol>
+    );
   }
 
-  if (!isLoading && wallet.type === WalletType.CAT) {
-    const token = catList.find((token) => token.assetId === wallet.meta?.assetId);
+  if (wallet.type === WalletType.CRCAT) {
+    return (
+      <StyledSymbol color={color} {...rest}>
+        <CrCat sx={{ verticalAlign: 'middle' }} /> <Trans>Restricted CAT</Trans>
+      </StyledSymbol>
+    );
+  }
+
+  if (!isLoading && [WalletType.CAT, WalletType.CRCAT].includes(wallet.type)) {
+    const token = catList.find((tokenItem) => tokenItem.assetId === wallet.meta?.assetId);
     if (token) {
-      return <StyledSymbol color={color} {...rest}>{token.symbol}</StyledSymbol>;
+      const tooltipText = AssetIdTooltipMapping[token.assetId];
+      return (
+        <StyledSymbol color={color} {...rest}>
+          <Flex flexDirection="row" alignItems="center" gap={1}>
+            {token.symbol}
+            {tooltipText && <TooltipIcon>{tooltipText}</TooltipIcon>}
+          </Flex>
+        </StyledSymbol>
+      );
     }
   }
 

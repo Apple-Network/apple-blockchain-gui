@@ -1,21 +1,21 @@
-import React from 'react';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { Back, Flex } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { Grid } from '@mui/material';
 import { Restore as RestoreIcon, Add as AddIcon } from '@mui/icons-material';
-import { Back, Flex } from '@apple/core';
+import { Grid } from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import WalletCreateCard from '../create/WalletCreateCard';
 
 export default function WalletCATSelect() {
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const navigate = useNavigate();
 
   function handleCreateNew() {
-    history.push(`${url}/create`);
+    navigate(`create`);
   }
 
   function handleCreateExisting() {
-    history.push(`${url}/existing`);
+    navigate(`existing`);
   }
 
   return (

@@ -1,49 +1,44 @@
 import EventEmitter from 'events';
+
 import { isUndefined, omitBy } from 'lodash';
+
 import type Client from '../Client';
-import ServiceName from '../constants/ServiceName';
 import Message from '../Message';
-import sleep from '../utils/sleep';
+import { type ServiceNameValue } from '../constants/ServiceName';
 
 export type Options = {
-  origin?: ServiceName;
-  skipAddService?: boolean;
+  origin?: ServiceNameValue;
 };
 
-export default class Service extends EventEmitter {
-  private _client: Client;
-  private _name: ServiceName;
-  private _origin: ServiceName;
-  private _readyPromise: Promise<null> | undefined;
+export default abstract class Service extends EventEmitter {
+  readonly client: Client;
 
-  constructor(
-    name: ServiceName, 
-    client: Client, 
-    options: Options = {}, 
-    onInit: () => Promise<void>,
-  ) {
+  readonly name: ServiceNameValue;
+
+  readonly origin: ServiceNameValue;
+
+  #readyPromise: Promise<null> | undefined;
+
+  constructor(name: ServiceNameValue, client: Client, options: Options = {}, onInit?: () => Promise<void>) {
     super();
 
-    const { origin, skipAddService } = options;
+    const { origin } = options;
 
-    this._client = client;
-    this._name = name;
-    this._origin = origin ?? client.origin;
+    this.client = client;
+    this.name = name;
+    this.origin = origin ?? client.origin;
 
-    if (!skipAddService) {
-      client.addService(this);
-    }
-    
+    this.setMaxListeners(100);
+
     client.on('message', this.handleMessage);
 
-    this._readyPromise = new Promise(async (resolve, reject) => {
+    this.#readyPromise = new Promise((resolve, reject) => {
       setTimeout(async () => {
         try {
           if (onInit) {
             await onInit();
           }
           resolve(null);
-          return;
         } catch (error: any) {
           reject(error);
         }
@@ -52,26 +47,15 @@ export default class Service extends EventEmitter {
   }
 
   async whenReady(callback?: () => Promise<any>) {
-    await this._readyPromise;
+    await this.#readyPromise;
     if (callback) {
       return callback();
     }
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  get client() {
-    return this._client;
-  }
-
-  get origin() {
-    return this._origin;
+    return undefined;
   }
 
   register() {
-    return this._client.registerService(this.name);
+    return this.client.registerService(this.name);
   }
 
   handleMessage = (message: Message) => {
@@ -80,15 +64,21 @@ export default class Service extends EventEmitter {
     }
 
     this.processMessage(message);
-  }
+  };
 
   processMessage(message: Message) {
     if (message.command) {
       this.emit(message.command, message.data, message);
-    }    
+    }
   }
 
-  async command(command: string, data: Object = {}, ack = false, timeout?: number, disableFormat?: boolean): Promise<any> {
+  async command<Data>(
+    command: string,
+    data: Object = {},
+    ack = false,
+    timeout?: number,
+    disableFormat?: boolean
+  ): Promise<Data> {
     const { client, origin, name } = this;
 
     if (!command) {
@@ -98,32 +88,32 @@ export default class Service extends EventEmitter {
     // remove undefined values from root data
     const updatedData = omitBy(data, isUndefined);
 
-    const response = await client.send(new Message({
-      origin,
-      destination: name,
-      command,
-      data: updatedData,
-      ack,
-    }), timeout, disableFormat);
+    const response = await client.send(
+      new Message({
+        origin,
+        destination: name,
+        command,
+        data: updatedData,
+        ack,
+      }),
+      timeout,
+      disableFormat
+    );
 
-    return response?.data;
+    return response?.data as Data;
   }
 
-  async ping(): Promise<{
-    success: boolean;
-  }> {
-    return this.command('ping', undefined, undefined, 1000);
+  async ping() {
+    return this.command<void>('ping', undefined, undefined, 1000);
   }
 
   onCommand(
-    command: string, 
+    command: string,
     callback: (data: any, message: Message) => void,
-    processData?: (data: any) => any,
+    processData?: (data: any, message: Message) => any
   ): () => void {
     function handleCommand(data: any, message: Message) {
-      const updatedData = processData
-        ? processData(data, message)
-        : data;
+      const updatedData = processData ? processData(data, message) : data;
       callback(updatedData, message);
     }
 
@@ -134,15 +124,15 @@ export default class Service extends EventEmitter {
     };
   }
 
-  onStateChanged(
-    state: string,
-    callback: (data: any, message: Message) => void,
-    processData?: (data: any) => any,
-  ) {
-    return this.onCommand('state_changed', (data, message) => {
-      if (data.state === state) {
-        callback(data, message);
-      }
-    }, processData);
+  onStateChanged(state: string, callback: (data: any, message: Message) => void, processData?: (data: any) => any) {
+    return this.onCommand(
+      'state_changed',
+      (data, message) => {
+        if (data.state === state) {
+          callback(data, message);
+        }
+      },
+      processData
+    );
   }
 }

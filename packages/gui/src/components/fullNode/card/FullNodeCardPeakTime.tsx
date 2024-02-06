@@ -1,15 +1,13 @@
-import React from 'react';
+import { useGetLatestPeakTimestampQuery } from '@apple-network/api-react';
+import { CardSimple } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { CardSimple } from '@apple/core';
 import moment from 'moment';
-import { useGetLatestPeakTimestampQuery } from '@apple/api-react';
+import React from 'react';
 
 export default function FullNodeCardPeakTime() {
   const { data: timestamp, isLoading, error } = useGetLatestPeakTimestampQuery();
 
-  const value = timestamp
-    ? moment(timestamp * 1000).format('LLL')
-    : '';
+  const value = timestamp ? moment(timestamp * 1000).format('LLL') : '';
 
   return (
     <CardSimple

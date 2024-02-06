@@ -1,10 +1,12 @@
-import { useAsync } from 'react-use';
-import isURL from 'validator/es/lib/isURL';
+import { isValidURL } from '@apple-network/core';
 import { t } from '@lingui/macro';
-import normalizeUrl from '../util/normalizeUrl';
+import { useAsync } from 'react-use';
+
 import type PoolInfo from '../types/PoolInfo';
-import useIsMainnet from './useIsMainnet';
 import getPoolInfo from '../util/getPoolInfo';
+import normalizeUrl from '../util/normalizeUrl';
+
+import useIsMainnet from './useIsMainnet';
 
 export default function usePoolInfo(poolUrl?: string): {
   error?: Error;
@@ -32,13 +34,11 @@ export default function usePoolInfo(poolUrl?: string): {
     }
 
     const normalizedUrl = normalizeUrl(poolUrl);
-    const isValidUrl = isURL(normalizedUrl, isUrlOptions);
+    const isValidUrl = isValidURL(normalizedUrl, isUrlOptions);
 
     if (!isValidUrl) {
       if (isMainnet && !normalizedUrl.startsWith('https:')) {
-        throw new Error(
-          t`The pool URL needs to use protocol https. ${normalizedUrl}`,
-        );
+        throw new Error(t`The pool URL needs to use protocol https. ${normalizedUrl}`);
       }
 
       throw new Error(t`The pool URL is not valid. ${normalizedUrl}`);
@@ -52,9 +52,7 @@ export default function usePoolInfo(poolUrl?: string): {
         ...data,
       };
     } catch (e) {
-      throw new Error(
-        t`The pool URL "${normalizedUrl}" is not working. Is it pool? Error: ${e.message}`,
-      );
+      throw new Error(t`The pool URL "${normalizedUrl}" is not working. Is it pool? Error: ${e.message}`);
     }
   }, [poolUrl, isMainnet]);
 

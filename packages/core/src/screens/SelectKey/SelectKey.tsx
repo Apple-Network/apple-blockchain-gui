@@ -1,67 +1,117 @@
-import React, { useState } from 'react';
-import { Trans } from '@lingui/macro';
-import styled from 'styled-components';
+import type { KeyData } from '@apple-network/api';
 import {
-  Alert,
-  Card,
-  Typography,
-  Container,
-  List,
-} from '@mui/material';
-import { useNavigate } from 'react-router';
-import {
+  usePrefs,
   useGetKeyringStatusQuery,
-  useGetPublicKeysQuery,
   useDeleteAllKeysMutation,
-  useLogInAndSkipImportMutation,
-} from '@apple/api-react';
-import SelectKeyItem from './SelectKeyItem';
+  useGetKeysQuery,
+  type Serializable,
+} from '@apple-network/api-react';
+import { AppleBlack, Coins } from '@apple-network/icons';
+import { Trans } from '@lingui/macro';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import { Alert, Typography, Container, ListItemIcon } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
+import Sortable from 'sortablejs';
+import styled from 'styled-components';
+
 import Button from '../../components/Button';
-import Flex from '../../components/Flex';
-import Logo from '../../components/Logo';
-import Loading from '../../components/Loading';
-import TooltipIcon from '../../components/TooltipIcon';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import DropdownActions from '../../components/Dropdown/DropdownActions';
+import Flex from '../../components/Flex';
+import Loading from '../../components/Loading';
+import MenuItem from '../../components/MenuItem/MenuItem';
+import More from '../../components/More';
+import TooltipIcon from '../../components/TooltipIcon';
+import Color from '../../constants/Color';
+import useAuth from '../../hooks/useAuth';
+import useKeyringMigrationPrompt from '../../hooks/useKeyringMigrationPrompt';
 import useOpenDialog from '../../hooks/useOpenDialog';
 import useShowError from '../../hooks/useShowError';
 import useSkipMigration from '../../hooks/useSkipMigration';
-import useKeyringMigrationPrompt from '../../hooks/useKeyringMigrationPrompt';
+
+import { randomEmoji } from './EmojiAndColorPicker';
+// import Search from './Search';
+import SelectKeyItem from './SelectKeyItem';
 
 const StyledContainer = styled(Container)`
   padding-bottom: 1rem;
+  max-width: 968px;
 `;
 
 export default function SelectKey() {
   const openDialog = useOpenDialog();
   const navigate = useNavigate();
   const [deleteAllKeys] = useDeleteAllKeysMutation();
-  const [logIn, { isLoading: isLoadingLogIn}] = useLogInAndSkipImportMutation();
-  const { data: publicKeyFingerprints, isLoading: isLoadingPublicKeys, error, refetch } = useGetPublicKeysQuery();
+
+  const { isLoading: isLoggingIn, logIn } = useAuth();
+  const [selectedKey, setSelectedKey] = useState<number | null>(null);
+  const { data: publicKeyFingerprints, isLoading: isLoadingPublicKeys, error, refetch } = useGetKeysQuery({});
   const { data: keyringState, isLoading: isLoadingKeyringStatus } = useGetKeyringStatusQuery();
   const hasFingerprints = !!publicKeyFingerprints?.length;
-  const [selectedFingerprint, setSelectedFingerprint] = useState<number | undefined>();
-  const [skippedMigration, _] = useSkipMigration();
+  const [skippedMigration] = useSkipMigration();
   const [promptForKeyringMigration] = useKeyringMigrationPrompt();
   const showError = useShowError();
+  const [sortedWallets, setSortedWallets] = usePrefs('sortedWallets', []);
 
-  const isLoading = isLoadingPublicKeys || isLoadingLogIn;
+  const keyItemsSortable = React.useRef<any>(null);
 
-  async function handleSelect(fingerprint: number) {
-    if (selectedFingerprint) {
-      return;
+  React.useEffect(() => {
+    if (document.getElementById('key-items-container')) {
+      keyItemsSortable.current = new Sortable(document.getElementById('key-items-container'), {
+        onEnd: () => {
+          const newArray = [...(document.getElementById('key-items-container') as HTMLElement).children]
+            .filter((node: any) => node.hasAttribute('data-testid'))
+            .map((node: any) => node.attributes['data-testid'].value.split('-')[2]);
+          setSortedWallets(newArray);
+        },
+      });
     }
+  }, [publicKeyFingerprints, setSortedWallets]);
 
+  type LocalStorageType = Record<string, Record<string, Serializable>>;
+  const theme = useTheme();
+  const [fingerprintSettings, setFingerprintSettings] = usePrefs<LocalStorageType>('fingerprintSettings', {});
+  const allColors = (theme.palette as any).colors;
+  /* useEffect - set random emojis and colors for each wallet
+     if we got no walletKeyTheme keys in each fingerprint inside prefs.yaml */
+  React.useEffect(() => {
+    if (publicKeyFingerprints?.length) {
+      const newFingerprints: any = {};
+      let notifyChange: boolean = false;
+      publicKeyFingerprints.forEach((f: any) => {
+        const themeColors = Object.keys(allColors);
+        const randomTheme = {
+          emoji: randomEmoji(),
+          color: themeColors[Math.floor(themeColors.length * Math.random())],
+        };
+        if (fingerprintSettings[f.fingerprint] && !fingerprintSettings[f.fingerprint].walletKeyTheme) {
+          newFingerprints[f.fingerprint] = { ...fingerprintSettings[f.fingerprint], walletKeyTheme: randomTheme };
+          notifyChange = true;
+        } else if (!fingerprintSettings[f.fingerprint]) {
+          newFingerprints[f.fingerprint] = { walletKeyTheme: randomTheme };
+          notifyChange = true;
+        } else {
+          newFingerprints[f.fingerprint] = fingerprintSettings[f.fingerprint];
+        }
+      });
+      if (notifyChange) {
+        setFingerprintSettings(newFingerprints);
+      }
+    }
+  }, [publicKeyFingerprints, fingerprintSettings, setFingerprintSettings, allColors]);
+
+  async function handleSelect(logInFingerprint: number) {
     try {
-      setSelectedFingerprint(fingerprint);
-      await logIn({
-        fingerprint,
-      }).unwrap();
+      setSelectedKey(logInFingerprint);
+      await logIn(logInFingerprint);
 
       navigate('/dashboard/wallets');
-    } catch (error) {
-      showError(error)
+    } catch (err) {
+      showError(err as Error);
     } finally {
-      setSelectedFingerprint(undefined);
+      setSelectedKey(null);
     }
   }
 
@@ -81,10 +131,10 @@ export default function SelectKey() {
         onConfirm={() => deleteAllKeys().unwrap()}
       >
         <Trans>
-          Deleting all keys will permanently remove the keys from your computer,
-          make sure you have backups. Are you sure you want to continue?
+          Deleting all keys will permanently remove the keys from your computer, make sure you have backups. Are you
+          sure you want to continue?
         </Trans>
-      </ConfirmDialog>,
+      </ConfirmDialog>
     );
   }
 
@@ -107,13 +157,83 @@ export default function SelectKey() {
     }
   }
 
+  function sortedFingerprints(fingerprints: string[]) {
+    const sorted = sortedWallets
+      .map((value: string) => fingerprints.find((f: any) => value === String(f.fingerprint)))
+      .filter((x: any) => !!x); /* if we added a new wallet and order was not saved yet case */
+    fingerprints.forEach((f: any) => {
+      if (sorted.map((f2: any) => f2.fingerprint).indexOf(f.fingerprint) === -1) {
+        sorted.push(f);
+      }
+    });
+    return sorted;
+  }
+
+  const NewWalletButtonGroup = (
+    <Flex alignItems="right">
+      <DropdownActions label={<Trans>Add wallet</Trans>} variant="contained">
+        <MenuItem close onClick={() => handleNavigationIfKeyringIsMutable('/wallet/add')}>
+          <Typography variant="inherit" noWrap>
+            <Trans>Create New</Trans>
+          </Typography>
+        </MenuItem>
+        <MenuItem close onClick={() => handleNavigationIfKeyringIsMutable('/wallet/import')}>
+          <Typography variant="inherit" noWrap>
+            <Trans>Import Existing</Trans>
+          </Typography>
+        </MenuItem>
+      </DropdownActions>
+      {hasFingerprints && (
+        <Flex
+          sx={{
+            '> button': {
+              width: '37px',
+              height: '37px',
+              marginLeft: '10px',
+            },
+          }}
+        >
+          <More>
+            <MenuItem onClick={handleDeleteAllKeys} close>
+              <ListItemIcon>
+                <DeleteIcon color="info" />
+              </ListItemIcon>
+              <Typography variant="inherit" noWrap>
+                <Trans>Delete All Keys</Trans>
+              </Typography>
+            </MenuItem>
+          </More>
+        </Flex>
+      )}
+    </Flex>
+  );
+
+  function renderTopSection() {
+    const isDark = theme.palette.mode === 'dark';
+    const level = isDark ? '700' : '300';
+    return (
+      <Flex
+        justifyContent="space-between"
+        width="100%"
+        sx={{ borderBottom: `1px solid ${Color.Neutral[level]}`, paddingBottom: '30px' }}
+      >
+        <Flex alignItems="left">
+          <AppleBlack color="secondary" />
+          <Typography variant="h4" component="h1" sx={{ position: 'relative', left: '15px', top: '5px' }}>
+            <Trans>Wallet Keys</Trans>
+          </Typography>
+        </Flex>
+        {NewWalletButtonGroup}
+      </Flex>
+    );
+  }
+
   return (
-    <StyledContainer maxWidth="xs">
+    <StyledContainer>
       <Flex flexDirection="column" alignItems="center" gap={3}>
-        <Logo width={130} />
         {isLoadingPublicKeys ? (
           <Loading center>
-            <Trans>Loading list of the keys</Trans>
+            <Trans>Loading keys</Trans>
           </Loading>
         ) : error ? (
           <Alert
@@ -124,80 +244,79 @@ export default function SelectKey() {
               </Button>
             }
           >
-            <Trans>Unable to load the list of the keys</Trans>
+            <Trans>Unable to load keys</Trans>
             &nbsp;
-            <TooltipIcon>
-              {error.message}
-            </TooltipIcon>
+            <TooltipIcon>{error.message}</TooltipIcon>
           </Alert>
         ) : hasFingerprints ? (
-          <Typography variant="h5" component="h1">
-            <Trans>Select Key</Trans>
-          </Typography>
+          <>{renderTopSection()}</>
         ) : (
           <>
-            <Typography variant="h5" component="h1">
-              <Trans>Sign In</Trans>
-            </Typography>
-            <Typography variant="subtitle1" align="center">
-              <Trans>
-                Welcome to Apple. Please log in with an existing key, or create
-                a new key.
-              </Trans>
-            </Typography>
+            {renderTopSection()}
+            <Flex alignItems="center" flexDirection="column">
+              <Typography component="div" variant="h4" color="textPrimary" sx={{ fontWeight: 600, fontSize: '40px' }}>
+                <Trans>Open a world of possibilities.</Trans>
+              </Typography>
+              <Typography
+                component="div"
+                variant="subtitle2"
+                color="textSecondary"
+                sx={{ fontWeight: 400, fontSize: '18px' }}
+              >
+                <Trans>Create a new wallet key to get started with Apple.</Trans>
+              </Typography>
+              <Button
+                onClick={() => handleNavigationIfKeyringIsMutable('/wallet/add')}
+                variant="outlined"
+                color="primary"
+                sx={{ margin: '15px 0' }}
+              >
+                <Trans>Create a new wallet key</Trans>
+              </Button>
+              <Coins />
+            </Flex>
           </>
         )}
-        <Flex
-          flexDirection="column"
-          gap={3}
-          alignItems="stretch"
-          alignSelf="stretch"
-        >
+        {/* <Search /> */}
+        <Flex flexDirection="column" gap={3} alignItems="stretch" alignSelf="stretch">
           {hasFingerprints && (
-            <Card>
-              <List>
-                {publicKeyFingerprints.map((fingerprint: number) => (
-                  <SelectKeyItem
-                    key={fingerprint}
-                    fingerprint={fingerprint}
-                    onSelect={handleSelect}
-                    loading={fingerprint === selectedFingerprint}
-                    disabled={!!selectedFingerprint && fingerprint !== selectedFingerprint}
-                  />
-                ))}
-              </List>
-            </Card>
+            <Flex
+              id="key-items-container"
+              sx={{
+                marginTop: '5px',
+                flexWrap: 'wrap',
+                rowGap: '22px',
+                columnGap: '22px',
+                '> div': {
+                  '@media (min-width: 983px)': {
+                    flexBasis: '292px',
+                    maxWidth: '292px',
+                  },
+                  '@media (max-width: 982px) and (min-width: 569px)': {
+                    flexBasis: 'none',
+                    flex: 'calc(50% - 22px)',
+                    minWidth: '250px',
+                    maxWidth: 'calc(50vw - 42px);',
+                  },
+                  '@media (max-width: 568px)': {
+                    flexBasis: 'none',
+                    minWidth: '250px',
+                  },
+                },
+              }}
+            >
+              {sortedFingerprints(publicKeyFingerprints).map((keyData: KeyData, index: number) => (
+                <SelectKeyItem
+                  key={keyData.fingerprint}
+                  index={index}
+                  keyData={keyData}
+                  onSelect={handleSelect}
+                  loading={isLoggingIn && keyData.fingerprint === selectedKey}
+                  disabled={isLoggingIn}
+                />
+              ))}
+            </Flex>
           )}
-          <Button
-            onClick={() => handleNavigationIfKeyringIsMutable("/wallet/add")}
-            variant="contained"
-            color="primary"
-            size="large"
-            disabled={isLoading}
-            fullWidth
-          >
-            <Trans>Create a new private key</Trans>
-          </Button>
-          <Button
-            onClick={() => handleNavigationIfKeyringIsMutable("/wallet/import")}
-            type="submit"
-            variant="outlined"
-            size="large"
-            disabled={isLoading}
-            fullWidth
-          >
-            <Trans>Import from Mnemonics (24 words)</Trans>
-          </Button>
-          <Button
-            onClick={handleDeleteAllKeys}
-            variant="outlined"
-            color="danger"
-            size="large"
-            disabled={isLoading}
-            fullWidth
-          >
-            <Trans>Delete all keys</Trans>
-          </Button>
         </Flex>
       </Flex>
     </StyledContainer>

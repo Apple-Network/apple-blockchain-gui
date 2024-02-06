@@ -1,6 +1,8 @@
-import PlotQueueItem from 'types/PlotQueueItem';
-import useThrottleQuery from './useThrottleQuery';
+import { PlotQueueItem } from '@apple-network/api';
+
 import { useGetPlotQueueQuery } from '../services/plotter';
+
+import useThrottleQuery from './useThrottleQuery';
 
 export default function useGetThrottlePlotQueueQuery(wait = 5000): {
   isLoading: boolean;
@@ -8,7 +10,11 @@ export default function useGetThrottlePlotQueueQuery(wait = 5000): {
   hasQueue: boolean;
   error?: Error;
 } {
-  const { data: queue, isLoading, error } = useThrottleQuery(useGetPlotQueueQuery, undefined, undefined, {
+  const {
+    data: queue,
+    isLoading,
+    error,
+  } = useThrottleQuery(useGetPlotQueueQuery, undefined, undefined, {
     wait,
   });
 

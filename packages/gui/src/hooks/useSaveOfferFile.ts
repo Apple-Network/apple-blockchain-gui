@@ -1,8 +1,11 @@
-import { OfferTradeRecord } from '@apple/api';
-import { useGetOfferDataMutation } from '@apple/api-react';
-import { useShowSaveDialog } from '@apple/core';
 import fs from 'fs';
+
+import { OfferTradeRecord } from '@apple-network/api';
+import { useGetOfferDataMutation } from '@apple-network/api-react';
+import { useShowSaveDialog } from '@apple-network/core';
+
 import { suggestedFilenameForOffer } from '../components/offers/utils';
+
 import useAssetIdName from './useAssetIdName';
 
 export type SaveOfferFileHook = (tradeId: string) => Promise<void>;
@@ -17,14 +20,11 @@ export default function useSaveOfferFile(): [SaveOfferFileHook] {
       data: response,
     }: {
       data: { offer: string; tradeRecord: OfferTradeRecord; success: boolean };
-    } = await getOfferData(tradeId);
+    } = await getOfferData({ offerId: tradeId });
     const { offer: offerData, tradeRecord, success } = response;
     if (success === true) {
       const dialogOptions = {
-        defaultPath: suggestedFilenameForOffer(
-          tradeRecord.summary,
-          lookupByAssetId,
-        ),
+        defaultPath: suggestedFilenameForOffer(tradeRecord.summary, lookupByAssetId),
       };
       const result = await showSaveDialog(dialogOptions);
       const { filePath, canceled } = result;

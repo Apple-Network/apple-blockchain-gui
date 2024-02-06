@@ -1,7 +1,8 @@
-import React from 'react';
-import { Loading, Flex } from '@apple/core';
-import { useGetThrottlePlotQueueQuery, useGetTotalHarvestersSummaryQuery } from '@apple/api-react';
+import { useGetThrottlePlotQueueQuery, useGetTotalHarvestersSummaryQuery } from '@apple-network/api-react';
+import { Loading, Flex } from '@apple-network/core';
 import { Grid } from '@mui/material';
+import React from 'react';
+
 import PlotHero from './PlotOverviewHero';
 import PlotOverviewPlots from './PlotOverviewPlots';
 

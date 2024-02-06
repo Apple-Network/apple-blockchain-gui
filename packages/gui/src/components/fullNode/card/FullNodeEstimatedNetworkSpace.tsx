@@ -1,7 +1,7 @@
-import React from 'react';
+import { useGetBlockchainStateQuery } from '@apple-network/api-react';
+import { FormatBytes, CardSimple } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { FormatBytes, CardSimple } from '@apple/core';
-import { useGetBlockchainStateQuery } from '@apple/api-react';
+import React from 'react';
 
 export default function FullNodeEstimatedNetworkSpace() {
   const { data, isLoading, error } = useGetBlockchainStateQuery();
@@ -12,12 +12,7 @@ export default function FullNodeEstimatedNetworkSpace() {
       loading={isLoading}
       valueColor="textPrimary"
       title={<Trans>Estimated Network Space</Trans>}
-      tooltip={
-        <Trans>
-          Estimated sum of all the plotted disk space of all farmers in the
-          network
-        </Trans>
-      }
+      tooltip={<Trans>Estimated sum of all the plotted disk space of all farmers in the network</Trans>}
       value={value && <FormatBytes value={value} precision={3} />}
       error={error}
     />

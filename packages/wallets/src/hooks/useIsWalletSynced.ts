@@ -1,4 +1,5 @@
-import { SyncingStatus } from '@apple/api';
+import { SyncingStatus } from '@apple-network/api';
+
 import useWalletState from './useWalletState';
 
 export default function useIsWalletSynced(): boolean {

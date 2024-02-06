@@ -1,7 +1,8 @@
-import React, { ReactElement } from 'react';
+import { useGetWalletBalanceQuery } from '@apple-network/api-react';
+import { CardSimple } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { useGetWalletBalanceQuery } from '@apple/api-react';
-import { CardSimple } from '@apple/core';
+import React, { ReactElement } from 'react';
+
 import useWallet from '../../hooks/useWallet';
 import useWalletHumanValue from '../../hooks/useWalletHumanValue';
 
@@ -17,11 +18,14 @@ export default function WalletCardSpendableBalance(props: Props) {
     data: walletBalance,
     isLoading: isLoadingWalletBalance,
     error,
-  } = useGetWalletBalanceQuery({
-    walletId,
-  }, {
-    pollingInterval: 10000,
-  });
+  } = useGetWalletBalanceQuery(
+    {
+      walletId,
+    },
+    {
+      pollingInterval: 10_000,
+    }
+  );
 
   const { wallet, unit = '', loading } = useWallet(walletId);
 

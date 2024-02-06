@@ -1,5 +1,6 @@
+import { ModeProvider, Persist } from '@apple-network/core';
 import React from 'react';
-import { ModeProvider, Persist } from '@apple/core';
+
 import AppRouter from './AppRouter';
 
 export default function App() {

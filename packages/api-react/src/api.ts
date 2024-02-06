@@ -1,7 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import appleLazyBaseQuery from './appleLazyBaseQuery';
 
-export const baseQuery = appleLazyBaseQuery({});
+import baseQuery from './appleLazyBaseQuery';
+
+export { baseQuery };
 
 export default createApi({
   reducerPath: 'appleApi',

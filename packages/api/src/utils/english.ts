@@ -1998,7 +1998,7 @@ export default [
   { word: 'wet', value: 1996 },
   { word: 'whale', value: 1997 },
   { word: 'what', value: 1998 },
-  { word: 'apple', value: 1999 },
+  { word: 'wheat', value: 1999 },
   { word: 'wheel', value: 2000 },
   { word: 'when', value: 2001 },
   { word: 'where', value: 2002 },

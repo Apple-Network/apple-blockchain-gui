@@ -1,5 +1,5 @@
-import React from 'react';
 import BigNumber from 'bignumber.js';
+import React from 'react';
 
 const Convert: [BigNumber, string][] = [
   [new BigNumber(0), 'B'],
@@ -22,17 +22,11 @@ type Props = {
   precision?: number;
   removeUnit?: boolean;
   fixedDecimals?: boolean;
+  effectiveSize?: boolean;
 };
 
 export default function FormatBytes(props: Props) {
-  const {
-    value,
-    precision,
-    unit,
-    removeUnit,
-    unitSeparator = ' ',
-    fixedDecimals,
-  } = props;
+  const { value, precision, unit, removeUnit, unitSeparator = ' ', fixedDecimals, effectiveSize } = props;
 
   if (value === null || value === undefined) {
     return null;
@@ -46,19 +40,20 @@ export default function FormatBytes(props: Props) {
   let humanUnit;
 
   if (unit) {
-    const unitIndex = Convert.findIndex(item => item[1].toLowerCase() === unit.toLowerCase());
+    const unitIndex = Convert.findIndex((item) => item[1].toLowerCase() === unit.toLowerCase());
     const [unitValue, unitName] = Convert[unitIndex];
 
     humanValue = bigValue.dividedBy(unitValue);
     humanUnit = unitName;
   } else {
     // convert value to nearest bytes representation
-    const unitIndex = Math.min(CovertReversed.length -1, CovertReversed.findIndex(item => absValue.isGreaterThanOrEqualTo(item[0])));
+    const unitIndex = Math.min(
+      CovertReversed.length - 1,
+      CovertReversed.findIndex((item) => absValue.isGreaterThanOrEqualTo(item[0]))
+    );
     const [unitValue, unitName] = CovertReversed[unitIndex];
 
-    humanValue = !unitValue.isZero() 
-      ? bigValue.dividedBy(unitValue) 
-      : bigValue;
+    humanValue = !unitValue.isZero() ? bigValue.dividedBy(unitValue) : bigValue;
     humanUnit = unitName;
   }
 
@@ -66,7 +61,7 @@ export default function FormatBytes(props: Props) {
     humanValue = humanValue.decimalPlaces(precision ?? 2);
   }
 
-  if (precision || fixedDecimals) {
+  if (typeof precision === 'number' || fixedDecimals) {
     humanValue = humanValue.toFixed(precision ?? 2);
   } else {
     humanValue = humanValue.toString();
@@ -74,6 +69,10 @@ export default function FormatBytes(props: Props) {
 
   if (removeUnit) {
     return humanValue;
+  }
+
+  if (effectiveSize && humanUnit) {
+    humanUnit += 'e';
   }
 
   return (

@@ -1,9 +1,10 @@
-import React from 'react';
+import { Flex, Indicator, StateColor, TooltipIcon } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { Flex, Indicator, StateColor, TooltipIcon } from '@apple/core';
-import type Plot from '../../types/Plot';
-import useFarmerStatus from '../../hooks/useFarmerStatus';
+import React from 'react';
+
 import FarmerStatus from '../../constants/FarmerStatus';
+import useFarmerStatus from '../../hooks/useFarmerStatus';
+import type Plot from '../../types/Plot';
 
 const Color = {
   [FarmerStatus.FARMING]: StateColor.SUCCESS,
@@ -35,7 +36,7 @@ type Props = {
 
 export default function PlotStatus(props: Props) {
   const { plot } = props;
-  const farmerStatus = useFarmerStatus();
+  const { farmerStatus } = useFarmerStatus();
   const color = Color[farmerStatus];
   const title = Title[farmerStatus];
   const description = Description[farmerStatus];

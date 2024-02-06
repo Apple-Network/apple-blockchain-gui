@@ -1,86 +1,88 @@
-import { BaseQueryFn } from '@reduxjs/toolkit/query/react';
-import Client, { Service } from '@apple/api';
-import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import Client from '@apple-network/api';
+
+import type ServiceConstructor from './@types/ServiceConstructor';
 import { selectApiConfig } from './slices/api';
 
-let clientInstance: Client;
+const instances = new Map<ServiceConstructor, InstanceType<ServiceConstructor>>();
 
-async function getClientInstance(api: BaseQueryApi): Promise<Client> {
-  if (!clientInstance) {
-    const config = selectApiConfig(api.getState());
-    if (!config) {
-      throw new Error('Client API config is not defined. Dispatch initializeConfig first');
+async function getInstance<TService extends ServiceConstructor>(
+  service: TService,
+  api: any
+): Promise<InstanceType<TService>> {
+  if (!instances.has(service)) {
+    if (service.isClient) {
+      const config = selectApiConfig(api.getState());
+      if (!config) {
+        throw new Error('Client API config is not defined. Dispatch initializeConfig first');
+      }
+      const clientInstance = new Client(config);
+
+      instances.set(service, clientInstance);
+    } else {
+      const client = await getInstance(Client, api);
+
+      if (service.isDaemon) {
+        return client.daemon as InstanceType<TService>;
+      }
+
+      const Service = service;
+      // client is async operation, so we need to check if instance is already set
+      if (!instances.has(Service)) {
+        instances.set(service, new Service(client));
+      }
     }
-    clientInstance = new Client(config);
   }
 
-  return clientInstance;
+  return instances.get(service) as InstanceType<TService>;
 }
 
-const services = new Map<Service, Service>();
-
-async function getServiceInstance(api: BaseQueryApi, ServiceClass: Service): Promise<Service> {
-  if (!services.has(ServiceClass)) {
-    const client = await getClientInstance(api);
-    const serviceInstance = new ServiceClass(client);
-    services.set(ServiceClass, serviceInstance);
-  }
-
-  return services.get(ServiceClass);
-}
-
-type Options = {
-  service?: Service;
-};
-
-export default function appleLazyBaseQuery(options: Options = {}): BaseQueryFn<
-  {
-    command: string;
-    service: Service;
-    args?: any[];
-    mockResponse?: any;
-  } | {
-    command: string;
-    client: boolean;
-    args?: any[];
+const appleLazyBaseQuery = async <
+  TService extends ServiceConstructor,
+  TMethod extends keyof InstanceType<TService> & string,
+  // TParameter extends Parameters<InstanceType<TService>[TMethod]>[0],
+  TResult extends ReturnType<InstanceType<TService>[TMethod]>
+>(
+  options: {
+    service: TService;
+    command: TMethod;
+    // args?: TParameter;
+    args?: any;
     mockResponse?: any;
   },
-  unknown,
-  unknown,
-  {},
-  {
-    timestamp: number;
-    command: string;
-    client?: boolean;
-    args?: any[];
-  }
-> {
-  const {
-    service: DefaultService,
-  } = options;
+  api: any
+) => {
+  const { service, command, args = [], mockResponse } = options;
 
-  return async ({ command, service: ServiceClass, client = false, args = [], mockResponse }, api) => {
-    const instance = client
-      ? await getClientInstance(api)
-      : await getServiceInstance(api, ServiceClass || DefaultService);
-
-    const meta = {
-      timestamp: Date.now(),
-      command,
-      client,
-      args,
-    };
-
-    try {
-      return {
-        data: mockResponse ?? await instance[command](...args),
-        meta,
-      };
-    } catch(error) {
-      return {
-        error,
-        meta,
-      };
-    }
+  const meta = {
+    timestamp: Date.now(),
+    service,
+    command,
+    args,
   };
-}
+
+  if (mockResponse) {
+    return {
+      data: mockResponse,
+      meta,
+    };
+  }
+
+  try {
+    const instance = await getInstance(service, api);
+    const arrayArgs = Array.isArray(args) ? args : [args];
+
+    const data = (await instance[command](...arrayArgs)) as TResult;
+
+    return {
+      data: data ?? null,
+      meta,
+    };
+  } catch (error) {
+    return {
+      error,
+      meta,
+    };
+  }
+};
+
+export default appleLazyBaseQuery;

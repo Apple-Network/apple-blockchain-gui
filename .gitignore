@@ -61,10 +61,6 @@ activate
 # mypy
 .mypy_cache/
 
-# Editors
-.vscode
-.idea
-
 # Packaging
 apple-blockchain.tar.gz
 
@@ -95,5 +91,16 @@ packages/**/src/locales/**/*.js
 daemon/
 win_code_sign_cert.p12
 
+# testing
+packages/**/playwright-report/index.html
+
 .env
 dist
+
+# JetBrains
+.idea/
+
+# Test coverage data
+**/coverage
+.coverage
+.nyc_output

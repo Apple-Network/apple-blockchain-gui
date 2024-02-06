@@ -1,7 +1,9 @@
+import type { PlotNFT, Plot } from '@apple-network/api';
+import { useIsWalletSynced } from '@apple-network/wallets';
 import { useMemo } from 'react';
-import type { PlotNFT, Plot } from '@apple/api';
-import { useIsWalletSynced } from '@apple/wallets';
+
 import PlotNFTState from '../constants/PlotNFTState';
+
 import usePlotNFTName from './usePlotNFTName';
 
 export default function usePlotNFTDetails(nft: PlotNFT): {

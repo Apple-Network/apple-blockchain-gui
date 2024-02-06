@@ -1,36 +1,29 @@
-import React, { useMemo } from 'react';
+import type { NFTAttribute } from '@apple-network/api';
+import { Color, CopyToClipboard, Flex, Loading, TooltipIcon, truncateValue } from '@apple-network/core';
 import { t, Trans } from '@lingui/macro';
-import type { NFTAttribute } from '@apple/api';
-import { useGetNFTInfoQuery } from '@apple/api-react';
-import {
-  CopyToClipboard,
-  Flex,
-  Loading,
-  TooltipIcon,
-  truncateValue,
-} from '@apple/core';
-import { Box, Card, CardContent, Typography } from '@mui/material';
+import { alpha, Box, Card, CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import React, { useMemo } from 'react';
+import styled from 'styled-components';
+
+import useNFT from '../../hooks/useNFT';
 import useNFTMetadata from '../../hooks/useNFTMetadata';
 import isRankingAttribute from '../../util/isRankingAttribute';
 import { launcherIdToNFTId } from '../../util/nfts';
-import NFTPreview from '../nfts/NFTPreview';
-import { NFTProperty } from '../nfts/NFTProperties';
-import { NFTRanking } from '../nfts/NFTRankings';
-import styled from 'styled-components';
 
-/* ========================================================================== */
+import NFTPreview from './NFTPreview';
+import { NFTProperty } from './NFTProperties';
+import { NFTRanking } from './NFTRankings';
+import NFTTitle from './NFTTitle';
 
 const StyledTitle = styled(Box)`
   font-size: 0.625rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${alpha(Color.Neutral[50], 0.7)};
 `;
 
 const StyledValue = styled(Box)`
   word-break: break-all;
 `;
-
-/* ========================================================================== */
 
 export type NFTSummaryProps = {
   launcherId: string;
@@ -41,18 +34,16 @@ export default function NFTSummary(props: NFTSummaryProps) {
   const nftId = launcherIdToNFTId(launcherId);
   const theme = useTheme();
   const bottomPadding = `${theme.spacing(2)}`; // logic borrowed from Flex's gap computation
-  const { data: nft, isLoading: isLoadingNFT } = useGetNFTInfoQuery({
-    coinId: launcherId,
-  });
-  const { metadata, isLoading: isLoadingMetadata } = useNFTMetadata(nft);
+  const { nft, isLoading: isLoadingNFT } = useNFT(launcherId);
+  const { metadata, isLoading: isLoadingMetadata } = useNFTMetadata(launcherId);
 
   const [properties, rankings] = useMemo(() => {
     if (!nft) {
       return [[], []];
     }
 
-    const properties: React.ReactElement[] = [];
-    const rankings: React.ReactElement[] = [];
+    const propertiesLocal: React.ReactElement[] = [];
+    const rankingsLocal: React.ReactElement[] = [];
 
     const collectionNameProperty = metadata?.collection_name ? (
       <NFTProperty
@@ -63,11 +54,11 @@ export default function NFTSummary(props: NFTSummaryProps) {
     ) : null;
 
     const editionProperty =
-      nft?.seriesNumber && nft?.seriesTotal > 1 ? (
+      nft?.editionNumber && nft?.editionTotal > 1 ? (
         <NFTProperty
           attribute={{
             name: t`Edition #`,
-            value: `${nft.seriesNumber}/${nft.seriesTotal}`,
+            value: `${nft.editionNumber}/${nft.editionTotal}`,
           }}
           size="small"
           color="secondary"
@@ -75,37 +66,28 @@ export default function NFTSummary(props: NFTSummaryProps) {
       ) : null;
 
     if (collectionNameProperty) {
-      properties.push(collectionNameProperty);
+      propertiesLocal.push(collectionNameProperty);
     }
 
     if (editionProperty) {
-      properties.push(editionProperty);
+      propertiesLocal.push(editionProperty);
     }
 
-    metadata
-      ?.attributes
+    metadata?.attributes
       ?.filter((attribute: NFTAttribute) => !isRankingAttribute(attribute))
       .forEach((attribute: NFTAttribute) =>
-        properties.push(
-          <NFTProperty attribute={attribute} size="small" color="secondary" />,
-        ),
+        propertiesLocal.push(<NFTProperty attribute={attribute} size="small" color="secondary" />)
       );
 
-    metadata
-      ?.attributes
+    metadata?.attributes
       ?.filter((attribute: NFTAttribute) => isRankingAttribute(attribute))
       .forEach((attribute: NFTAttribute) =>
-        rankings.push(
-          <NFTRanking
-            attribute={attribute}
-            size="small"
-            color="secondary"
-            progressColor="secondary"
-          />,
-        ),
+        rankingsLocal.push(
+          <NFTRanking attribute={attribute} size="small" color="secondary" progressColor="secondary" />
+        )
       );
 
-    return [properties, rankings];
+    return [propertiesLocal, rankingsLocal];
   }, [nft, metadata]);
 
   const havePropertiesOrRankings = properties.length > 0 || rankings.length > 0;
@@ -121,47 +103,6 @@ export default function NFTSummary(props: NFTSummaryProps) {
     );
   }
 
-  const NFTIDComponent = function (props: any) {
-    const { ...rest } = props;
-    const truncatedNftId = truncateValue(nftId, {});
-
-    return (
-      <Flex flexDirection="row" alignItems="center" gap={1} {...rest}>
-        <Typography variant="body2">{truncatedNftId}</Typography>
-        <TooltipIcon interactive>
-          <Flex flexDirection="column" gap={1}>
-            <Flex flexDirection="column" gap={0}>
-              <Flex>
-                <Box flexGrow={1}>
-                  <StyledTitle>NFT ID</StyledTitle>
-                </Box>
-              </Flex>
-              <Flex alignItems="center" gap={1}>
-                <StyledValue>{nftId}</StyledValue>
-                <CopyToClipboard value={nftId} fontSize="small" invertColor />
-              </Flex>
-            </Flex>
-            <Flex flexDirection="column" gap={0}>
-              <Flex>
-                <Box flexGrow={1}>
-                  <StyledTitle>Launcher ID</StyledTitle>
-                </Box>
-              </Flex>
-              <Flex alignItems="center" gap={1}>
-                <StyledValue>{launcherId}</StyledValue>
-                <CopyToClipboard
-                  value={launcherId}
-                  fontSize="small"
-                  invertColor
-                />
-              </Flex>
-            </Flex>
-          </Flex>
-        </TooltipIcon>
-      </Flex>
-    );
-  };
-
   return (
     <Card>
       <CardContent style={{ paddingBottom: `${bottomPadding}` }}>
@@ -176,7 +117,7 @@ export default function NFTSummary(props: NFTSummaryProps) {
               minWidth="80px"
               height="80px"
             >
-              <NFTPreview nft={nft} height={80} />
+              <NFTPreview id={nftId} width={80} disableInteractions />
             </Box>
             <Flex
               flexDirection="column"
@@ -188,14 +129,14 @@ export default function NFTSummary(props: NFTSummaryProps) {
               }}
             >
               <Typography variant="h6" fontWeight="bold" noWrap>
-                {metadata?.name ?? <Trans>Title Not Available</Trans>}
+                <NFTTitle nftId={nftId} />
               </Typography>
               {metadata?.description && (
                 <Typography variant="caption" noWrap>
                   {metadata.description}
                 </Typography>
               )}
-              <NFTIDComponent style={{ paddingTop: '0.5rem' }} />
+              <NFTIDComponent style={{ paddingTop: '0.5rem' }} nftId={nftId} launcherId={launcherId} />
             </Flex>
           </Flex>
           {havePropertiesOrRankings && (
@@ -203,6 +144,7 @@ export default function NFTSummary(props: NFTSummaryProps) {
               {properties.length > 0 && (
                 <Flex flexDirection="row" gap={1}>
                   {properties?.map((property, index) => (
+                    // eslint-disable-next-line react/no-array-index-key -- Its a list of react elements, we have nothing else to use
                     <React.Fragment key={index}>{property}</React.Fragment>
                   ))}
                 </Flex>
@@ -210,6 +152,7 @@ export default function NFTSummary(props: NFTSummaryProps) {
               {rankings.length > 0 && (
                 <Flex flexDirection="row" gap={1}>
                   {rankings?.map((ranking, index) => (
+                    // eslint-disable-next-line react/no-array-index-key -- Its a list of react elements, we have nothing else to use
                     <React.Fragment key={index}>{ranking}</React.Fragment>
                   ))}
                 </Flex>
@@ -219,5 +162,47 @@ export default function NFTSummary(props: NFTSummaryProps) {
         </Flex>
       </CardContent>
     </Card>
+  );
+}
+
+type NFTIDComponentProps = {
+  launcherId: string;
+  nftId: string;
+};
+
+function NFTIDComponent(props: NFTIDComponentProps) {
+  const { nftId, launcherId, ...flexProps } = props;
+  const truncatedNftId = truncateValue(nftId, {});
+
+  return (
+    <Flex flexDirection="row" alignItems="center" gap={1} {...flexProps}>
+      <Typography variant="body2">{truncatedNftId}</Typography>
+      <TooltipIcon>
+        <Flex flexDirection="column" gap={1}>
+          <Flex flexDirection="column" gap={0}>
+            <Flex>
+              <Box flexGrow={1}>
+                <StyledTitle>NFT ID</StyledTitle>
+              </Box>
+            </Flex>
+            <Flex alignItems="center" gap={1}>
+              <StyledValue>{nftId}</StyledValue>
+              <CopyToClipboard value={nftId} fontSize="small" invertColor />
+            </Flex>
+          </Flex>
+          <Flex flexDirection="column" gap={0}>
+            <Flex>
+              <Box flexGrow={1}>
+                <StyledTitle>Launcher ID</StyledTitle>
+              </Box>
+            </Flex>
+            <Flex alignItems="center" gap={1}>
+              <StyledValue>{launcherId}</StyledValue>
+              <CopyToClipboard value={launcherId} fontSize="small" invertColor />
+            </Flex>
+          </Flex>
+        </Flex>
+      </TooltipIcon>
+    </Flex>
   );
 }

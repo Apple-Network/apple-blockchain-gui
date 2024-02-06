@@ -1,60 +1,46 @@
-import React, { ReactNode } from 'react';
 import { Trans, Plural } from '@lingui/macro';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Box, IconButton, InputAdornment, FormControl, FormHelperText } from '@mui/material';
 import BigNumber from 'bignumber.js';
-import NumberFormat from 'react-number-format';
-import {
-  Box,
-  InputAdornment,
-  FormControl,
-  FormHelperText,
-} from '@mui/material';
+import React, { type ReactNode } from 'react';
 import { useWatch, useFormContext } from 'react-hook-form';
-import TextField, { TextFieldProps } from '../TextField';
-import appleToMojo from '../../utils/appleToMojo';
-import catToMojo from '../../utils/catToMojo';
+
 import useCurrencyCode from '../../hooks/useCurrencyCode';
-import FormatLargeNumber from '../FormatLargeNumber';
+import catToMojo from '../../utils/catToMojo';
+import appleToMojo from '../../utils/appleToMojo';
 import Flex from '../Flex';
+import FormatLargeNumber from '../FormatLargeNumber';
+import TextField, { TextFieldProps } from '../TextField';
 
-interface NumberFormatCustomProps {
-  inputRef: (instance: NumberFormat | null) => void;
-  onChange: (event: { target: { name: string; value: string } }) => void;
-  name: string;
-}
-
-function NumberFormatCustom(props: NumberFormatCustomProps) {
-  const { inputRef, onChange, ...other } = props;
-
-  function handleChange(values: Object) {
-    onChange(values.value);
-  }
-
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={handleChange}
-      thousandSeparator
-      allowNegative={false}
-      isNumericString
-    />
-  );
-}
+import NumberFormatCustom from './NumberFormatCustom';
 
 export type AmountProps = TextFieldProps & {
   children?: (props: { mojo: BigNumber; value: string | undefined }) => ReactNode;
   name?: string;
   symbol?: string; // if set, overrides the currencyCode. empty string is allowed
   showAmountInMojos?: boolean; // if true, shows the mojo amount below the input field
-  feeMode?: boolean // if true, amounts are expressed in mojos used to set a transaction fee
+  dropdownAdornment?: func;
+  label?: ReactNode;
+  'data-testid'?: string;
 };
 
 export default function Amount(props: AmountProps) {
-  const { children, name, symbol, showAmountInMojos, variant, fullWidth, ...rest } = props;
+  const {
+    children,
+    name = 'amount',
+    symbol,
+    showAmountInMojos = true,
+    dropdownAdornment,
+    variant,
+    fullWidth,
+    'data-testid': dataTestid,
+    label = <Trans>Amount</Trans>,
+    ...rest
+  } = props;
   const { control } = useFormContext();
   const defaultCurrencyCode = useCurrencyCode();
 
-  const value = useWatch<string>({
+  const value: string = useWatch({
     control,
     name,
   });
@@ -63,9 +49,7 @@ export default function Amount(props: AmountProps) {
 
   const currencyCode = symbol === undefined ? defaultCurrencyCode : symbol;
   const isAppleCurrency = ['APPLE', 'TAPPLE'].includes(currencyCode);
-  const mojo = isAppleCurrency
-    ? appleToMojo(correctedValue)
-    : catToMojo(correctedValue);
+  const mojo = isAppleCurrency ? appleToMojo(correctedValue) : catToMojo(correctedValue);
 
   return (
     <FormControl variant={variant} fullWidth={fullWidth}>
@@ -78,42 +62,41 @@ export default function Amount(props: AmountProps) {
           inputComponent: NumberFormatCustom as any,
           inputProps: {
             decimalScale: isAppleCurrency ? 12 : 3,
+            'data-testid': dataTestid,
           },
-          endAdornment: (
+          endAdornment: dropdownAdornment ? (
+            <IconButton onClick={dropdownAdornment}>
+              <ArrowDropDownIcon />
+            </IconButton>
+          ) : (
             <InputAdornment position="end">{currencyCode}</InputAdornment>
           ),
+          style: dropdownAdornment ? { paddingRight: '0' } : undefined,
         }}
+        label={label}
         {...rest}
       />
-        <FormHelperText component='div' >
-          <Flex alignItems="center" gap={2}>
-            {showAmountInMojos && (
-              <Flex flexGrow={1} gap={1}>
-                {!mojo.isZero() && (
-                  <>
-                    <FormatLargeNumber value={mojo} />
-                    <Box>
-                      <Plural value={mojo.toNumber()} one="mojo" other="mojos" />
-                    </Box>
-                  </>
-                )}
-              </Flex>
-            )}
-            {children &&
-              children({
-                mojo,
-                value,
-              })}
-          </Flex>
-        </FormHelperText>
+      <FormHelperText component="div">
+        <Flex alignItems="center" gap={2}>
+          {showAmountInMojos && (
+            <Flex flexGrow={1} gap={1}>
+              {!mojo.isZero() && (
+                <>
+                  <FormatLargeNumber value={mojo} />
+                  <Box>
+                    <Plural value={mojo.toNumber()} one="mojo" other="mojos" />
+                  </Box>
+                </>
+              )}
+            </Flex>
+          )}
+          {children &&
+            children({
+              mojo,
+              value,
+            })}
+        </Flex>
+      </FormHelperText>
     </FormControl>
   );
 }
-
-Amount.defaultProps = {
-  label: <Trans>Amount</Trans>,
-  name: 'amount',
-  children: undefined,
-  showAmountInMojos: true,
-  feeMode: false,
-};

@@ -1,6 +1,6 @@
 enum NFTOfferExchangeType {
-  NFTForAPPLE = 'nft_for_apple',
-  APPLEForNFT = 'apple_for_nft',
+  NFTForToken = 'nft_for_token',
+  TokenForNFT = 'token_for_nft',
 }
 
 export default NFTOfferExchangeType;

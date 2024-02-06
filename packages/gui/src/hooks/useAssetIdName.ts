@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
-import { useGetCatListQuery, useGetWalletsQuery } from '@apple/api-react';
-import { CATToken, Wallet, useCurrencyCode } from '@apple/core';
-import { WalletType } from '@apple/api';
+import { WalletType } from '@apple-network/api';
+import { useGetCatListQuery, useGetWalletsQuery } from '@apple-network/api-react';
+import type { CATToken, Wallet } from '@apple-network/core';
+import { useCurrencyCode } from '@apple-network/core';
+import { useMemo, useRef, useCallback } from 'react';
 
 export type AssetIdMapEntry = {
   walletId: number;
@@ -10,23 +11,26 @@ export type AssetIdMapEntry = {
   name: string;
   symbol?: string;
   displayName: string;
+  assetId: string;
 };
 
 export default function useAssetIdName() {
-  const { data: wallets, isLoading } = useGetWalletsQuery();
-  const { data: catList = [], isLoading: isCatListLoading } =
-    useGetCatListQuery();
+  const { data: wallets = [], isLoading: isLoadingWallets, error: errorWallets } = useGetWalletsQuery();
+  const { data: catList = [], isLoading: isCatListLoading, error: errorCatList } = useGetCatListQuery();
   const currencyCode = useCurrencyCode();
 
-  const { assetIdNameMapping, walletIdNameMapping } = useMemo(() => {
+  const isLoading = isLoadingWallets || isCatListLoading;
+  const error = errorWallets || errorCatList;
+
+  const memoized = useMemo(() => {
     const assetIdNameMapping = new Map<string, AssetIdMapEntry>();
     const walletIdNameMapping = new Map<number, AssetIdMapEntry>();
 
-    if (isLoading || isCatListLoading) {
+    if (isLoading) {
       return { assetIdNameMapping, walletIdNameMapping };
     }
 
-    wallets.map((wallet: Wallet) => {
+    wallets.forEach((wallet: Wallet) => {
       const walletId: number = wallet.id;
       const walletType: WalletType = wallet.type;
       let assetId: string | undefined;
@@ -39,11 +43,9 @@ export default function useAssetIdName() {
         name = 'Apple';
         symbol = currencyCode;
         isVerified = true;
-      } else if (walletType === WalletType.CAT) {
+      } else if ([WalletType.CAT, WalletType.CRCAT].includes(walletType)) {
         const lowercaseTail = wallet.meta.assetId.toLowerCase();
-        const cat = catList.find(
-          (cat: CATToken) => cat.assetId.toLowerCase() === lowercaseTail,
-        );
+        const cat = catList.find((catItem: CATToken) => catItem.assetId.toLowerCase() === lowercaseTail);
 
         assetId = lowercaseTail;
         name = wallet.name;
@@ -55,7 +57,7 @@ export default function useAssetIdName() {
       }
 
       if (assetId && name) {
-        const displayName = symbol ? symbol : name;
+        const displayName = symbol || name;
         const entry: AssetIdMapEntry = {
           walletId,
           walletType,
@@ -63,21 +65,22 @@ export default function useAssetIdName() {
           symbol,
           displayName,
           isVerified,
+          assetId,
         };
         assetIdNameMapping.set(assetId, entry);
         walletIdNameMapping.set(walletId, entry);
       }
     });
 
-    catList.map((cat: CATToken) => {
+    catList.forEach((cat: CATToken) => {
       if (assetIdNameMapping.has(cat.assetId)) {
         return;
       }
 
-      const assetId = cat.assetId;
-      const name = cat.name;
-      const symbol = cat.symbol;
-      const displayName = symbol ? symbol : name;
+      const { assetId } = cat;
+      const { name } = cat;
+      const { symbol } = cat;
+      const displayName = symbol || name;
       const entry: AssetIdMapEntry = {
         walletId: 0,
         walletType: WalletType.CAT,
@@ -85,6 +88,7 @@ export default function useAssetIdName() {
         symbol,
         displayName,
         isVerified: true,
+        assetId,
       };
       assetIdNameMapping.set(assetId, entry);
     });
@@ -94,7 +98,7 @@ export default function useAssetIdName() {
       const assetId = 'tapple';
       const name = 'Apple (Testnet)';
       const symbol = 'TAPPLE';
-      const displayName = symbol ? symbol : name;
+      const displayName = symbol || name;
       const entry: AssetIdMapEntry = {
         walletId: 1,
         walletType: WalletType.STANDARD_WALLET,
@@ -107,17 +111,20 @@ export default function useAssetIdName() {
     }
 
     return { assetIdNameMapping, walletIdNameMapping };
-  }, [catList, wallets, isCatListLoading, isLoading]);
+  }, [isLoading, wallets, catList, currencyCode]);
 
-  function lookupByAssetId(assetId: string): AssetIdMapEntry | undefined {
-    return assetIdNameMapping.get(assetId.toLowerCase());
-  }
+  const ref = useRef(memoized);
+  ref.current = memoized;
 
-  function lookupByWalletId(
-    walletId: number | string,
-  ): AssetIdMapEntry | undefined {
-    return walletIdNameMapping.get(Number(walletId));
-  }
+  const lookupByAssetId = useCallback(
+    (assetId: string) => ref.current.assetIdNameMapping.get(assetId.toLowerCase()),
+    [ref]
+  );
 
-  return { lookupByAssetId, lookupByWalletId };
+  const lookupByWalletId = useCallback(
+    (walletId: number | string) => ref.current.walletIdNameMapping.get(Number(walletId)),
+    [ref]
+  );
+
+  return { lookupByAssetId, lookupByWalletId, isLoading, error };
 }

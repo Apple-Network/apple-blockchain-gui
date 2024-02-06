@@ -1,6 +1,3 @@
-import React, { ReactNode, useMemo, useState, SyntheticEvent, Fragment } from 'react';
-import styled from 'styled-components';
-import { get } from 'lodash';
 import {
   Box,
   TableContainer,
@@ -14,50 +11,75 @@ import {
   TablePagination,
   Collapse,
 } from '@mui/material';
+import { get } from 'lodash';
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
+import React, { ReactNode, useMemo, useState, SyntheticEvent, Fragment } from 'react';
+import styled from 'styled-components';
+
+import Color from '../../constants/Color';
 import LoadingOverlay from '../LoadingOverlay';
 
-
 const StyledTableHead = styled(TableHead)`
-  background-color: ${({ theme }) => theme.palette.action.selected};
+  background-color: ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[700] : Color.Neutral[200])};
   font-weight: 500;
 `;
 
-export const StyledTableRow = styled(({ odd, ...rest }) => <TableRow {...rest} />)`
-  ${({ odd, theme }) => odd
-    ? `background-color: ${theme.palette.action.hover};`
-    : undefined
-  }
+export const StyledTableRow = styled(({ odd, oddRowBackgroundColor, ...rest }) => <TableRow {...rest} />)`
+  ${({ odd, oddRowBackgroundColor, theme }) =>
+    odd
+      ? `background-color: ${
+          oddRowBackgroundColor || (theme.palette.mode === 'dark' ? Color.Neutral[800] : Color.Neutral[100])
+        };`
+      : undefined}
 `;
 
-const StyledExpandedTableRow = styled(TableRow)`
-  background-color: ${({ theme }) =>
-    theme.palette.mode === 'dark' ? '#1E1E1E' : '#EEEEEE'};
-  ${({ isExpanded }) => !isExpanded ? 'display: none;' : undefined}
+const StyledExpandedTableRow = styled(({ isExpanded, ...rest }) => <TableRow {...rest} />)`
+  background-color: ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[700] : Color.Neutral[200])};
+  ${({ isExpanded }) => (!isExpanded ? 'display: none;' : undefined)}
 `;
 
-const StyledTableCell = styled(({ width, minWidth, maxWidth, ...rest }) => (
-  <TableCell {...rest} />
-))`
-  max-width: ${({ minWidth, maxWidth, width }) =>
-    (maxWidth || width || minWidth) ?? 'none'};
+const StyledTableCell = styled(({ width, minWidth, maxWidth, ...rest }) => <TableCell {...rest} />)`
+  max-width: ${({ minWidth, maxWidth, width }) => (maxWidth || width || minWidth) ?? 'none'};
   min-width: ${({ minWidth }) => minWidth || '0'};
   width: ${({ width, minWidth }) => (width || minWidth ? width : 'auto')}};
-  border-bottom: 1px solid ${({ theme }) =>
-    theme.palette.mode === 'dark' ? '#353535' : '#e0e0e0'};
+  border-bottom: 1px solid ${({ theme }) => (theme.palette.mode === 'dark' ? Color.Neutral[800] : Color.Neutral[200])};
 `;
 
-const StyledTableCellContent = styled(Box)`
+const StyledTableCellContent = styled(Box)<{ forceWrap: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: ${(props) => (props.forceWrap ? 'wrap' : 'nowrap')};
 `;
 
-const StyledExpandedTableCell = styled(({ isExpanded, ...rest}) => <TableCell {...rest} />)`
-`;
+const StyledExpandedTableCell = styled(({ isExpanded, ...rest }) => <TableCell {...rest} />)``;
 
 const StyledExpandedTableCellContent = styled(Box)`
   padding: 1rem 0;
 `;
+
+function PaperScrollbar(props) {
+  const { children, rest } = props;
+
+  return (
+    <Paper {...rest}>
+      <OverlayScrollbarsComponent options={{ scrollbars: { autoHide: 'leave' } }}>
+        {children}
+      </OverlayScrollbarsComponent>
+    </Paper>
+  );
+}
+
+function PaginationScrollbar(props) {
+  const { children, rest } = props;
+
+  return (
+    <Box sx={{ display: 'table', width: '100%' }} {...rest}>
+      <OverlayScrollbarsComponent options={{ scrollbars: { autoHide: 'leave' } }}>
+        {children}
+      </OverlayScrollbarsComponent>
+    </Box>
+  );
+}
 
 export type Col = {
   key?: number | string;
@@ -67,6 +89,7 @@ export type Col = {
   maxWidth?: string;
   width?: string;
   tooltip?: ReactNode | ((row: Row) => ReactNode);
+  forceWrap?: boolean;
 };
 
 export type Row = {
@@ -92,30 +115,34 @@ export type TableControlledProps = {
   metadata?: any;
   expandedField?: (row: Row) => ReactNode;
   expandedCellShift?: number;
-  onPageChange?: (rowsPerPage: number, page: number) => void,
+  onPageChange?: (rowsPerPage: number, page: number) => void;
   count?: number;
   isLoading?: boolean;
+  onToggleExpand?: (rowId: string, expanded: boolean, rowData: any) => void;
+  ExtraRowsAfterHeader?: ReactNode;
 };
 
 export default function TableControlled(props: TableControlledProps) {
   const {
-    cols,
-    rows,
+    cols = [],
+    rows = [],
     page,
-    pages,
-    rowsPerPageOptions,
-    rowsPerPage,
-    hideHeader,
+    pages = false,
+    rowsPerPageOptions = [10, 25, 100],
+    rowsPerPage = 10,
+    hideHeader = false,
     caption,
     onRowClick,
-    rowHover,
+    rowHover = false,
     uniqueField,
     metadata,
     expandedField,
-    expandedCellShift,
+    expandedCellShift = 0,
     onPageChange,
     count,
     isLoading,
+    onToggleExpand = () => {},
+    ExtraRowsAfterHeader = null,
   } = props;
   const [expanded, setExpanded] = useState<{
     [key: string]: boolean;
@@ -133,23 +160,19 @@ export default function TableControlled(props: TableControlledProps) {
     }
   }
 
-  function handleToggleExpand(rowId: string) {
+  function handleToggleExpand(rowId: string, row: any) {
+    onToggleExpand(rowId, !expanded[rowId], row);
     setExpanded({
       ...expanded,
       [rowId]: !expanded[rowId],
     });
   }
 
-  function handleChangePage(
-    _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
-    newPage: number,
-  ) {
+  function handleChangePage(_event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) {
     handleSetPage(newPage);
   }
 
-  function handleChangeRowsPerPage(
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) {
+  function handleChangeRowsPerPage(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
     handleSetRowsPerPage(+event.target.value);
   }
 
@@ -159,7 +182,7 @@ export default function TableControlled(props: TableControlledProps) {
         key: index,
         ...col,
       })),
-    [cols],
+    [cols]
   );
 
   const preparedRows = useMemo<InternalTableRow[]>(
@@ -168,7 +191,7 @@ export default function TableControlled(props: TableControlledProps) {
         $uniqueId: uniqueField ? get(row, uniqueField) : rowIndex,
         ...row,
       })),
-    [rows],
+    [rows, uniqueField]
   );
 
   function handleRowClick(e: SyntheticEvent, row: Row) {
@@ -179,19 +202,14 @@ export default function TableControlled(props: TableControlledProps) {
 
   return (
     <LoadingOverlay loading={isLoading}>
-      <TableContainer component={Paper}>
+      <TableContainer component={PaperScrollbar}>
         <TableBase>
           {caption && <caption>{caption}</caption>}
           {!hideHeader && (
             <StyledTableHead>
               <TableRow>
                 {currentCols.map((col) => (
-                  <StyledTableCell
-                    key={col.key}
-                    minWidth={col.minWidth}
-                    maxWidth={col.maxWidth}
-                    width={col.width}
-                  >
+                  <StyledTableCell key={col.key} minWidth={col.minWidth} maxWidth={col.maxWidth} width={col.width}>
                     <StyledTableCellContent>{col.title}</StyledTableCellContent>
                   </StyledTableCell>
                 ))}
@@ -200,84 +218,27 @@ export default function TableControlled(props: TableControlledProps) {
           )}
 
           <TableBody>
-            {preparedRows.map((row, rowIndex) => {
-              const id = `${row.$uniqueId?.toString()}-${rowIndex}`;
-              const isExpanded = !!expanded[id];
-              const expandableCells = [];
-
-              for (let i = 0; i < expandedCellShift; i += 1) {
-                expandableCells.push((
-                  <StyledExpandedTableCell key={i} style={{ paddingBottom: 0, paddingTop: 0 }} isExpanded={isExpanded}>
-                  </StyledExpandedTableCell>
-                ));
-              }
-
-              return (
-                <Fragment key={id}>
-                  <StyledTableRow
-                    odd={rowIndex % 2 === 1}
-                    onClick={(e) => handleRowClick(e, row)}
-                    hover={rowHover}
-                  >
-                    {currentCols.map((col) => {
-                      const { field, tooltip } = col;
-
-                      const value =
-                        typeof field === 'function'
-                          ? field(row, metadata, isExpanded, () => handleToggleExpand(id))
-                          : // @ts-ignore
-                            get(row, field);
-
-                      let tooltipValue;
-                      if (tooltip) {
-                        if (tooltip === true) {
-                          tooltipValue = value;
-                        } else {
-                          tooltipValue =
-                            typeof tooltip === 'function'
-                              ? tooltip(row)
-                              : // @ts-ignore
-                                get(row, tooltip);
-                        }
-                      }
-
-                      return (
-                        <StyledTableCell
-                          minWidth={col.minWidth}
-                          maxWidth={col.maxWidth}
-                          width={col.width}
-                          key={col.key}
-                        >
-                          {tooltipValue ? (
-                            <Tooltip title={tooltipValue}>
-                              <StyledTableCellContent>{value}</StyledTableCellContent>
-                            </Tooltip>
-                          ) : (
-                            <StyledTableCellContent>{value}</StyledTableCellContent>
-                          )}
-                        </StyledTableCell>
-                      );
-                    })}
-                  </StyledTableRow>
-                  <StyledExpandedTableRow isExpanded={isExpanded}>
-                    {expandableCells}
-                    <StyledExpandedTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={cols.length - expandedCellShift}>
-                      <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                        <StyledExpandedTableCellContent>
-                          {expandedField && expandedField(row)}
-                        </StyledExpandedTableCellContent>
-                      </Collapse>
-                    </StyledExpandedTableCell>
-                  </StyledExpandedTableRow>
-                </Fragment>
-              );
-            })}
+            {ExtraRowsAfterHeader}
+            {preparedRows.map((row, rowIndex) => (
+              <TableControlledRow
+                row={row}
+                rowIndex={rowIndex}
+                currentCols={currentCols}
+                expandedCellShift={expandedCellShift}
+                expanded={expanded}
+                handleToggleExpand={handleToggleExpand}
+                handleRowClick={handleRowClick}
+                rowHover={rowHover}
+                metadata={metadata}
+                expandedField={expandedField}
+              />
+            ))}
           </TableBody>
         </TableBase>
         {pages && (
           <TablePagination
             rowsPerPageOptions={rowsPerPageOptions}
-            component="div"
+            component={PaginationScrollbar}
             count={count ?? rows.length ?? 0}
             rowsPerPage={rowsPerPage}
             page={page}
@@ -290,18 +251,82 @@ export default function TableControlled(props: TableControlledProps) {
   );
 }
 
-TableControlled.defaultProps = {
-  rows: [],
-  cols: [],
-  pages: false,
-  rowsPerPageOptions: [10, 25, 100],
-  rowsPerPage: 10,
-  hideHeader: false,
-  caption: undefined,
-  children: undefined,
-  rowHover: false,
-  uniqueField: undefined,
-  metadata: undefined,
-  expandable: false,
-  expandedCellShift: 0,
-};
+export function TableControlledRow({
+  row,
+  rowIndex,
+  currentCols,
+  expandedCellShift,
+  expanded = {},
+  handleToggleExpand,
+  handleRowClick,
+  rowHover,
+  metadata,
+  expandedField,
+  oddRowBackgroundColor,
+}) {
+  const id = `${row.$uniqueId?.toString()}-${rowIndex}`;
+  const isExpanded = !!expanded[id];
+  const expandableCells = [];
+
+  for (let i = 0; i < expandedCellShift; i += 1) {
+    expandableCells.push(
+      <StyledExpandedTableCell key={i} style={{ paddingBottom: 0, paddingTop: 0 }} isExpanded={isExpanded} />
+    );
+  }
+  return (
+    <Fragment key={id}>
+      <StyledTableRow
+        odd={rowIndex % 2 === 1}
+        oddRowBackgroundColor={oddRowBackgroundColor}
+        onClick={handleRowClick ? (e) => handleRowClick(e, row) : undefined}
+        hover={rowHover}
+      >
+        {currentCols.map((col) => {
+          const { field, tooltip, forceWrap } = col;
+
+          const value =
+            typeof field === 'function'
+              ? field(row, metadata, isExpanded, () => handleToggleExpand(id, row))
+              : // @ts-ignore
+                get(row, field);
+
+          let tooltipValue;
+          if (tooltip) {
+            if (tooltip === true) {
+              tooltipValue = value;
+            } else {
+              tooltipValue =
+                typeof tooltip === 'function'
+                  ? tooltip(row)
+                  : // @ts-ignore
+                    get(row, tooltip);
+            }
+          }
+
+          return (
+            <StyledTableCell minWidth={col.minWidth} maxWidth={col.maxWidth} width={col.width} key={col.key}>
+              {tooltipValue ? (
+                <Tooltip title={tooltipValue}>
+                  <StyledTableCellContent>{value}</StyledTableCellContent>
+                </Tooltip>
+              ) : (
+                <StyledTableCellContent forceWrap={forceWrap}>{value}</StyledTableCellContent>
+              )}
+            </StyledTableCell>
+          );
+        })}
+      </StyledTableRow>
+      <StyledExpandedTableRow isExpanded={isExpanded}>
+        {expandableCells}
+        <StyledExpandedTableCell
+          style={{ paddingBottom: 0, paddingTop: 0 }}
+          colSpan={currentCols.length - expandedCellShift}
+        >
+          <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+            <StyledExpandedTableCellContent>{expandedField && expandedField(row)}</StyledExpandedTableCellContent>
+          </Collapse>
+        </StyledExpandedTableCell>
+      </StyledExpandedTableRow>
+    </Fragment>
+  );
+}

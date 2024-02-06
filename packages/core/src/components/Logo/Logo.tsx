@@ -1,7 +1,7 @@
+import { Apple } from '@apple-network/icons';
+import { Box, BoxProps } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
-import { Box, BoxProps } from '@mui/material';
-import { Apple } from '@apple/icons';
 
 const StyledApple = styled(Apple)`
   max-width: 100%;

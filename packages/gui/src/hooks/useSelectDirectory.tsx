@@ -1,37 +1,42 @@
-import React from 'react';
-import isElectron from 'is-electron';
+import { AlertDialog, useOpenDialog } from '@apple-network/core';
+import { dialog } from '@electron/remote';
 import { Trans } from '@lingui/macro';
-import { AlertDialog, useOpenDialog } from '@apple/core';
+import isElectron from 'is-electron';
+import React from 'react';
 
 type Options = {
+  properties?: string[];
   defaultPath?: string;
   buttonLabel?: string;
 };
 
 export default function useSelectDirectory(
-  defaultOptions?: Options,
+  defaultOptions?: Options
 ): (options?: Options) => Promise<string | undefined> {
   const openDialog = useOpenDialog();
 
   async function handleSelect(options?: Options): Promise<string | undefined> {
     if (isElectron()) {
-      const {dialog} = window.require('@electron/remote');
       // @ts-ignore
       const result = await dialog.showOpenDialog({
         properties: ['openDirectory', 'showHiddenFiles'],
         ...defaultOptions,
         ...options,
       });
-      const filePath = result.filePaths[0];
 
-      return filePath;
+      if (result.canceled) {
+        return undefined;
+      }
+
+      return result.filePaths[0];
     }
 
     openDialog(
       <AlertDialog>
         <Trans>This feature is available only from the GUI.</Trans>
-      </AlertDialog>,
+      </AlertDialog>
     );
+    return undefined;
   }
 
   return handleSelect;

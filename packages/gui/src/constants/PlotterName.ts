@@ -1,6 +1,8 @@
 enum PlotterName {
-  BLADEBIT = 'bladebit',
-  APPLEPOS = 'applepos',
+  BLADEBIT_RAM = 'bladebit_ram',
+  BLADEBIT_DISK = 'bladebit_disk',
+  BLADEBIT_CUDA = 'bladebit_cuda',
+  APPLEPOS = 'chiapos',
   MADMAX = 'madmax',
 }
 

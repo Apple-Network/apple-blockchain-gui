@@ -1,23 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { fromBech32m } from '@apple-network/api';
+import { useGetDIDQuery, useGetDIDNameQuery, useSetDIDNameMutation } from '@apple-network/api-react';
+import { Color, CopyToClipboard, Flex, Loading, Tooltip, truncateValue } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import {
-  CopyToClipboard,
-  Flex,
-  Suspender,
-  Tooltip,
-  truncateValue,
-} from '@apple/core';
-import { Box, Card, TextField, Typography } from '@mui/material';
-import styled from 'styled-components';
+import { alpha, Box, Card, TextField, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fromBech32m } from '@apple/api';
-import {
-  useGetDIDQuery,
-  useGetDIDNameQuery,
-  useSetDIDNameMutation,
-} from '@apple/api-react';
-import { stripHexPrefix } from '../../util/utils';
+import styled from 'styled-components';
+
 import { didToDIDId } from '../../util/dids';
+import removeHexPrefix from '../../util/removeHexPrefix';
 
 const StyledCard = styled(Card)(
   ({ theme }) => `
@@ -25,19 +16,19 @@ const StyledCard = styled(Card)(
   padding: ${theme.spacing(3)};
   border-radius: ${theme.spacing(1)};
   background-color: ${theme.palette.background.paper};
-`,
+`
 );
 
 const StyledTitle = styled(Box)`
   font-size: 0.625rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${alpha(Color.Neutral[50], 0.7)};
 `;
 
 const StyledValue = styled(Box)`
   word-break: break-all;
 `;
 
-const InlineEdit = ({ text, walletId }) => {
+function InlineEdit({ text, walletId }) {
   const [editedText, setEditedText] = useState(text);
   const [setDid] = useSetDIDNameMutation();
 
@@ -57,7 +48,7 @@ const InlineEdit = ({ text, walletId }) => {
     if (event.target.value.trim() === '') {
       setEditedText(text);
     } else {
-      setDid({ walletId: walletId, name: event.target.value });
+      setDid({ walletId, name: event.target.value });
     }
   };
 
@@ -71,21 +62,26 @@ const InlineEdit = ({ text, walletId }) => {
       fullWidth
     />
   );
-};
+}
 
 export default function ProfileView() {
-  const { walletId } = useParams();
-  const { data: did, isLoading } = useGetDIDQuery({ walletId: walletId });
-  const { data: didName, loading } = useGetDIDNameQuery({ walletId: walletId });
+  const { walletId } = useParams<{
+    walletId: string;
+  }>();
 
-  if (isLoading || loading) {
-    return <Suspender />;
+  const { data: did, isLoading: isLoadingDID } = useGetDIDQuery({ walletId: Number(walletId) });
+  const { data: didName, isLoading: isLoadingDIDName } = useGetDIDNameQuery({ walletId: Number(walletId) });
+
+  const isLoading = isLoadingDID || isLoadingDIDName;
+
+  if (isLoading) {
+    return <Loading center />;
   }
 
   if (did && didName) {
     const nameText = didName.name;
     const didID = didToDIDId(did.myDid);
-    const hexDID = stripHexPrefix(fromBech32m(didID));
+    const hexDID = removeHexPrefix(fromBech32m(didID));
     const truncatedDID = truncateValue(didID, {});
 
     return (
@@ -140,7 +136,7 @@ export default function ProfileView() {
         </StyledCard>
       </div>
     );
-  } else {
-    return null;
   }
+
+  return null;
 }

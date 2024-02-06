@@ -1,7 +1,7 @@
-import React from 'react';
+import { useGetBlockchainStateQuery } from '@apple-network/api-react';
+import { FormatLargeNumber, CardSimple } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { FormatLargeNumber, CardSimple } from '@apple/core';
-import { useGetBlockchainStateQuery } from '@apple/api-react';
+import React from 'react';
 
 export default function FullNodeCardVDFSubSlotIterations() {
   const { data, isLoading, error } = useGetBlockchainStateQuery();

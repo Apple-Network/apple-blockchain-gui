@@ -1,59 +1,37 @@
+import { Color, Flex } from '@apple-network/core';
+import { Search as SearchIcon } from '@mui/icons-material';
+import { InputBase, InputBaseProps } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
-import { InputBase } from '@mui/material';
-import styled from 'styled-components';
-import SearchIcon from '@mui/icons-material/Search';
 
-const SearchBase = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.action.selected,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  paddingLeft: theme.spacing(1),
-  paddingRight: theme.spacing(1),
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 0),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  width: '100%',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(2)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-  },
-}));
-
-export type SearchProps = {
-  value: string;
-  onChange: (value: string) => void;
+export type SearchProps = InputBaseProps & {
+  onUpdate: (value: string) => void;
   placeholder?: string;
 };
 
 export default function Search(props: SearchProps) {
-  const { value, onChange, placeholder } = props;
+  const { onUpdate, placeholder, ...rest } = props;
+  const theme: any = useTheme();
 
   return (
-    <SearchBase>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
+    <Flex
+      gap={1}
+      alignItems="center"
+      sx={{
+        borderColor: theme.palette.mode === 'dark' ? Color.Neutral[700] : Color.Neutral[300],
+        backgroundColor: 'background.paper',
+        paddingX: 1,
+        borderRadius: 1,
+        borderWidth: 1,
+        borderStyle: 'solid',
+      }}
+    >
+      <SearchIcon sx={{ color: theme.palette.mode === 'dark' ? Color.Neutral[400] : Color.Neutral[500] }} />
+      <InputBase
+        onInput={(event) => onUpdate((event.target as HTMLInputElement).value)}
         placeholder={placeholder}
+        {...rest}
       />
-    </SearchBase>
+    </Flex>
   );
 }

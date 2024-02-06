@@ -1,15 +1,23 @@
+import './wdyr.dev'; // must be first
 import './polyfill';
 import './config/env';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './config/env';
+import { createRoot } from 'react-dom/client';
+
 import App from './components/app/App';
+import initPrefs from './init-prefs';
 
 // we need to use additional root for hot reloading
 function Root() {
-  return (
-    <App />
-  );
+  return <App />;
 }
 
-ReactDOM.render(<Root />, document.querySelector('#root'));
+const onInit = () => {
+  const container = document.querySelector('#root');
+  const root = createRoot(container!);
+  root.render(<Root />);
+};
+
+initPrefs(onInit).catch(() => {
+  // window.alert(e);
+});

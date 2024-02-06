@@ -1,5 +1,5 @@
-import type { PoolInfo } from '@apple/api';
-import { toCamelCase } from '@apple/api';
+import type { PoolInfo } from '@apple-network/api';
+import { toCamelCase } from '@apple-network/api';
 
 export default async function getPoolInfo(poolUrl: string): PoolInfo {
   const url = `${poolUrl}/pool_info`;

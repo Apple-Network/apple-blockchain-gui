@@ -1,9 +1,11 @@
-import React from 'react';
-import { Trans } from '@lingui/macro';
+/* eslint-disable react/no-unstable-nested-components -- These components are at the edges of the component tree, so no perf issues */
+
+import { useGetKeyringStatusQuery } from '@apple-network/api-react';
 import {
-  Button,
   AlertDialog,
-  Suspender,
+  Button,
+  Color,
+  Loading,
   useOpenDialog,
   useSkipMigration,
   SettingsApp,
@@ -12,17 +14,19 @@ import {
   StateTypography,
   State,
   TooltipIcon,
-} from '@apple/core';
-import { useGetKeyringStatusQuery } from '@apple/api-react';
+} from '@apple-network/core';
+import { Trans } from '@lingui/macro';
+import { Help as HelpIcon } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
-import {
-  Help as HelpIcon,
-} from '@mui/icons-material';
+import React from 'react';
+
 import ChangePassphrasePrompt from './ChangePassphrasePrompt';
 import RemovePassphrasePrompt from './RemovePassphrasePrompt';
 import SetPassphrasePrompt from './SetPassphrasePrompt';
 import SettingsDerivationIndex from './SettingsDerivationIndex';
-
+import SettingsExpiringOffers from './SettingsExpiringOffers';
+import SettingsStartup from './SettingsStartup';
+import SettingsVerifiableCredentials from './SettingsVerifiableCredentials';
 
 export default function SettingsPanel() {
   const openDialog = useOpenDialog();
@@ -32,24 +36,11 @@ export default function SettingsPanel() {
   const [removePassphraseOpen, setRemovePassphraseOpen] = React.useState(false);
   const [addPassphraseOpen, setAddPassphraseOpen] = React.useState(false);
 
-  if (isLoading) {
-    return (
-      <Suspender />
-    );
-  }
-
-  const {
-    userPassphraseIsSet,
-    needsMigration,
-  } = keyringStatus;
-
   async function changePassphraseSucceeded() {
     closeChangePassphrase();
     await openDialog(
       <AlertDialog>
-        <Trans>
-          Your passphrase has been updated
-        </Trans>
+        <Trans>Your passphrase has been updated</Trans>
       </AlertDialog>
     );
   }
@@ -58,9 +49,7 @@ export default function SettingsPanel() {
     closeSetPassphrase();
     await openDialog(
       <AlertDialog>
-        <Trans>
-          Your passphrase has been set
-        </Trans>
+        <Trans>Your passphrase has been set</Trans>
       </AlertDialog>
     );
   }
@@ -69,9 +58,7 @@ export default function SettingsPanel() {
     closeRemovePassphrase();
     await openDialog(
       <AlertDialog>
-        <Trans>
-          Passphrase protection has been disabled
-        </Trans>
+        <Trans>Passphrase protection has been disabled</Trans>
       </AlertDialog>
     );
   }
@@ -89,23 +76,27 @@ export default function SettingsPanel() {
   }
 
   function PassphraseFeatureStatus() {
+    const { userPassphraseIsSet, needsMigration = false } = keyringStatus ?? {};
     let state: State = null;
     let statusMessage: JSX.Element | null = null;
     let tooltipTitle: React.ReactElement;
-    const tooltipIconStyle: React.CSSProperties = { color: '#c8c8c8', fontSize: 12 };
+    const tooltipIconStyle: React.CSSProperties = {
+      color: Color.Neutral[300],
+      fontSize: 12,
+    };
 
     if (needsMigration) {
       state = State.WARNING;
-      statusMessage = (<Trans>Migration required to support passphrase protection</Trans>);
-      tooltipTitle = (<Trans>Passphrase support requires migrating your keys to a new keyring</Trans>);
+      statusMessage = <Trans>Migration required to support passphrase protection</Trans>;
+      tooltipTitle = <Trans>Passphrase support requires migrating your keys to a new keyring</Trans>;
     } else {
-      tooltipTitle = (<Trans>Secure your keychain using a strong passphrase</Trans>);
+      tooltipTitle = <Trans>Secure your keychain using a strong passphrase</Trans>;
 
       if (userPassphraseIsSet) {
-        statusMessage = (<Trans>Passphrase protection is enabled</Trans>);
+        statusMessage = <Trans>Passphrase protection is enabled</Trans>;
       } else {
         state = State.WARNING;
-        statusMessage = (<Trans>Passphrase protection is disabled</Trans>);
+        statusMessage = <Trans>Passphrase protection is disabled</Trans>;
       }
     }
 
@@ -121,20 +112,15 @@ export default function SettingsPanel() {
   }
 
   function DisplayChangePassphrase() {
+    const { userPassphraseIsSet, needsMigration = false } = keyringStatus ?? {};
     if (needsMigration === false && userPassphraseIsSet) {
       return (
         <>
-          <Button
-            onClick={() => setChangePassphraseOpen(true)}
-            variant="outlined"
-          >
+          <Button onClick={() => setChangePassphraseOpen(true)} variant="outlined" data-testid="changePassphraseAtt">
             <Trans>Change Passphrase</Trans>
           </Button>
           {changePassphraseOpen && (
-            <ChangePassphrasePrompt
-              onSuccess={changePassphraseSucceeded}
-              onCancel={closeChangePassphrase}
-            />
+            <ChangePassphrasePrompt onSuccess={changePassphraseSucceeded} onCancel={closeChangePassphrase} />
           )}
         </>
       );
@@ -143,78 +129,75 @@ export default function SettingsPanel() {
   }
 
   function ActionButtons() {
+    const { userPassphraseIsSet, needsMigration = false } = keyringStatus ?? {};
     if (needsMigration) {
       return (
-        <Button
-          onClick={() => setSkipMigration(false)}
-          variant="outlined"
-        >
+        <Button onClick={() => setSkipMigration(false)} variant="outlined">
           <Trans>Migrate Keyring</Trans>
         </Button>
       );
-    } else {
-      if (userPassphraseIsSet) {
-        return (
-          <Button
-            onClick={() => setRemovePassphraseOpen(true)}
-            variant="outlined"
-          >
-            <Trans>Remove Passphrase</Trans>
-          </Button>
-        );
-      } else {
-        return (
-          <Button
-            onClick={() => setAddPassphraseOpen(true)}
-            variant="outlined"
-          >
-            <Trans>Set Passphrase</Trans>
-          </Button>
-        );
-      }
     }
+    if (userPassphraseIsSet) {
+      return (
+        <Button
+          onClick={() => setRemovePassphraseOpen(true)}
+          variant="outlined"
+          data-testid="SettingsPanel-remove-passphrase"
+        >
+          <Trans>Remove Passphrase</Trans>
+        </Button>
+      );
+    }
+    return (
+      <Button onClick={() => setAddPassphraseOpen(true)} variant="outlined" data-testid="SettingsPanel-set-passphrase">
+        <Trans>Set Passphrase</Trans>
+      </Button>
+    );
   }
 
   return (
     <SettingsApp>
-      <Flex flexDirection="column" gap={1}>
-        <SettingsLabel>
-          <Flex gap={1} alignItems="center">
-            <Trans>Derivation Index</Trans>
-            <TooltipIcon>
-              <Trans>
-                The derivation index sets the range of wallet addresses that the wallet scans the blockchain for.
-                This number is generally higher if you have a lot of transactions or canceled offers for APPLE, CATs, or NFTs.
-                If you believe your balance is incorrect because it’s missing coins,
-                then increasing the derivation index could help the wallet include the missing coins in the balance total.
-              </Trans>
-            </TooltipIcon>
+      {isLoading ? (
+        <Loading center />
+      ) : (
+        <>
+          <Flex flexDirection="column" gap={1}>
+            <SettingsLabel>
+              <Flex gap={1} alignItems="center">
+                <Trans>Derivation Index</Trans>
+                <TooltipIcon>
+                  <Trans>
+                    The derivation index sets the range of wallet addresses that the wallet scans the blockchain for.
+                    This number is generally higher if you have a lot of transactions or canceled offers for APPLE, CATs,
+                    or NFTs. If you believe your balance is incorrect because it’s missing coins, then increasing the
+                    derivation index could help the wallet include the missing coins in the balance total.
+                  </Trans>
+                </TooltipIcon>
+              </Flex>
+            </SettingsLabel>
+
+            <SettingsDerivationIndex />
           </Flex>
-        </SettingsLabel>
+          <SettingsStartup />
+          <Flex flexDirection="column" gap={1}>
+            <SettingsLabel>
+              <Trans>Passphrase</Trans>
+            </SettingsLabel>
 
-        <SettingsDerivationIndex />
-      </Flex>
-      <Flex flexDirection="column" gap={1}>
-        <SettingsLabel>
-          <Trans>Passphrase</Trans>
-        </SettingsLabel>
-
-        <DisplayChangePassphrase />
-        <ActionButtons />
-        {removePassphraseOpen && (
-          <RemovePassphrasePrompt
-            onSuccess={removePassphraseSucceeded}
-            onCancel={closeRemovePassphrase}
-          />
-        )}
-        {addPassphraseOpen && (
-          <SetPassphrasePrompt
-            onSuccess={setPassphraseSucceeded}
-            onCancel={closeSetPassphrase}
-          />
-        )}
-        <PassphraseFeatureStatus />
-      </Flex>
+            <DisplayChangePassphrase />
+            <ActionButtons />
+            {removePassphraseOpen && (
+              <RemovePassphrasePrompt onSuccess={removePassphraseSucceeded} onCancel={closeRemovePassphrase} />
+            )}
+            {addPassphraseOpen && (
+              <SetPassphrasePrompt onSuccess={setPassphraseSucceeded} onCancel={closeSetPassphrase} />
+            )}
+            <PassphraseFeatureStatus />
+            <SettingsVerifiableCredentials />
+            <SettingsExpiringOffers />
+          </Flex>
+        </>
+      )}
     </SettingsApp>
   );
 }

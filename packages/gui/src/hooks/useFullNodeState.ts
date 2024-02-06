@@ -1,18 +1,40 @@
-import { useGetBlockchainStateQuery } from '@apple/api-react';
+import { BlockchainState } from '@apple-network/api';
+import { useGetBlockchainStateQuery } from '@apple-network/api-react';
+
 import FullNodeState from '../constants/FullNodeState';
 
-export default function useFullNodeState(): FullNodeState {
-  const { data: blockchainState, isLoading } = useGetBlockchainStateQuery();
+export default function useFullNodeState(): {
+  isLoading: boolean;
+  state?: FullNodeState;
+  data?: BlockchainState;
+  error?: Error;
+} {
+  const {
+    data: blockchainState,
+    isLoading,
+    error,
+  } = useGetBlockchainStateQuery(
+    {},
+    {
+      pollingInterval: 10_000,
+    }
+  );
   const blockchainSynced = blockchainState?.sync?.synced;
   const blockchainSynching = blockchainState?.sync?.syncMode;
 
+  let state: FullNodeState;
   if (blockchainSynching) {
-    return FullNodeState.SYNCHING;
+    state = FullNodeState.SYNCHING;
+  } else if (blockchainSynced) {
+    state = FullNodeState.SYNCED;
+  } else {
+    state = FullNodeState.ERROR;
   }
 
-  if (!blockchainSynced) {
-    return FullNodeState.ERROR;
-  }
-
-  return FullNodeState.SYNCED;
+  return {
+    isLoading,
+    state,
+    data: blockchainState,
+    error: error as Error,
+  };
 }

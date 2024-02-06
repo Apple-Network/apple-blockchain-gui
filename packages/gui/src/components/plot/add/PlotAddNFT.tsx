@@ -1,32 +1,31 @@
-import React, { useState, forwardRef } from 'react';
+import { Button, CardStep, Select, Flex, Link, Loading } from '@apple-network/core';
 import { Trans } from '@lingui/macro';
-import { Button, CardStep, Select, Flex, Loading } from '@apple/core';
-import {
-  Box,
-  Grid,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Typography,
-} from '@mui/material';
+import { Box, Grid, FormControl, InputLabel, MenuItem, Typography } from '@mui/material';
+import React, { useState, forwardRef } from 'react';
 import { useFormContext } from 'react-hook-form';
+
 import usePlotNFTs from '../../../hooks/usePlotNFTs';
 import PlotNFTName from '../../plotNFT/PlotNFTName';
 import PlotNFTSelectPool from '../../plotNFT/select/PlotNFTSelectPool';
-import Plotter from '../../../types/Plotter';
 
 type Props = {
   step: number;
-  plotter: Plotter;
+  setShowingPoolDetails?: (showing: boolean) => void;
 };
 
 const PlotAddNFT = forwardRef((props: Props, ref) => {
-  const { step } = props;
+  const { step, setShowingPoolDetails } = props;
   const { nfts, external, loading } = usePlotNFTs();
   const [showCreatePlotNFT, setShowCreatePlotNFT] = useState<boolean>(false);
   const { setValue } = useFormContext();
 
   const hasNFTs = !!nfts?.length || !!external?.length;
+
+  React.useEffect(() => {
+    if (!showCreatePlotNFT && setShowingPoolDetails) {
+      setShowingPoolDetails(false);
+    }
+  }, [showCreatePlotNFT, setShowingPoolDetails]);
 
   function handleJoinPool() {
     setShowCreatePlotNFT(true);
@@ -45,10 +44,11 @@ const PlotAddNFT = forwardRef((props: Props, ref) => {
         onCancel={handleCancelPlotNFT}
         ref={ref}
         title={<Trans>Create a Plot NFT</Trans>}
+        setShowingPoolDetails={setShowingPoolDetails}
         description={
           <Trans>
-            Join a pool and get consistent APPLE farming rewards. The average
-            returns are the same, but it is much less volatile.
+            Join a pool and get consistent APPLE farming rewards. The average returns are the same, but it is much less
+            volatile.
           </Trans>
         }
       />
@@ -61,10 +61,10 @@ const PlotAddNFT = forwardRef((props: Props, ref) => {
       title={
         <Flex gap={1} alignItems="baseline">
           <Box>
-            <Trans>Join a Pool</Trans>
+            <Trans>Plot to a Plot NFT</Trans>
           </Box>
           <Typography variant="body1" color="textSecondary">
-            <Trans>(Optional)</Trans>
+            <Trans>(Recommended)</Trans>
           </Typography>
         </Flex>
       }
@@ -75,17 +75,22 @@ const PlotAddNFT = forwardRef((props: Props, ref) => {
         <>
           <Typography variant="subtitle1">
             <Trans>
-              Select your Plot NFT from the dropdown or create a new one.
+              Plotting to a Plot NFT allows you the flexibility to join a pool or solo farm. You can easily switch
+              between different pools or solo farming at any time. If you choose not to plot to a Plot NFT, you will
+              need to replot in order to join any of the standard pools.
             </Trans>
+            &nbsp;
+            <Link target="_blank" href="https://docs.applecoin.in/pool-farming">
+              <Trans>Learn more</Trans>
+            </Link>
           </Typography>
-
           <Grid spacing={2} direction="column" container>
             <Grid xs={12} md={8} lg={6} item>
               <FormControl variant="filled" fullWidth>
-                <InputLabel required>
+                <InputLabel shrink>
                   <Trans>Select your Plot NFT</Trans>
                 </InputLabel>
-                <Select name="p2SingletonPuzzleHash">
+                <Select name="p2SingletonPuzzleHash" displayEmpty>
                   <MenuItem value="">
                     <em>
                       <Trans>None</Trans>
@@ -97,10 +102,7 @@ const PlotAddNFT = forwardRef((props: Props, ref) => {
                     } = nft;
 
                     return (
-                      <MenuItem
-                        value={p2SingletonPuzzleHash}
-                        key={p2SingletonPuzzleHash}
-                      >
+                      <MenuItem value={p2SingletonPuzzleHash} key={p2SingletonPuzzleHash}>
                         <PlotNFTName nft={nft} />
                       </MenuItem>
                     );
@@ -111,10 +113,7 @@ const PlotAddNFT = forwardRef((props: Props, ref) => {
                     } = nft;
 
                     return (
-                      <MenuItem
-                        value={p2SingletonPuzzleHash}
-                        key={p2SingletonPuzzleHash}
-                      >
+                      <MenuItem value={p2SingletonPuzzleHash} key={p2SingletonPuzzleHash}>
                         <PlotNFTName nft={nft} />
                       </MenuItem>
                     );
@@ -136,13 +135,13 @@ const PlotAddNFT = forwardRef((props: Props, ref) => {
         <>
           <Typography variant="subtitle1">
             <Trans>
-              Join a pool and get more consistent APPLE farming rewards. Create a
-              plot NFT and assign your new plots to a group.
+              Join a pool and get more consistent APPLE farming rewards. Create a plot NFT and assign your new plots to a
+              group.
             </Trans>
           </Typography>
 
           <Box>
-            <Button onClick={handleJoinPool} variant="outlined" >
+            <Button onClick={handleJoinPool} variant="outlined">
               <Trans>Join a Pool</Trans>
             </Button>
           </Box>
